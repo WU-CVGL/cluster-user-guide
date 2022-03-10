@@ -1,1 +1,0 @@
-[Footer] Welcome to the Wiki.
