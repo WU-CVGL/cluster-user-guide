@@ -71,6 +71,9 @@ Save the YAML configuration to, let's say, `test_task.yaml`. You can start a Jup
     # shell
     det shell start --config-file test_task.yaml
 
+Now you can see your task pending/running on the WebUI dashboard.
+![tasks](https://docs.determined.ai/latest/_images/launch-cpu-notebook@2x.jpg)
+
 ## Managing Tasks
 
 You can manage the tasks on the WebUI.
