@@ -92,7 +92,7 @@ TL;DR: Imagine how frustrating it is to enter your password again and again when
 
 - Step 4. On remote Server, create and edit file, paste the public key into it:
 
-    mkdir ~/.ssh && vim ~/.ssh/authorized_hosts
+    mkdir ~/.ssh && vim ~/.ssh/authorized_keys
 
     (Paste and Save)
 
