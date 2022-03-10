@@ -36,6 +36,17 @@ You need to ask system `admin` to get your user account.
 
 You can use either SSH (Secure Shell Protocol) or RDP (Remote Desktop Protocol) to login.
 
+## RDP
+
+RDP provides a remote desktop interface which is more user-friendly.
+
+First you need a RDP Client. On Windows, there is a pre-installed software `mstsc.exe`, or you can download a newer `Microsoft Remote Desktop` from the Microsoft Store.
+On Linux, it's recommended to install Remmina and remmina-plugin-rdp.
+
+Using the RDP Clients is simple. Following the prompts, type in the server address, user name, password, set the screen resolution and color depth you want.
+![remmina](Basics/QQ截图20220310230912.png)
+![mstsc](Basics/QQ截图20220310231310.png)
+
 ## SSH
 
 The SSH port has been set to `22332` for safety. To login by SSH, just simply run:
