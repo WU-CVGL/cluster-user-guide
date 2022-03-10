@@ -40,7 +40,7 @@ You can use either SSH (Secure Shell Protocol) or RDP (Remote Desktop Protocol) 
 
 RDP provides a remote desktop interface which is more user-friendly.
 
-First you need a RDP Client. On Windows, there is a pre-installed software `mstsc.exe`, or you can download a newer `Microsoft Remote Desktop` from the Microsoft Store.
+First you need a RDP Client. On Windows, there is a built-in software `mstsc.exe`, or you can download a newer `Microsoft Remote Desktop` from the Microsoft Store.
 On Linux, it's recommended to install Remmina and remmina-plugin-rdp.
 
 Using the RDP Clients is simple. Following the prompts, type in the server address, user name, password, set the screen resolution and color depth you want.
@@ -76,7 +76,7 @@ TL;DR: Imagine when the network connection is unstable, typing the passwords aga
 
     mkdir ~/.ssh && cd ~/.ssh
 
-- Step 2. Create a public key - private key pair:
+- Step 2. Create a public/private key pair:
 
     ssh-keygen
     
