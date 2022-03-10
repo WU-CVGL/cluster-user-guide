@@ -1,4 +1,4 @@
-<h1 align="center">Cluster User Guide</h1>
+<h1 align="center">Determined-AI User Guide</h1>
 <p align="center">
 2022-03-10 v0.1
 </p>
