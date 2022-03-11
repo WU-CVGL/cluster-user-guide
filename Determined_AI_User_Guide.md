@@ -36,7 +36,7 @@ In the CLI, the user login subcommand can be used to authenticate a user:
     det user login <username>
 
 ## Changing passwords
-Users have *blank* passwords by default. This might be sufficient for low-security or experimental clusters, and it still provides the organizational benefits of associating each Determined object with the user that created it. If desired, a user can change their own password using the user change-password subcommand:
+Users have *blank* passwords by default. If desired, a user can change their own password using the user change-password subcommand:
 
     det user change-password
 
