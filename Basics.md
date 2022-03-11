@@ -23,7 +23,7 @@ GPU Node 1：
 |  SSD   | Intel S4510 1.92TB * 2 |
 |*IP Address*| **10.0.1.67** |
 
-<img src="./Basics/QQ图片20220310215340.jpg" alt="drawing" style="height:50vh;"/>
+<img src="./Basics/QQ图片20220310215340.jpg" alt="drawing" style="height:480px;"/>
 
 
 # User Account
@@ -99,7 +99,7 @@ TL;DR: Imagine how frustrating it is to enter your password again and again when
 RDP provides a remote desktop interface which is more user-friendly.
 
 First you need a RDP Client. On Windows, there is a built-in software `mstsc.exe`, or you can download a newer `Microsoft Remote Desktop` from the Microsoft Store.
-On Linux, it's recommended to install Remmina and remmina-plugin-rdp.
+On Linux, it's recommended to install `remmina` and `remmina-plugin-rdp`.
 
 Using the RDP Clients is simple. Following the prompts, type in the server address, user name, password, set the screen resolution and color depth you want.
 ![remmina](Basics/QQ截图20220310230912.png)
