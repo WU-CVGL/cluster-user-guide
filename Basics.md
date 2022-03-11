@@ -41,6 +41,8 @@ You can use either SSH (Secure Shell Protocol) or RDP (Remote Desktop Protocol) 
 The SSH port has been set to `22332` for safety. To login by SSH, just simply run:
 
     ssh -p 22332 <UserName>@10.0.1.67
+    
+You can also choose your favorite SSH client to log in, such as MobaXterm, XShell and Terminus, just configure accordingly.
 
 ### Tricks on SSH
 
