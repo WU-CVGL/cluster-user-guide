@@ -47,18 +47,19 @@ Users have *blank* passwords by default. If desired, a user can change their own
 
 Here is a template of a task configuration file, in YAML format:
 
-    description: *your_task_name*
+    description: <your_task_name>
     resources:
-    slots: 1
+        slots: 1
     bind_mounts:
-    - host_path: /home/*user_name*/
-        container_path: /run/determined/workdir/home/
-    - host_path: /data/
-        container_path: /run/determined/workdir/data/
+        - host_path: /home/<user_name>/
+            container_path: /run/determined/workdir/home/
+        - host_path: /data/
+            container_path: /run/determined/workdir/data/
     environment:
-    image: determinedai/environments:cuda-11.1-pytorch-1.9-lightning-1.3-tf-2.4-gpu-5158dec
+        image: determinedai/environments:cuda-11.1-pytorch-1.9-lightning-1.5-tf-2.4-deepspeed-0.5.10-gpu-0.17.12
 
 Notes: 
+- You need to change the task_name and user_name to your own
 - Number of **slots** is the number of GPUs you want to use
 - In **bind_mounts**, the first host_path/container_path maps your home directory into the container work directory; And the second maps the dataset directory (/data) into the container.
 
