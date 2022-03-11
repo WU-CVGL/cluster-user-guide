@@ -102,5 +102,7 @@ First you need a RDP Client. On Windows, there is a built-in software `mstsc.exe
 On Linux, it's recommended to install `remmina` and `remmina-plugin-rdp`.
 
 Using the RDP Clients is simple. Following the prompts, type in the server address, user name, password, set the screen resolution and color depth you want.
-![remmina](Basics/QQ截图20220310230912.png)
+
 ![mstsc](Basics/QQ截图20220310231310.png)
+
+![remmina](Basics/QQ截图20220310230912.png)
