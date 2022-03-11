@@ -61,7 +61,7 @@ Note that the indents are not mandatory.
 
 #### Best Practice: Using SSH Certificates
 
-TL;DR: Imagine how frustrating it is to enter your password again and again when the network connection is unstable. With an SSH certificate, you will never need to enter a password, and at the same time it provides greater security, powered by cryptography, it prevents man-in-the-middle attacks, etc.
+TL;DR: Imagine how frustrating it is to enter your password again and again when the network connection is unstable. With an SSH certificate, you will never need to enter a password, and at the same time it provides greater security. Powered by cryptography, it also prevents man-in-the-middle attacks, etc.
 
 - Step 1. On your PC, go to folder:
 
