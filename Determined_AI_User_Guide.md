@@ -1,4 +1,5 @@
-<h1 align="center">Determined-AI User Guide</h1>
+<h1 align="center">Getting started with the batch system:<br>
+Determined-AI User Guide </h1>
 <p align="center">
 2022-03-10 v0.1
 </p>
@@ -13,7 +14,7 @@ We are currently using [Determined AI](https://www.determined.ai/) to manage our
 
 You can open the dashboard (a.k.a WebUI) by the following URL and login:
 
-[http://10.0.1.67:8080/](http://10.0.1.67:8080/)
+[https://git.cvgl.lab/](https://git.cvgl.lab/)
 
 
 # User Account [[1]](https://docs.determined.ai/latest/sysadmin-basics/users.html)
@@ -29,9 +30,7 @@ You need to ask system `admin` to get your user account.
 The WebUI will automatically redirect users to a login page if there is no valid Determined session established on that browser. After logging in, the user will be redirected to the URL they initially attempted to access.
 
 ### CLI
-Before using the CLI(Command Line Interface), you may need to recite some basics: [[Basics]](http://10.0.1.67:3000/Cluster_User_Group/cluster-user-guide/wiki/Basics)
-
-In the CLI, the user login subcommand can be used to authenticate a user:
+Once you have managed to login the cluster, the *Determined AI* user login subcommand can be used to authenticate a user:
 
     det user login <username>
 

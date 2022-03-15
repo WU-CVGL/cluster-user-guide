@@ -1,5 +1,7 @@
-[Home](http://10.0.1.67:3000/Cluster_User_Group/cluster-user-guide/wiki/Home)
+[Home](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Home)
 
-[Basics](http://10.0.1.67:3000/Cluster_User_Group/cluster-user-guide/wiki/Basics)
+[Tutorials Overview](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Tutorials)
 
-[Determined_AI_User_Guide](http://10.0.1.67:3000/Cluster_User_Group/cluster-user-guide/wiki/Determined_AI_User_Guide)
+[Getting Started](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Getting_started)
+
+[Determined_AI_User_Guide](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Determined_AI_User_Guide)
