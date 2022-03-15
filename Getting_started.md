@@ -32,12 +32,12 @@ The way to modify the hosts file is as follows:
 ### Hosts Modification
 
 Append these lines to the end of the *hosts* file:
-
-    10.0.1.67 cvgl.lab
-    10.0.1.67 git.cvgl.lab
-    10.0.1.67 gpu.cvgl.lab
-    10.0.1.68 login.cvgl.lab
-
+```
+10.0.1.67 cvgl.lab
+10.0.1.67 git.cvgl.lab
+10.0.1.67 gpu.cvgl.lab
+10.0.1.68 login.cvgl.lab
+```
 ## Install the root CA certificate (Optional)
 
 Since we are using a self-signed certificate, after modifying the host, when we use a web browser to access the service, a security warning appears saying the certificate is not recognized. We can suppress this warning by making the system trust the certificate.
@@ -48,7 +48,7 @@ The certificate can be downloaded at: [https://cvgl.lab/cvgl.crt](https://cvgl.l
 
 - For Linux (tested Ubuntu), first you need the `ca-certificates` package installed, then copy the certificate file to `/usr/local/share/ca-certificates`, and update certificates system-wide with the following command:
 ```
-    sudo update-ca-certificates
+sudo update-ca-certificates
 ```
 
 ## SSH
@@ -62,9 +62,9 @@ Since we have set up the *hosts* in the [previous section](#hosts), we can use t
 
 ### SSH in Linux, *nix including macOS
 Open a terminal and use the standard ssh command
-
-    ssh -p 22332 username@hostname
-
+```
+ssh -p 22332 username@hostname
+```
 where **username** is your username and the **hostname** can be found in the table shown above. The parameter `-p 22332` is used to declare the SSH port used on the server. For security, we modified the default port. If for instance user **peter** would like to access the cluster, then the command would be
 
     peter@laptop:~$ ssh -p 22332 peter@login.cvgl.lab
@@ -113,52 +113,51 @@ The [links](#ssh-in-windows) above demonstrates methods using GUI. You can also 
 
 ### SSH keys on Linux
 For security reasons, we recommend that you use a different key pair for every computer you want to connect to:
-
-    ssh-keygen -t ed25519 -f $HOME/.ssh/id_ed25519_cvgl_cluster
-    
-    (And hit ENTER multiple times)
-
-    (You can set a passphrase for the private key for advanced safety)
+```
+ssh-keygen -t ed25519 -f $HOME/.ssh/id_ed25519_cvgl_cluster
+```   
+It is recommended to set a passphrase for the private key.
 
 Once this is done, copy the public key to the cluster:
-
-    ssh-copy-id -i $HOME/.ssh/id_ed25519_cvgl_cluster.pub    username@login.cvgl.lab
-
+```
+ssh-copy-id -i $HOME/.ssh/id_ed25519_cvgl_cluster.pub    username@login.cvgl.lab
+```
 Finally you can add the private key temporarily so that you don't need to enter passphrase every time (You still need to do this every time after reboot)
-
-    ssh-add ~/.ssh/id_ed25519_cvgl_cluster
+```
+ssh-add ~/.ssh/id_ed25519_cvgl_cluster
+```
 
 ### SSH keys on Windows
 For windows a third party software ([PuTTYgen](https://www.puttygen.com/),[MobaXterm](https://mobaxterm.mobatek.net/)) is commonly used to create SSH keys (demonstrated in the [links above](#ssh-in-windows)).
 However since Windows 10, we can also follow the similar steps in powershell:
 - Step 1. On your PC, go to folder:
-
-    mkdir ~/.ssh && cd ~/.ssh
-
+```
+mkdir ~/.ssh && cd ~/.ssh
+```
 - Step 2. Create a public/private key pair:
-
-    ssh-keygen
-
-    (Set a passphrase for the private key for advanced safety)
+```
+ssh-keygen -t ed25519
+```
+It's recommended to set a passphrase for the private key for advanced safety.
 
 - Step 3. The program `ssh-copy-id` is not available so we manually copy the public key:
-
-    cat ~/.ssh/id_rsa.pub
-
-    (Copy)
+```
+cat ~/.ssh/id_ed25519.pub
+```
+(Copy above)
 
 - Step 4. On remote Server, create and edit file, paste the public key into it:
-
-    mkdir ~/.ssh && vim ~/.ssh/authorized_hosts
-
-    (Paste and Save)
+```
+mkdir ~/.ssh && vim ~/.ssh/authorized_hosts
+```
+(Paste to above and Save)
 
 - Step 5. Start the ssh-agent; Apply the private key so that you don't need to enter passphrase every time (You need to do this every time after system starts up)
+```
+ssh-agent
 
-    ssh-agent
-
-    ssh-add ~/.ssh/id_rsa
-
+ssh-add ~/.ssh/id_rsa
+```
 </details>
 
 ### Safety rules
@@ -178,21 +177,21 @@ However since Windows 10, we can also follow the similar steps in powershell:
 ### How to use keys with non-default names
 
 If you use different key pairs for different computers (as recommended above), you need to specify the right key when you connect, for instance:
-
-    ssh -p 22332 -i $HOME/.ssh/id_ed25519_cvgl_cluster username@login.cvgl.lab
-
+```
+ssh -p 22332 -i $HOME/.ssh/id_ed25519_cvgl_cluster username@login.cvgl.lab
+```
 To make your life easier, you can configure your ssh client to use these options automatically by adding the following lines in your $HOME/.ssh/config file:
-
-    Host cluster
-        HostName        login.cvgl.lab
-        Port            22332
-        User            username
-        IdentityFile    ~/.ssh/id_ed25519_cvgl_cluster
-
+```
+Host cluster
+    HostName        login.cvgl.lab
+    Port            22332
+    User            username
+    IdentityFile    ~/.ssh/id_ed25519_cvgl_cluster
+```
 Then your ssh command simplifies as follows:
-
-    ssh cluster
-
+```
+ssh cluster
+```
 ## X11 forwarding and remote desktop
 
 Sometimes we need to run GUI applications on the login node. To directly run GUI application in ssh terminal, you must open an SSH tunnel and redirect all X11 communication through that tunnel.
