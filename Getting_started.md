@@ -45,9 +45,11 @@ Since we are using a self-signed certificate, after modifying the host, when we 
 The certificate can be downloaded at: [https://cvgl.lab/cvgl.crt](https://cvgl.lab/cvgl.crt)
 
 - For Windows, right click the CA certificate file and select 'Install Certificate'. Follow the prompts to add the certificate to the **Trusted Root Certification Authorities**.
-- For Linux (tested Ubuntu), first you need the `ca-certificates` package installed, then copy the certificate file to `/usr/local/share/ca-certificates`, and update certificates system-wide with the following command:
 
+- For Linux (tested Ubuntu), first you need the `ca-certificates` package installed, then copy the certificate file to `/usr/local/share/ca-certificates`, and update certificates system-wide with the following command:
+```
     sudo update-ca-certificates
+```
 
 ## SSH
 You can connect to the cluster via the SSH protocol. For this purpose it is required that you have an SSH client installed. The information required to connect to the cluster, is the hostname (which resolves to an IP address) of the cluster and your account credentials (username, password).
