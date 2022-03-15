@@ -14,7 +14,7 @@ We are currently using [Determined AI](https://www.determined.ai/) to manage our
 
 You can open the dashboard (a.k.a WebUI) by the following URL and login:
 
-[https://git.cvgl.lab/](https://git.cvgl.lab/)
+[https://gpu.cvgl.lab/](https://gpu.cvgl.lab/)
 
 
 # User Account [[1]](https://docs.determined.ai/latest/sysadmin-basics/users.html)
