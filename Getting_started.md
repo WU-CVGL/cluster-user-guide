@@ -122,13 +122,13 @@ Once this is done, copy the public key to the cluster:
 ```
 ssh-copy-id -i $HOME/.ssh/id_ed25519_cvgl_cluster.pub    username@login.cvgl.lab
 ```
-Finally you can add the private key temporarily so that you don't need to enter passphrase every time (You still need to do this every time after reboot)
+Finally you can add the private key to the ssh-agent temporarily so that you don't need to enter passphrase every time (You still need to do this every time after reboot).
 ```
 ssh-add ~/.ssh/id_ed25519_cvgl_cluster
 ```
 
 ### SSH keys on Windows
-For windows a third party software ([PuTTYgen](https://www.puttygen.com/),[MobaXterm](https://mobaxterm.mobatek.net/)) is commonly used to create SSH keys (demonstrated in the [links above](#ssh-in-windows)).
+For windows a third party software ([PuTTYgen](https://www.puttygen.com/), [MobaXterm](https://mobaxterm.mobatek.net/)) is commonly used to create SSH keys (demonstrated in the [links above](#ssh-in-windows)).
 However since Windows 10, we can also follow the similar steps in powershell:
 - Step 1. On your PC, go to folder:
 ```
