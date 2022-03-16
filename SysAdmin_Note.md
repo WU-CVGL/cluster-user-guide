@@ -116,24 +116,33 @@ Two VMs are connected to the host by NAT-bridge, and connected to the campus net
     # On Node01 as NFS server
     apt install nfs-kernel-server
     mkdir -p /srv/nfs4/datasets
-    # mount --bind /datasets /srv/nfs4/backups
+    mkdir -p /srv/nfs4/worspace
     echo "/datasets /srv/nfs4/backups none bind 0 0" >> /etc/fstab
+    echo "/mnt/sdb1/workspace /srv/nfs4/workspace none bind 0 0" >> /etc/fstab
     mount -a
+    mkdir /workspace
+    sudo mount --bind /workspace /mnt/sdb1/workspace
     vim /etc/exports
     ####
     /srv/nfs4            10.0.1.64/27(rw,sync,no_subtree_check,crossmnt,fsid=0)
     /srv/nfs4            192.168.122.0/24(rw,sync,no_subtree_check,crossmnt,fsid=0)
     /srv/nfs4/datasets   10.0.1.64/27(rw,sync,no_subtree_check)
     /srv/nfs4/datasets   192.168.122.0/24(rw,sync,no_subtree_check)
+    /srv/nfs4/workspace  10.0.1.64/27(rw,sync,no_subtree_check)
+    /srv/nfs4/workspace  192.168.122.0/24(rw,sync,no_subtree_check)
     ####
     exportfs -ar
     
     # On Node01VM01 as NFS client
     apt install nfs-common
     mkdir -p /datasets
-    # mount -t nfs -o vers=4 192.168.122.1:/datasets /datasets
-    echo "192.168.122.1:/datasets /datasets nfs defaults,timeo=900,retrans=5,_netdev 0 0" >> /etc/fstab
+    mkdir -p /workspace
+    echo "192.168.122.1:/datasets /datasets nfs defaults,timeo=900,retrans=5,_netdev 0 2" >> /etc/fstab
+    echo "192.168.122.1:/workspace /workspace nfs defaults,timeo=900,retrans=5,_netdev 0 2" >> /etc/fstab
     mount -a
+
+# XRDP
+> https://www.reddit.com/r/linuxquestions/comments/ceog3w/how_can_i_install_xrdp_so_that_it_actually_works/
 
 # Nginx Reverse Proxy & HTTPS/TLS
 
