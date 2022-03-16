@@ -112,6 +112,29 @@ Two VMs are connected to the host by NAT-bridge, and connected to the campus net
     23389                      ALLOW       Anywhere       # RDP
 
 
+# NFS
+    # On Node01 as NFS server
+    apt install nfs-kernel-server
+    mkdir -p /srv/nfs4/datasets
+    # mount --bind /datasets /srv/nfs4/backups
+    echo "/datasets /srv/nfs4/backups none bind 0 0" >> /etc/fstab
+    mount -a
+    vim /etc/exports
+    ####
+    /srv/nfs4            10.0.1.64/27(rw,sync,no_subtree_check,crossmnt,fsid=0)
+    /srv/nfs4            192.168.122.0/24(rw,sync,no_subtree_check,crossmnt,fsid=0)
+    /srv/nfs4/datasets   10.0.1.64/27(rw,sync,no_subtree_check)
+    /srv/nfs4/datasets   192.168.122.0/24(rw,sync,no_subtree_check)
+    ####
+    exportfs -ar
+    
+    # On Node01VM01 as NFS client
+    apt install nfs-common
+    mkdir -p /datasets
+    # mount -t nfs -o vers=4 192.168.122.1:/datasets /datasets
+    echo "192.168.122.1:/datasets /datasets nfs defaults,timeo=900,retrans=5,_netdev 0 0" >> /etc/fstab
+    mount -a
+
 # Nginx Reverse Proxy & HTTPS/TLS
 
     docker pull nginx
