@@ -13,7 +13,7 @@ Gateway: 10.0.1.65
 
 IP address pool: 10.0.1.66-94
 
-BMC(IPMI) of Server01 has be assigned the IP Address 10.0.1.66.
+BMC(IPMI) of Node01 has be assigned the IP Address 10.0.1.66.
 
     # cvgl-node01
     vim /etc/netplan/00-installer-config.yaml
@@ -97,6 +97,20 @@ Two VMs are connected to the host by NAT-bridge, and connected to the campus net
                 search: []
         version: 2
     ####
+
+# UFW
+
+    # On Node01
+    To                         Action      From
+    --                         ------      ----
+    222                        ALLOW       Anywhere       # Gitea SSH
+    443                        ALLOW       Anywhere       # nginx
+    2049                       ALLOW       10.0.1.64/27   # NFS
+    3000                       ALLOW       Anywhere       # Gitea HTTP
+    8080                       ALLOW       10.0.1.64/27   # Determined intra-cluster (inter-node)
+    22332                      ALLOW       Anywhere       # SSH
+    23389                      ALLOW       Anywhere       # RDP
+
 
 # Nginx Reverse Proxy & HTTPS/TLS
 
