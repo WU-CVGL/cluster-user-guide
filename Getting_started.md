@@ -10,7 +10,7 @@ The accounts includes a Linux account on the login node, and an account for the 
 ## Security
 Accessing to the cluster is currently only possible via secure protocols (ssh, scp, rsync). The cluster is only accessible from inside the campus local area network. If you would like to connect from a computer, which is not inside the campus network, then you would need to establish a [VPN](https://vpn.westlake.edu.cn/) connection first.
 
-## Hosts
+## Setting up the hosts file
 Since our cluster is only accesible in the campus LAN, and we do not have the administration of the DNS server, setting up the *hosts* file is the best way to translate human-friendly hostnames into IP addresses.
 
 The way to modify the hosts file is as follows:
