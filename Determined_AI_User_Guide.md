@@ -4,7 +4,18 @@ Determined-AI User Guide </h1>
 2022-03-10 v0.1
 </p>
 
-
+- [Introduction](#introduction)
+- [User Account [[1]](https://docs.determined.ai/latest/sysadmin-basics/users.html)](#user-account-1)
+  - [Ask for your account](#ask-for-your-account)
+  - [Authentication](#authentication)
+    - [WebUI](#webui)
+    - [CLI](#cli)
+  - [Changing passwords](#changing-passwords)
+- [Submitting Tasks [[2]](https://zhuanlan.zhihu.com/p/422462131)](#submitting-tasks-2)
+  - [Task Configuration Template](#task-configuration-template)
+  - [Submit](#submit)
+  - [Managing Tasks](#managing-tasks)
+  - [Experiments](#experiments)
 
 # Introduction
 

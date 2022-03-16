@@ -1,6 +1,27 @@
 <h1 align="center">Getting started with the cluster</h1>
 <p align="center">2022-03-15 v0.2</p>
 
+- [Requesting accounts](#requesting-accounts)
+- [Accessing the cluster](#accessing-the-cluster)
+  - [Security](#security)
+  - [Setting up the hosts file](#setting-up-the-hosts-file)
+    - [For Windows](#for-windows)
+    - [For Linux, *nix including macOS](#for-linux-nix-including-macos)
+    - [Hosts Modification](#hosts-modification)
+  - [Install the root CA certificate (Optional)](#install-the-root-ca-certificate-optional)
+  - [SSH](#ssh)
+    - [SSH in Linux, *nix including macOS](#ssh-in-linux-nix-including-macos)
+    - [SSH in Windows](#ssh-in-windows)
+    - [SSH keys](#ssh-keys)
+    - [SSH keys on Linux](#ssh-keys-on-linux)
+    - [SSH keys on Windows](#ssh-keys-on-windows)
+    - [Safety rules](#safety-rules)
+    - [How to use keys with non-default names](#how-to-use-keys-with-non-default-names)
+  - [X11 forwarding and remote desktop](#x11-forwarding-and-remote-desktop)
+    - [X11 over SSH on Linux, *nix including macOS](#x11-over-ssh-on-linux-nix-including-macos)
+    - [Remote desktop via RDP](#remote-desktop-via-rdp)
+- [Data management](#data-management)
+
 # Requesting accounts
 
 The accounts includes a Linux account on the login node, and an account for the batch system (Determined AI).
