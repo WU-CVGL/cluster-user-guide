@@ -121,7 +121,7 @@ Two VMs are connected to the host by NAT-bridge, and connected to the campus net
     echo "/mnt/sdb1/workspace /srv/nfs4/workspace none bind 0 0" >> /etc/fstab
     mount -a
     mkdir /workspace
-    sudo mount --bind /workspace /mnt/sdb1/workspace
+    sudo mount --bind /mnt/sdb1/workspace /workspace
     vim /etc/exports
     ####
     /srv/nfs4            10.0.1.64/27(rw,sync,no_subtree_check,crossmnt,fsid=0)
