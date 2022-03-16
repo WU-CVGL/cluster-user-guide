@@ -20,15 +20,15 @@ The way to modify the hosts file is as follows:
 - Press `Win-Key + R`. A a small window will pop up.
 
 - Type in the following command and press `Ctrl+Shift+Enter`, to make notepad run as administrator and edit the *hosts* file.
-
-    notepad C:\Windows\System32\drivers\etc\hosts
-
+```
+notepad C:\Windows\System32\drivers\etc\hosts
+```
 ### For Linux, *nix including macOS
 
 - Edit `/etc/hosts` with root privilege in your favourite way. For example:
-
-    sudo vim /etc/hosts
-
+```
+sudo vim /etc/hosts
+```
 ### Hosts Modification
 
 Append these lines to the end of the *hosts* file:
