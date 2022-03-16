@@ -5,17 +5,18 @@ Determined-AI User Guide </h1>
 </p>
 
 - [Introduction](#introduction)
-- [User Account [[1]](https://docs.determined.ai/latest/sysadmin-basics/users.html)](#user-account-1)
+- [User Account](#user-account)
   - [Ask for your account](#ask-for-your-account)
   - [Authentication](#authentication)
     - [WebUI](#webui)
     - [CLI](#cli)
   - [Changing passwords](#changing-passwords)
-- [Submitting Tasks [[2]](https://zhuanlan.zhihu.com/p/422462131)](#submitting-tasks-2)
+- [Submitting Tasks](#submitting-tasks)
   - [Task Configuration Template](#task-configuration-template)
   - [Submit](#submit)
   - [Managing Tasks](#managing-tasks)
   - [Experiments](#experiments)
+  - [References](#references)
 
 # Introduction
 
@@ -28,7 +29,7 @@ You can open the dashboard (a.k.a WebUI) by the following URL and login:
 [https://gpu.cvgl.lab/](https://gpu.cvgl.lab/)
 
 
-# User Account [[1]](https://docs.determined.ai/latest/sysadmin-basics/users.html)
+# User Account
 
 ## Ask for your account
 
@@ -54,7 +55,7 @@ Users have *blank* passwords by default. If desired, a user can change their own
 det user change-password
 ```
 
-# Submitting Tasks [[2]](https://zhuanlan.zhihu.com/p/422462131)
+# Submitting Tasks
 
 ## Task Configuration Template
 
@@ -103,3 +104,8 @@ You can manage the tasks on the WebUI.
 (TODO)
 
 ![experiments](https://docs.determined.ai/latest/_images/hp_experiment_page@2x.jpg)
+
+
+## References
+[[1]](https://docs.determined.ai/latest/sysadmin-basics/users.html)
+[[2]](https://zhuanlan.zhihu.com/p/422462131)
