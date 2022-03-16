@@ -96,16 +96,16 @@ Now you can see your task pending/running on the WebUI dashboard.
 
 You can manage the tasks on the WebUI.
 
-![recent-tasks](https://docs.determined.ai/latest/_images/pytorch_dashboard@2x.jpg)
+![recent-tasks](https://gpu.cvgl.lab/docs/_images/pytorch_dashboard@2x.jpg)
 
 
 ## Experiments
 
 (TODO)
 
-![experiments](https://docs.determined.ai/latest/_images/hp_experiment_page@2x.jpg)
+![experiments](https://gpu.cvgl.lab/docs/_images/hp_experiment_page@2x.jpg)
 
 
 ## References
-[[1]](https://docs.determined.ai/latest/sysadmin-basics/users.html)
+[[1]](https://gpu.cvgl.lab/docs/sysadmin-basics/users.html)
 [[2]](https://zhuanlan.zhihu.com/p/422462131)
