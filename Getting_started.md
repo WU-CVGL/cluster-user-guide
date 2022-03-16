@@ -21,6 +21,8 @@
     - [X11 over SSH on Linux, *nix including macOS](#x11-over-ssh-on-linux-nix-including-macos)
     - [Remote desktop via RDP](#remote-desktop-via-rdp)
 - [Data management](#data-management)
+  - [Introduction](#introduction)
+  - [Uploading and downloading data](#uploading-and-downloading-data)
 
 # Requesting accounts
 
@@ -240,9 +242,11 @@ login.cvgl.lab:23389
 
 # Data management
 
+## Introduction
+
 We are currently using NFS to share filesystems between cluster nodes. The storage space of the login node is small (about 100GB), so it is recommended to store code and data in NFS shared folders: `/dataset` for datasets and `/workspace` for workspaces. The two NFS folders are allocated on two different SSDs, each with a capacity of 2TB.
 
-You can check the file systems with command `df -H`:
+We can check the file systems with command `df -H`:
 
     peter@login.cvgl.lab: ~ $ df -H
 
@@ -250,3 +254,16 @@ You can check the file systems with command `df -H`:
     /dev/vda2                 135G   40G   89G  31% /
     192.168.122.1:/datasets   2.0T  217G  1.7T  12% /datasets
     192.168.122.1:/workspace  2.0T  217G  1.7T  12% /workspace
+
+We can create your own folder under workspace:
+
+    mkdir /workspace/<username>
+
+By default, other users have read [permissions](https://scicomp.ethz.ch/wiki/Linux_permissions) on your folder. We can also make it private:
+
+    chmod 700 /workspace/<username>
+
+## Uploading and downloading data
+
+We can use CLI tools like scp, rsync; or GUI tools like mobaXterm, VSCode, xftp for uploading files from a personal computer to the data storage. Or you can use Baidu Netdisk client (already installed). You can also download datasets directly from the source. It is recommended to use professional download software to download large datasets, such as aria2, motrix (aria2 with GUI), etc.
+

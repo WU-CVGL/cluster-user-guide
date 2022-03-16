@@ -6,6 +6,7 @@
 - [UFW](#ufw)
 - [NFS](#nfs)
 - [XRDP](#xrdp)
+- [I18N](#i18n)
 - [Nginx Reverse Proxy & HTTPS/TLS](#nginx-reverse-proxy--httpstls)
 
 # Topology
@@ -150,6 +151,11 @@ Two VMs are connected to the host by NAT-bridge, and connected to the campus net
 
 # XRDP
 > https://www.reddit.com/r/linuxquestions/comments/ceog3w/how_can_i_install_xrdp_so_that_it_actually_works/
+
+# I18N
+````
+sudo apt-get -y install `check-language-support -l zh-hans`
+````
 
 # Nginx Reverse Proxy & HTTPS/TLS
 
