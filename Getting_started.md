@@ -108,9 +108,6 @@ It is recommended to create SSH keys: Imagine when the network connection is uns
 
 The [links](#ssh-in-windows) above demonstrates methods using GUI. You can also create the keys with CLI:
 
-<details>
-<summary> Click to show </summary>
-
 ### SSH keys on Linux
 For security reasons, we recommend that you use a different key pair for every computer you want to connect to:
 ```
@@ -158,7 +155,6 @@ ssh-agent
 
 ssh-add ~/.ssh/id_rsa
 ```
-</details>
 
 ### Safety rules
 
@@ -208,9 +204,27 @@ On Linux, it's recommended to install Remmina and remmina-plugin-rdp.
 
 Using the RDP Clients is simple. Following the prompts, type in the server address, user name, password, set the screen resolution and color depth you want.
 
-![remmina](Getting_started/QQ截图20220310230912.png)
-![mstsc](Getting_started/QQ截图20220310231310.png)
+For security, we changed the default RDP port from 3389 to 23389. So the server address becomes:
+```
+login.cvgl.lab:23389
+```
+<details>
+<summary> Click to show image</summary>
+
+![mstsc1](Getting_started/QQ%E6%88%AA%E5%9B%BE20220316211436.png)
+![mstsc2](Getting_started/QQ截图20220316211450.png)
+
+</details>
 
 # Data management
 
-(TODO: home/storage on login node, NFS, GlusterFS, dataset, netdisk)
+We are currently using NFS to share filesystems between cluster nodes. The storage space of the login node is small (about 100GB), so it is recommended to store code and data in NFS shared folders: `/dataset` for datasets and `/workspace` for workspaces. The two NFS folders are allocated on two different SSDs, each with a capacity of 2TB.
+
+You can check the file systems with command `df -H`:
+
+    peter@login.cvgl.lab: ~ $ df -H
+
+    Filesystem                Size  Used Avail Use% Mounted on
+    /dev/vda2                 135G   40G   89G  31% /
+    192.168.122.1:/datasets   2.0T  217G  1.7T  12% /datasets
+    192.168.122.1:/workspace  2.0T  217G  1.7T  12% /workspace

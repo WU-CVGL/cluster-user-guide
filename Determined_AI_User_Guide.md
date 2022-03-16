@@ -53,9 +53,9 @@ description: <your_task_name>
 resources:
     slots: 1
 bind_mounts:
-    - host_path: /home/<user_name>/
+    - host_path: /workspace/<user_name>/
         container_path: /run/determined/workdir/home/
-    - host_path: /data/
+    - host_path: /datasets/
         container_path: /run/determined/workdir/data/
 environment:
     image: determinedai/environments:cuda-11.1-pytorch-1.9-lightning-1.5-tf-2.4-deepspeed-0.5.10-gpu-0.17.12
@@ -63,7 +63,7 @@ environment:
 Notes: 
 - You need to change the task_name and user_name to your own
 - Number of **slots** is the number of GPUs you want to use
-- In **bind_mounts**, the first host_path/container_path maps your home directory into the container work directory; And the second maps the dataset directory (/data) into the container.
+- In **bind_mounts**, the first host_path/container_path maps your workspace directory into the container; And the second maps the dataset directory (/data) into the container.
 
 ## Submit
 
