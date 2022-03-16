@@ -168,9 +168,9 @@ ssh-add ~/.ssh/id_rsa
 
 - Use a different key pair for each computer you want to connect to
 
-- Do not reuse the key pairs for Euler / Leonhard for other systems
+- Do not reuse the key pairs for other systems
 
-- Do not keep open SSH connections in detached screen sessions
+- Do not keep open SSH connections in detached `screen` sessions
 
 - Disable the ForwardAgent option in your SSH configuration and do not use ssh -A (or use ssh -a to disable agent forwarding)
 
