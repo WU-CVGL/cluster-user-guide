@@ -10,7 +10,7 @@ The accounts includes a Linux account on the login node, and an account for the 
 ## Security
 Accessing to the cluster is currently only possible via secure protocols (ssh, scp, rsync). The cluster is only accessible from inside the campus local area network. If you would like to connect from a computer, which is not inside the campus network, then you would need to establish a [VPN](https://vpn.westlake.edu.cn/) connection first.
 
-## Hosts
+## Setting up the hosts file
 Since our cluster is only accesible in the campus LAN, and we do not have the administration of the DNS server, setting up the *hosts* file is the best way to translate human-friendly hostnames into IP addresses.
 
 The way to modify the hosts file is as follows:
@@ -20,15 +20,15 @@ The way to modify the hosts file is as follows:
 - Press `Win-Key + R`. A a small window will pop up.
 
 - Type in the following command and press `Ctrl+Shift+Enter`, to make notepad run as administrator and edit the *hosts* file.
-
-    notepad C:\Windows\System32\drivers\etc\hosts
-
+```
+notepad C:\Windows\System32\drivers\etc\hosts
+```
 ### For Linux, *nix including macOS
 
 - Edit `/etc/hosts` with root privilege in your favourite way. For example:
-
-    sudo vim /etc/hosts
-
+```
+sudo vim /etc/hosts
+```
 ### Hosts Modification
 
 Append these lines to the end of the *hosts* file:
@@ -108,6 +108,7 @@ It is recommended to create SSH keys: Imagine when the network connection is uns
 
 The [links](#ssh-in-windows) above demonstrates methods using GUI. You can also create the keys with CLI:
 
+
 ### SSH keys on Linux
 For security reasons, we recommend that you use a different key pair for every computer you want to connect to:
 ```
@@ -119,13 +120,13 @@ Once this is done, copy the public key to the cluster:
 ```
 ssh-copy-id -i $HOME/.ssh/id_ed25519_cvgl_cluster.pub    username@login.cvgl.lab
 ```
-Finally you can add the private key temporarily so that you don't need to enter passphrase every time (You still need to do this every time after reboot)
+Finally you can add the private key to the ssh-agent temporarily so that you don't need to enter passphrase every time (You still need to do this every time after reboot).
 ```
 ssh-add ~/.ssh/id_ed25519_cvgl_cluster
 ```
 
 ### SSH keys on Windows
-For windows a third party software ([PuTTYgen](https://www.puttygen.com/),[MobaXterm](https://mobaxterm.mobatek.net/)) is commonly used to create SSH keys (demonstrated in the [links above](#ssh-in-windows)).
+For windows a third party software ([PuTTYgen](https://www.puttygen.com/), [MobaXterm](https://mobaxterm.mobatek.net/)) is commonly used to create SSH keys (demonstrated in the [links above](#ssh-in-windows)).
 However since Windows 10, we can also follow the similar steps in powershell:
 - Step 1. On your PC, go to folder:
 ```
@@ -164,9 +165,9 @@ ssh-add ~/.ssh/id_rsa
 
 - Use a different key pair for each computer you want to connect to
 
-- Do not reuse the key pairs for Euler / Leonhard for other systems
+- Do not reuse the key pairs for other systems
 
-- Do not keep open SSH connections in detached screen sessions
+- Do not keep open SSH connections in detached `screen` sessions
 
 - Disable the ForwardAgent option in your SSH configuration and do not use ssh -A (or use ssh -a to disable agent forwarding)
 
