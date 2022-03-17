@@ -68,7 +68,7 @@ The certificate can be downloaded at: [https://cvgl.lab/cvgl.crt](https://cvgl.l
 
 - For Windows, right click the CA certificate file and select 'Install Certificate'. Follow the prompts to add the certificate to the **Trusted Root Certification Authorities**.
 
-- For Linux (tested Ubuntu), first you need the `ca-certificates` package installed, then go to `/usr/local/share/ca-certificates`, copy the .crt file to the new folder, and update certificates system-wide with the command `sudo update-ca-certificates`. This works for most applications, but browsers like google-chrome and chromium on Linux has its own certification storage. You need to go to [chrome://settings/certificates](chrome://settings/certificates), select "Authorities", and import the .crt file.
+- For Linux (tested Ubuntu), first you need the `ca-certificates` package installed, then go to `/usr/local/share/ca-certificates`, copy the .crt file to the new folder, and update certificates system-wide with the command `sudo update-ca-certificates`. This works for most applications, but browsers like google-chrome and chromium on Linux has its own certification storage. You need to go to `chrome://settings/certificates`, select "Authorities", and import the .crt file.
 
 
 ## SSH
