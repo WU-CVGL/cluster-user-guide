@@ -82,7 +82,7 @@ Notes:
     docker tag my_image:latest  registry.cvgl.lab/my_image:latest
     docker push registry.cvgl.lab/my_image:latest
 ```
-and use the image `registry.cvgl.lab/my_image:latest` in the task configuration `.yaml` file.
+and use the image `localhost:5000/my_image:latest` in the task configuration `.yaml` file. (Currently `registry.cvgl.lab` must be replaced with `localhost:5000` in the task configuration.) Also note that every time you update an image, you need to change the image name, otherwise the system will not be able to detect the image update (probably because It only uses the image name as detection, not its checksum).
 
 ## Submit
 
