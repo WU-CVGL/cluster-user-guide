@@ -70,7 +70,7 @@ bind_mounts:
     - host_path: /datasets/
         container_path: /run/determined/workdir/data/
 environment:
-    image: determinedai/environments:cuda-11.1-pytorch-1.9-lightning-1.5-tf-2.4-deepspeed-0.5.10-gpu-0.17.12
+    image: determinedai/environments:cuda-11.3-pytorch-1.10-lightning-1.5-tf-2.8-deepspeed-0.5.10-gpu-0.17.12
 ```
 Notes: 
 - You need to change the task_name and user_name to your own
