@@ -1,5 +1,5 @@
 <h1 align="center">Getting started with the cluster</h1>
-<p align="center">2022-03-15 v0.2</p>
+<p align="center">2022-03-17 v0.2a</p>
 
 - [Requesting accounts](#requesting-accounts)
 - [Accessing the cluster](#accessing-the-cluster)
@@ -18,7 +18,6 @@
     - [Safety rules](#safety-rules)
     - [How to use keys with non-default names](#how-to-use-keys-with-non-default-names)
   - [X11 forwarding and remote desktop](#x11-forwarding-and-remote-desktop)
-    - [X11 over SSH on Linux, *nix including macOS](#x11-over-ssh-on-linux-nix-including-macos)
     - [Remote desktop via RDP](#remote-desktop-via-rdp)
 - [Data management](#data-management)
   - [Introduction](#introduction)
@@ -216,9 +215,7 @@ ssh cluster
 
 Sometimes we need to run GUI applications on the login node. To directly run GUI application in ssh terminal, you must open an SSH tunnel and redirect all X11 communication through that tunnel.
 
-### X11 over SSH on Linux, *nix including macOS
-
-Xorg (X11) is normally installed by default as part of most Linux distributions. For macOS, since X11 is no longer included, you must install [XQuartz](https://www.xquartz.org/). You may need to check out the [trubleshooting section](https://scicomp.ethz.ch/wiki/Accessing_the_clusters#Troubleshooting) authored by ETH.
+Xorg (X11) is normally installed by default as part of most Linux distributions. For Windows, tools such as [vcxsrv](https://sourceforge.net/projects/vcxsrv/) or [x410](https://x410.dev/) can be used. For macOS, since X11 is no longer included, you must install [XQuartz](https://www.xquartz.org/). You may want to check out the [Troubleshooting section](https://scicomp.ethz.ch/wiki/Accessing_the_clusters#Troubleshooting) by ETHZ IT-Services.
 
 
 ### Remote desktop via RDP

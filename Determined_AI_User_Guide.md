@@ -1,7 +1,7 @@
 <h1 align="center">Getting started with the batch system:<br>
 Determined-AI User Guide </h1>
 <p align="center">
-2022-03-10 v0.1
+2022-03-17 v0.1a
 </p>
 
 - [Introduction](#introduction)
@@ -76,6 +76,7 @@ Notes:
 - You need to change the task_name and user_name to your own
 - Number of **slots** is the number of GPUs you want to use
 - In **bind_mounts**, the first host_path/container_path maps your workspace directory into the container; And the second maps the dataset directory (/data) into the container.
+- In `environment.image`, an official image by *Determined AI* is used. *Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency.
 
 ## Submit
 
