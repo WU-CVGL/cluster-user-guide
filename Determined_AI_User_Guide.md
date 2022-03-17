@@ -78,6 +78,7 @@ Notes:
 - In `bind_mounts`, the first host_path/container_path maps your workspace directory into the container; And the second maps the dataset directory (`/datasets`) into the container.
 - In `environment.image`, an official image by *Determined AI* is used. *Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency. Notice that instead of pushing the image to Docker Hub, you can use the private registry: `registry.cvgl.lab`. For instance: 
 ```
+    docker login -u cvgl -p westlake_liu registry.cvgl.lab    # You only need to login once
     docker tag my_image:latest  registry.cvgl.lab/my_image:latest
     docker push registry.cvgl.lab/my_image:latest
 ```
