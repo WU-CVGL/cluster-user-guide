@@ -222,20 +222,49 @@ sudo apt-get -y install `check-language-support -l zh-hans`
 
     vim  /mnt/sda1/docker/nginx/config/nginx/conf.d/default.conf
     ####
+    # top-level http config for websocket headers
+    # If Upgrade is defined, Connection = upgrade
+    # If Upgrade is empty, Connection = close
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        ''      close;
+    }
+
+    server {
+        listen 80;
+        server_name NO_HUB.DOMAIN.TLD;
+
+        # Tell all requests to port 80 to be 302 redirected to HTTPS
+        return 302 https://$host$request_uri;
+    }
+
     server {
         listen       443 ssl;
         server_name  cvgl.lab;
+
+        #access_log  /var/log/nginx/host.access.log  main;
+
         ssl on;
         ssl_certificate /opt/ssl/Server.cer;
         ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
         ssl_session_timeout 5m;
         ssl_protocols TLSv1.2 TLSv1.3;
+
         ssl_ciphers HIGH:!aNULL:!MD5;
         ssl_prefer_server_ciphers on;
 
         location / {
             root   /usr/share/nginx/html;
             index  index.html index.htm;
+        }
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
         }
     }
 
@@ -244,7 +273,7 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         server_name  git.cvgl.lab;
 
         #access_log  /var/log/nginx/host.access.log  main;
-        
+
         ssl on;
         ssl_certificate /opt/ssl/Server.cer;
         ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
@@ -273,7 +302,7 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         server_name  gpu.cvgl.lab;
 
         #access_log  /var/log/nginx/host.access.log  main;
-        
+
         ssl on;
         ssl_certificate /opt/ssl/Server.cer;
         ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
@@ -285,6 +314,75 @@ sudo apt-get -y install `check-language-support -l zh-hans`
 
         location / {
             proxy_pass http://192.168.122.3:8080;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+            # websocket headers
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection $connection_upgrade;
+            proxy_set_header X-Scheme $scheme;
+
+            proxy_buffering off;
+        }
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
+
+    server {
+        listen       443 ssl;
+        server_name  registry.cvgl.lab;
+
+        #access_log  /var/log/nginx/host.access.log  main;
+
+        ssl on;
+        ssl_certificate /opt/ssl/Server.cer;
+        ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
+        ssl_session_timeout 5m;
+        ssl_protocols TLSv1.2 TLSv1.3;
+
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
+
+        location / {
+            proxy_pass http://localhost:5000;
+        }
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
+
+    server {
+        listen       443 ssl;
+        server_name  portainer.cvgl.lab;
+
+        #access_log  /var/log/nginx/host.access.log  main;
+
+        ssl on;
+        ssl_certificate /opt/ssl/Server.cer;
+        ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
+        ssl_session_timeout 5m;
+        ssl_protocols TLSv1.2 TLSv1.3;
+
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
+
+        location / {
+            proxy_pass http://localhost:9000;
         }
 
         #error_page  404              /404.html;
