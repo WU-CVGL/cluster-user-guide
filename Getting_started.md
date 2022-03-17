@@ -68,7 +68,7 @@ The certificate can be downloaded at: [https://cvgl.lab/cvgl.crt](https://cvgl.l
 
 - For Windows, right click the CA certificate file and select 'Install Certificate'. Follow the prompts to add the certificate to the **Trusted Root Certification Authorities**.
 
-- For Linux (tested Ubuntu), first you need the `ca-certificates` package installed, then go to `/usr/local/share/ca-certificates`, copy the .crt file to the new folder, and update certificates system-wide with the command `sudo update-ca-certificates`. This works for most applications, but browsers like google-chrome and chromium on Linux has its own certification storage. You need to go to `chrome://settings/certificates`, select "Authorities", and import the .crt file.
+- For Linux (tested Ubuntu), first you need the `ca-certificates` package installed, then go to `/usr/local/share/ca-certificates`, copy the .crt file to the new folder, and update certificates system-wide with the command `sudo update-ca-certificates`. This works for most applications, but browsers like google-chrome and chromium on Linux has its own certification storage. You need to go to `chrome://settings/certificates`, select "Authorities", and import the .crt file. To use our Docker registry `registry.cvgl.lab`, you need to create the folder `/etc/docker/certs.d/registry.cvgl.lab/` and copy ther certification into it.
 
 
 ## SSH
@@ -261,4 +261,10 @@ By default, other users have read [permissions](https://scicomp.ethz.ch/wiki/Lin
 ## Uploading and downloading data
 
 We can use CLI tools like scp, rsync; or GUI tools like mobaXterm, VSCode, xftp for uploading files from a personal computer to the data storage. Or you can use Baidu Netdisk client (already installed). You can also download datasets directly from the source. It is recommended to use professional download software to download large datasets, such as aria2, motrix (aria2 with GUI), etc.
+
+<details>
+<summary> Click to show image</summary>
+
+![baidu_netdisk](Getting_started/QQ截图20220317001515.png)
+</details>
 

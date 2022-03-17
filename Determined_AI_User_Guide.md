@@ -61,7 +61,7 @@ det user change-password
 
 Here is a template of a task configuration file, in YAML format:
 ```
-description: <your_task_name>
+description: <task_name>
 resources:
     slots: 1
 bind_mounts:
@@ -73,10 +73,15 @@ environment:
     image: determinedai/environments:cuda-11.3-pytorch-1.10-lightning-1.5-tf-2.8-deepspeed-0.5.10-gpu-0.17.12
 ```
 Notes: 
-- You need to change the task_name and user_name to your own
-- Number of **slots** is the number of GPUs you want to use
-- In **bind_mounts**, the first host_path/container_path maps your workspace directory into the container; And the second maps the dataset directory (/data) into the container.
-- In `environment.image`, an official image by *Determined AI* is used. *Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency.
+- You need to change the `task_name` and `user_name` to your own
+- Number of `resources.slots` is the number of GPUs you want to use
+- In `bind_mounts`, the first host_path/container_path maps your workspace directory into the container; And the second maps the dataset directory (`/datasets`) into the container.
+- In `environment.image`, an official image by *Determined AI* is used. *Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency. Notice that instead of pushing the image to Docker Hub, you can use the private registry: `registry.cvgl.lab`. For instance: 
+```
+    docker tag registry.cvgl.lab/my_image:latest my_image:latest
+    docker push registry.cvgl.lab/my_image:latest
+```
+and use the image `registry.cvgl.lab/my_image:latest` in the task configuration `.yaml` file.
 
 ## Submit
 
