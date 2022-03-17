@@ -312,6 +312,12 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         ssl_ciphers HIGH:!aNULL:!MD5;
         ssl_prefer_server_ciphers on;
 
+        # disable any limits to avoid HTTP 413 for large image uploads
+        client_max_body_size 0;
+
+        # required to avoid HTTP 411: see Issue #1486 (https://github.com/moby/moby/issues/1486)
+        chunked_transfer_encoding on;
+
         location / {
             proxy_pass http://192.168.122.3:8080;
             proxy_set_header X-Real-IP $remote_addr;
@@ -337,6 +343,19 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         }
     }
 
+    upstream docker-registry {
+        server localhost:5000;
+    }
+
+    ## Set a variable to help us decide if we need to add the
+    ## 'Docker-Distribution-Api-Version' header.
+    ## The registry always sets this header.
+    ## In the case of nginx performing auth, the header is unset
+    ## since nginx is auth-ing before proxying.
+    map $upstream_http_docker_distribution_api_version $docker_distribution_api_version {
+        '' 'registry/2.0';
+    }
+
     server {
         listen       443 ssl;
         server_name  registry.cvgl.lab;
@@ -346,25 +365,42 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         ssl on;
         ssl_certificate /opt/ssl/Server.cer;
         ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
-        ssl_session_timeout 5m;
+
+        # Recommendations from https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html
         ssl_protocols TLSv1.2 TLSv1.3;
-
-        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
         ssl_prefer_server_ciphers on;
+        ssl_session_cache shared:SSL:10m;
 
-        location / {
-            proxy_pass http://localhost:5000;
-        }
+        # disable any limits to avoid HTTP 413 for large image uploads
+        client_max_body_size 0;
 
-        #error_page  404              /404.html;
+        # required to avoid HTTP 411: see Issue #1486 (https://github.com/moby/moby/issues/1486)
+        chunked_transfer_encoding on;
 
-        # redirect server error pages to the static page /50x.html
-        #
-        error_page   500 502 503 504  /50x.html;
-        location = /50x.html {
-            root   /usr/share/nginx/html;
+
+        location /v2/ {
+            # Do not allow connections from docker 1.5 and earlier
+            # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+            if ($http_user_agent ~ "^(docker\/1\.(3|4|5(?!\.[0-9]-dev))|Go ).*$" ) {
+                return 404;
+            }
+            # To add basic authentication to v2 use auth_basic setting.
+            auth_basic "Registry realm";
+            auth_basic_user_file /etc/nginx/conf.d/nginx.htpasswd;
+            ## If $docker_distribution_api_version is empty, the header is not added.
+            ## See the map directive above where this variable is defined.
+            add_header 'Docker-Distribution-Api-Version' $docker_distribution_api_version always;
+
+            proxy_pass                          http://docker-registry;
+            proxy_set_header  Host              $http_host;   # required for docker client's sake
+            proxy_set_header  X-Real-IP         $remote_addr; # pass on real client's IP
+            proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+            proxy_set_header  X-Forwarded-Proto $scheme;
+            proxy_read_timeout                  900;
         }
     }
+
 
     server {
         listen       443 ssl;
