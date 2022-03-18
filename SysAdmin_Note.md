@@ -232,7 +232,7 @@ sudo apt-get -y install `check-language-support -l zh-hans`
 
     server {
         listen 80;
-        server_name NO_HUB.DOMAIN.TLD;
+        server_name cvgl.lab;
 
         # Tell all requests to port 80 to be 302 redirected to HTTPS
         return 302 https://$host$request_uri;
@@ -284,13 +284,43 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         ssl_prefer_server_ciphers on;
 
         location / {
-            proxy_pass http://localhost:3000;
+            proxy_pass http://127.0.0.1:3000;
         }
 
         #error_page  404              /404.html;
 
         # redirect server error pages to the static page /50x.html
         #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
+
+    server {
+        listen       443 ssl;
+        server_name  pan.cvgl.lab;
+
+        #access_log  /var/log/nginx/host.access.log  main;
+
+        ssl on;
+        ssl_certificate /opt/ssl/Server.cer;
+        ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
+        ssl_session_timeout 5m;
+        ssl_protocols TLSv1.2 TLSv1.3;
+
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
+
+        # disable any limits to avoid HTTP 413 for large image uploads
+        client_max_body_size 0;
+
+        # required to avoid HTTP 411: see Issue #1486 (https://github.com/moby/moby/issues/1486)
+        chunked_transfer_encoding on;
+
+        location / {
+            proxy_pass http://127.0.0.1:4080;
+        }
         error_page   500 502 503 504  /50x.html;
         location = /50x.html {
             root   /usr/share/nginx/html;
@@ -344,7 +374,7 @@ sudo apt-get -y install `check-language-support -l zh-hans`
     }
 
     upstream docker-registry {
-        server localhost:5000;
+        server 127.0.0.1:5000;
     }
 
     ## Set a variable to help us decide if we need to add the
@@ -418,7 +448,7 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         ssl_prefer_server_ciphers on;
 
         location / {
-            proxy_pass http://localhost:9000;
+            proxy_pass http://127.0.0.1:9000;
         }
 
         #error_page  404              /404.html;
