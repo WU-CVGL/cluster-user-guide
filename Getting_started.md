@@ -25,7 +25,13 @@
 
 # Requesting accounts
 
-The accounts includes a Linux account on the login node, and an account for the batch system (Determined AI).
+Accounts that need to be created by the administrator include:
+- A Linux account on the login node ([login.cvgl.lab](login.cvgl.lab))
+- An account for the batch system (Determined AI, [gpu.cvgl.lab](login.cvgl.lab)).
+- A Nextcloud account ([pan.cvgl.lab](login.cvgl.lab))
+
+Accounts that you can create by your self:
+- Gitea account ([git.cvgl.lab](git.cvgl.lab))
 
 # Accessing the cluster
 
