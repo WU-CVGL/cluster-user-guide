@@ -42,7 +42,7 @@ You need to ask system `admin` to get your user account.
 The WebUI will automatically redirect users to a login page if there is no valid Determined session established on that browser. After logging in, the user will be redirected to the URL they initially attempted to access.
 
 ### CLI
-Before using the CLI(Command Line Interface), you may need to recite some basics: [[Basics]](http://10.0.1.67:3000/Cluster_User_Group/cluster-user-guide/wiki/Basics)
+Before using the CLI(Command Line Interface), you may need to recite some basics: [[Basics]](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Getting_started)
 
 In the CLI, the user login subcommand can be used to authenticate a user:
 ```
@@ -66,9 +66,9 @@ resources:
     slots: 1
 bind_mounts:
     - host_path: /workspace/<user_name>/
-        container_path: /run/determined/workdir/home/
+      container_path: /run/determined/workdir/home/
     - host_path: /datasets/
-        container_path: /run/determined/workdir/data/
+      container_path: /run/determined/workdir/data/
 environment:
     image: determinedai/environments:cuda-11.3-pytorch-1.10-lightning-1.5-tf-2.8-deepspeed-0.5.10-gpu-0.17.12
 ```
