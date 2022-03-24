@@ -65,6 +65,7 @@ Append these lines to the end of the *hosts* file:
 10.0.1.67 git.cvgl.lab
 10.0.1.67 gpu.cvgl.lab
 10.0.1.67 pan.cvgl.lab
+10.0.1.67 registry.cvgl.lab
 10.0.1.68 login.cvgl.lab
 ```
 ## Install the root CA certificate (Optional)
