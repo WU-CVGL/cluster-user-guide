@@ -48,10 +48,6 @@ You need to ask system `admin` to get your user account.
 The WebUI will automatically redirect users to a login page if there is no valid Determined session established on that browser. After logging in, the user will be redirected to the URL they initially attempted to access.
 
 ### CLI
-TODO: diagram? provide options: use determined-cli on login node or on PC. If on PC, install determined ai through pypi and set the environment variable.
-
-![Diagram of submitting task](Determined_AI_User_Guide/task-diagram.svg)
-
 Users can also interact with Determined using a command-line interface (CLI). The CLI is distributed as a Python wheel package; once the wheel has been installed, the CLI can be used via the det command.
 
 You can use the CLI either on the login node or on your local development machine.
@@ -75,7 +71,7 @@ det user change-password
 ```
 
 # Submitting Tasks
-
+![Diagram of submitting task](Determined_AI_User_Guide/task-diagram.svg)
 ## Task Configuration Template
 
 Here is a template of a task configuration file, in YAML format:
@@ -85,9 +81,9 @@ resources:
     slots: 1
 bind_mounts:
     - host_path: /workspace/<user_name>/
-        container_path: /run/determined/workdir/home/
+      container_path: /run/determined/workdir/home/
     - host_path: /datasets/
-        container_path: /run/determined/workdir/data/
+      container_path: /run/determined/workdir/data/
 environment:
     image: determinedai/environments:cuda-11.3-pytorch-1.10-lightning-1.5-tf-2.8-deepspeed-0.5.10-gpu-0.17.15
 ```

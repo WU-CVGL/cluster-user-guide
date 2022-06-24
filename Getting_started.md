@@ -28,7 +28,13 @@
 
 # Requesting accounts
 
-The accounts includes a Linux account on the login node, and an account for the batch system (Determined AI).
+Accounts that need to be created by the administrator include:
+- A Linux account on the login node ([login.cvgl.lab](https://login.cvgl.lab/))
+- An account for the batch system (Determined AI, [gpu.cvgl.lab](https://gpu.cvgl.lab/)).
+- A Nextcloud account ([pan.cvgl.lab](https://pan.cvgl.lab/))
+
+Accounts that you can create by your self:
+- Gitea account ([git.cvgl.lab](https://git.cvgl.lab/))
 
 # Accessing the cluster
 
@@ -61,6 +67,8 @@ Append these lines to the end of the *hosts* file:
 10.0.1.67 cvgl.lab
 10.0.1.67 git.cvgl.lab
 10.0.1.67 gpu.cvgl.lab
+10.0.1.67 pan.cvgl.lab
+10.0.1.67 registry.cvgl.lab
 10.0.1.68 login.cvgl.lab
 ```
 ## Install the root CA certificate (Optional)
