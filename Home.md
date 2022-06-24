@@ -13,10 +13,6 @@ Currently we are hosting these services (available after [configuring the `hosts
 Shared Folders:
 
 https://pan.cvgl.lab/s/6P8EyrewEz4G3sm
-(Add copyright/license, ytb-dl command with ffmpeg command)
-yt-dlp.exe -f "bv*+ba/b" -S res,vcodec:h264,h265,acodec:m4a --write-subs --write-auto-subs --sub-langs zh-Hans,en --proxy 127.0.0.1:8889 -N 8 https://www.youtube.com/watch?v=MyrVDUnaqUs
-ffmpeg-normalize (get-item .\*.mp4) -of ./EBU-R128/ -t -16 -tp 0 -c:a aac -b:a 192k -ar 48000
-link,screenshot of potplayer
 
 ## Quick guide
 
