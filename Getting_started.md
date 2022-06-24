@@ -1,5 +1,5 @@
 <h1 align="center">Getting started with the cluster</h1>
-<p align="center">2022-03-17 v0.2a</p>
+<p align="center">2022-06-24 v0.3 alpha</p>
 
 - [Requesting accounts](#requesting-accounts)
 - [Accessing the cluster](#accessing-the-cluster)
@@ -18,10 +18,13 @@
     - [Safety rules](#safety-rules)
     - [How to use keys with non-default names](#how-to-use-keys-with-non-default-names)
   - [X11 forwarding and remote desktop](#x11-forwarding-and-remote-desktop)
+    - [X11 forwarding](#x11-forwarding)
     - [Remote desktop via RDP](#remote-desktop-via-rdp)
 - [Data management](#data-management)
   - [Introduction](#introduction)
   - [Uploading and downloading data](#uploading-and-downloading-data)
+    - [Uploading](#uploading)
+    - [Downloading](#downloading)
 
 # Requesting accounts
 
@@ -76,14 +79,14 @@ You can connect to the cluster via the SSH protocol. For this purpose it is requ
 
 Since we have set up the *hosts* in the [previous section](#hosts), we can use the human-readable hostname to make our connection.
 
-| Hostname | IP Address |
-| :-- | :-- |
-|login.cvgl.lab|10.0.1.68|
+| Hostname | IP Address | Port |
+| :-- | :-- | :-- |
+|login.cvgl.lab|10.0.1.68|22332|
 
 ### SSH in Linux, *nix including macOS
 Open a terminal and use the standard ssh command
 ```
-ssh -p 22332 username@hostname
+ssh -p 22332 username@login.cvgl.lab
 ```
 where **username** is your username and the **hostname** can be found in the table shown above. The parameter `-p 22332` is used to declare the SSH port used on the server. For security, we modified the default port. If for instance user **peter** would like to access the cluster, then the command would be
 
@@ -118,10 +121,11 @@ Since Windows 10, an ssh client is also provided in the operating system, but it
 
 For using MobaXterm, you can either start a local terminal and use the same SSH command as for Linux and Mac OS X, or you can click on the session button, choose SSH and then enter the hostname and username. After clicking on OK, you will be asked to enter your password.
 
-Here is an example about how to use MobaXterm: [How to access the cluster with MobaXterm](https://scicomp.ethz.ch/wiki/How_to_access_the_cluster_with_MobaXterm)
+How to use MobaXterm: [How to access the cluster with MobaXterm - ETHZ](https://scicomp.ethz.ch/wiki/How_to_access_the_cluster_with_MobaXterm) / [Download and setup MobaXterm - CECI](https://support.ceci-hpc.be/doc/_contents/QuickStart/ConnectingToTheClusters/MobaXTerm.html)
 
-Here is an example about how to use PuTTY: [How to access the cluster with PuTTY](https://scicomp.ethz.ch/wiki/How_to_access_the_cluster_with_PuTTY)
+How to use PuTTY: [How to access the cluster with PuTTY - ETHZ](https://scicomp.ethz.ch/wiki/How_to_access_the_cluster_with_PuTTY)
 
+> Alternative option: use WSL/WSL2 [[CECI Doc]](https://support.ceci-hpc.be/doc/_contents/QuickStart/ConnectingToTheClusters/WSL.html)
 
 ### SSH keys
 It is recommended to create SSH keys: Imagine when the network connection is unstable, typing the passwords again and agiain is frustrating. Using SSH Certificates, you will never need to type in the passwords, while it provides more safety, powered by cryptography, it prevents man-in-the-middle attacks, etc.
@@ -154,19 +158,19 @@ mkdir ~/.ssh && cd ~/.ssh
 ```
 - Step 2. Create a public/private key pair:
 ```
-ssh-keygen -t ed25519
+ssh-keygen -t ed25519 -f id_ed25519_cvgl_cluster
 ```
 It's recommended to set a passphrase for the private key for advanced safety.
 
 - Step 3. The program `ssh-copy-id` is not available so we manually copy the public key:
 ```
-cat ~/.ssh/id_ed25519.pub
+notepad ~/.ssh/id_ed25519_cvgl_cluster.pub
 ```
-(Copy above)
+(Copy)
 
 - Step 4. On remote Server, create and edit file, paste the public key into it:
 ```
-mkdir ~/.ssh && vim ~/.ssh/authorized_hosts
+mkdir ~/.ssh && vim ~/.ssh/authorized_keys
 ```
 (Paste to above and Save)
 
@@ -205,11 +209,18 @@ Host cluster
     User            username
     IdentityFile    ~/.ssh/id_ed25519_cvgl_cluster
 ```
+
+For windows, you need to use back slash:
+
+IdentityFile    ~\\.ssh\\id_ed25519_cvgl_cluster
+
 Then your ssh command simplifies as follows:
 ```
 ssh cluster
 ```
 ## X11 forwarding and remote desktop
+
+### X11 forwarding
 
 Sometimes we need to run GUI applications on the login node. To directly run GUI application in ssh terminal, you must open an SSH tunnel and redirect all X11 communication through that tunnel.
 
@@ -223,10 +234,14 @@ On Linux, it's recommended to install Remmina and remmina-plugin-rdp.
 
 Using the RDP Clients is simple. Following the prompts, type in the server address, user name, password, set the screen resolution and color depth you want.
 
-For security, we changed the default RDP port from 3389 to 23389. So the server address becomes:
+For security, RDP is only allowed from SSH tunnel, and the default RDP port is also changed from 3389 to 23389. One can create the SSH tunnel and forward RDP connection to localhost:23389 by
+
 ```
-login.cvgl.lab:23389
+ssh -p 22332 -NL 23389:localhost:23389 username@login.cvgl.lab
 ```
+
+Then connect to `localhost:23389` using `mstsc.exe` or Remote Desktop App from [Microsoft Store](https://apps.microsoft.com/store/detail/microsoft-remote-desktop/9WZDNCRFJ3PS)
+
 <details>
 <summary> Click to show image</summary>
 
@@ -238,6 +253,8 @@ login.cvgl.lab:23389
 # Data management
 
 ## Introduction
+
+![Storage Model](Getting_started/storage_model.svg)
 
 We are currently using NFS to share filesystems between cluster nodes. The storage space of the login node is small (about 100GB), so it is recommended to store code and data in NFS shared folders: `/dataset` for datasets and `/workspace` for workspaces. The two NFS folders are allocated on two different SSDs, each with a capacity of 2TB.
 
@@ -260,7 +277,32 @@ By default, other users have read [permissions](https://scicomp.ethz.ch/wiki/Lin
 
 ## Uploading and downloading data
 
-We can use CLI tools like scp, rsync; or GUI tools like mobaXterm, VSCode, xftp for uploading files from a personal computer to the data storage. Or you can use Baidu Netdisk client (already installed). You can also download datasets directly from the source. It is recommended to use professional download software to download large datasets, such as aria2, motrix (aria2 with GUI), etc.
+### Uploading
+
+When you transfer data from your personal computer to a storage server, it's called an upload.
+We can use CLI tools like scp, rsync; or GUI tools like mobaXterm, FinalShell, VSCode, xftp, SSHFS for uploading files from a personal computer to the data storage.
+
+Here is an example of using FinalShell:
+
+<details>
+<summary> Click to show image</summary>
+
+![FinalShell](Getting_started/QQ截图20220624200336.png)
+</details>
+
+Here is an example of using SSHFS-win:
+
+<details>
+<summary> Click to show image</summary>
+
+![FinalShell](Getting_started/QQ截图20220624203058.png)
+</details>
+
+### Downloading
+When you get data from a service provider such as Baidu Netdisk, Google Drive, Microsoft Onedrive, Amazon S3, etc., it's called a download. For example, you can use Baidu Netdisk client (already installed). 
+You can also download datasets directly from the source. It is recommended to use professional download software to download large datasets, such as aria2, motrix (aria2 with GUI), etc.
+
+Here is an example of using Baidu Netdisk:
 
 <details>
 <summary> Click to show image</summary>

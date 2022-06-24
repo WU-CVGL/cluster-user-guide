@@ -1,7 +1,7 @@
 <h1 align="center">Getting started with the batch system:<br>
 Determined-AI User Guide </h1>
 <p align="center">
-2022-03-17 v0.1a
+2022-06-24 v0.3 alpha
 </p>
 
 - [Introduction](#introduction)
@@ -20,13 +20,19 @@ Determined-AI User Guide </h1>
 
 # Introduction
 
-!["intro-determined-ai"](https://docs.determined.ai/latest/_static/images/logo-determined-ai.svg)
+!["intro-determined-ai"](Determined_AI_User_Guide/logo-determined-ai.svg)
 
 We are currently using [Determined AI](https://www.determined.ai/) to manage our GPU Cluster.
 
 You can open the dashboard (a.k.a WebUI) by the following URL and login:
 
 [https://gpu.cvgl.lab/](https://gpu.cvgl.lab/)
+
+Determined is a successful (aquired by Hewlett Packard Enterprise in 2021) open-source deep learning training platform that helps researchers train models more quickly, easily share GPU resources, and collaborate more effectively. [1](https://developer.hpe.com/blog/deep-learning-model-training-%E2%80%93-a-first-time-user%E2%80%99s-experience-with-determined-part-1/)
+
+Its architecture is shown below:
+
+![System Architecture](Determined_AI_User_Guide/detai-high-levl-architecture-thumbnail-v2.png)
 
 
 # User Account
@@ -42,7 +48,20 @@ You need to ask system `admin` to get your user account.
 The WebUI will automatically redirect users to a login page if there is no valid Determined session established on that browser. After logging in, the user will be redirected to the URL they initially attempted to access.
 
 ### CLI
-Before using the CLI(Command Line Interface), you may need to recite some basics: [[Basics]](http://10.0.1.67:3000/Cluster_User_Group/cluster-user-guide/wiki/Basics)
+TODO: diagram? provide options: use determined-cli on login node or on PC. If on PC, install determined ai through pypi and set the environment variable.
+
+![Diagram of submitting task](Determined_AI_User_Guide/task-diagram.svg)
+
+Users can also interact with Determined using a command-line interface (CLI). The CLI is distributed as a Python wheel package; once the wheel has been installed, the CLI can be used via the det command.
+
+You can use the CLI either on the login node or on your local development machine.
+The CLI can be installed via pip:
+
+> Note that determined>=0.18.0 does not show the port number when using command `det shell show_ssh_command`, though this works well with ssh, Visual Studio Code etc., but PyCharm must have this port number. If you uses PyCharm and want to use its remote development on the cluster, you should use version 0.17.x.
+
+```
+pip install determined==0.17.15
+```
 
 In the CLI, the user login subcommand can be used to authenticate a user:
 ```
@@ -70,7 +89,7 @@ bind_mounts:
     - host_path: /datasets/
         container_path: /run/determined/workdir/data/
 environment:
-    image: determinedai/environments:cuda-11.3-pytorch-1.10-lightning-1.5-tf-2.8-deepspeed-0.5.10-gpu-0.17.12
+    image: determinedai/environments:cuda-11.3-pytorch-1.10-lightning-1.5-tf-2.8-deepspeed-0.5.10-gpu-0.17.15
 ```
 Notes: 
 - You need to change the `task_name` and `user_name` to your own
@@ -86,7 +105,7 @@ and use the image `localhost:5000/my_image:latest` in the task configuration `.y
 
 ## Submit
 
-Save the YAML configuration to, let's say, `test_task.yaml`. You can start a Jupyter Notebook (Lab) environment or a simple shell environment. A notebook is a web interface thus more user-friendly. However, you can use **Visual Studio Code** or **PyCharm** and connect to a shell environment[[3]](https://docs.determined.ai/latest/features/commands-and-shells.html#visual-studio-code), which brings more flexibility and productivity if you are familiar with these editors.
+Save the YAML configuration to, let's say, `test_task.yaml`. You can start a Jupyter Notebook (Lab) environment or a simple shell environment. A notebook is a web interface thus more user-friendly. However, you can use **Visual Studio Code** or **PyCharm** and connect to a shell environment[[3]](https://gpu.cvgl.lab/docs/features/commands-and-shells.html#ide-integration), which brings more flexibility and productivity if you are familiar with these editors.
 
 For notebook:
 ```
@@ -110,7 +129,7 @@ You can manage the tasks on the WebUI.
 
 (TODO)
 
-![experiments](https://gpu.cvgl.lab/docs/_images/hp_experiment_page@2x.jpg)
+![experiments](https://gpu.cvgl.lab/docs/_images/adaptive-asha-experiment-detail.png)
 
 
 ## References
