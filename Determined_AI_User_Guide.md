@@ -89,7 +89,7 @@ environment:
 ```
 Notes: 
 - You need to change the `task_name` and `user_name` to your own
-- Number of `resources.slots` is the number of GPUs you want to use
+- Number of `resources.slots` is the number of GPUs you want to use, which is set to `1` here
 - In `bind_mounts`, the first host_path/container_path maps your workspace directory into the container; And the second maps the dataset directory (`/datasets`) into the container.
 - In `environment.image`, an official image by *Determined AI* is used. *Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency. Notice that instead of pushing the image to Docker Hub, you can use the private registry: `registry.cvgl.lab`. For instance: 
 ```
@@ -98,6 +98,10 @@ Notes:
     docker push registry.cvgl.lab/my_image:latest
 ```
 and use the image `localhost:5000/my_image:latest` in the task configuration `.yaml` file. (Currently `registry.cvgl.lab` must be replaced with `localhost:5000` in the task configuration.) Also note that every time you update an image, you need to change the image name, otherwise the system will not be able to detect the image update (probably because It only uses the image name as detection, not its checksum).
+
+How `bind_mounts` works:
+ 
+![Storage Model](Getting_started/storage_model.svg)
 
 ## Submit
 
