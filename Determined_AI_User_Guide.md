@@ -118,7 +118,7 @@ Now you can see your task pending/running on the WebUI dashboard.
 
 You can manage the tasks on the WebUI.
 
-![recent-tasks](https://gpu.cvgl.lab/docs/_images/pytorch_dashboard@2x.jpg)
+![recent-tasks](https://gpu.cvgl.lab/docs/_images/qs01b.png)
 
 
 ## Experiments
