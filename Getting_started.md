@@ -1,5 +1,5 @@
 <h1 align="center">Getting started with the cluster</h1>
-<p align="center">2022-06-24 v0.3 alpha</p>
+<p align="center">2022-06-27 v0.3.1 alpha</p>
 
 - [Requesting accounts](#requesting-accounts)
 - [Accessing the cluster](#accessing-the-cluster)
@@ -64,11 +64,11 @@ sudo vim /etc/hosts
 
 Append these lines to the end of the *hosts* file:
 ```
-10.0.1.67 cvgl.lab
-10.0.1.67 git.cvgl.lab
-10.0.1.67 gpu.cvgl.lab
-10.0.1.67 pan.cvgl.lab
-10.0.1.67 registry.cvgl.lab
+10.0.1.68 cvgl.lab
+10.0.1.68 git.cvgl.lab
+10.0.1.68 gpu.cvgl.lab
+10.0.1.68 pan.cvgl.lab
+10.0.1.68 registry.cvgl.lab
 10.0.1.68 login.cvgl.lab
 ```
 ## Install the root CA certificate (Optional)
