@@ -1,5 +1,5 @@
 <h1 align="center">SysAdmin's Note</h1>
-<p align="center">2022-03-15 v0.2</p>
+<p align="center">2022-06-27 v0.3.1 alpha</p>
 
 - [Topology](#topology)
 - [Networking](#networking)
@@ -12,6 +12,8 @@
 # Topology
 
 The cluster currently has one physical server, with Ubuntu 20.04 & QEMU-KVM installed. Two VMs are created on the host: a login node & a Determined AI Master node. The host is also a Determined AI Agent node. Nginx, Gitea, and other Web-based services are deployed by Docker on the host.
+
+Add temporary nginx container on login node for visiting student - will replace with traefik in the future.
 
 # Networking
 
@@ -111,14 +113,21 @@ Two VMs are connected to the host by NAT-bridge, and connected to the campus net
     # On Node01
     To                         Action      From
     --                         ------      ----
-    222                        ALLOW       Anywhere       # Gitea SSH
-    443                        ALLOW       Anywhere       # nginx
-    2049                       ALLOW       10.0.1.64/27   # NFS
-    3000                       ALLOW       Anywhere       # Gitea HTTP
-    8080                       ALLOW       10.0.1.64/27   # Determined intra-cluster (inter-node)
-    22332                      ALLOW       Anywhere       # SSH
-    23389                      ALLOW       Anywhere       # RDP
-
+    80                         ALLOW       Anywhere         # HTTP (auto jump to https 443)
+    222                        ALLOW       Anywhere         # Gitea SSH
+    443                        ALLOW       Anywhere         # nginx
+    1089                       ALLOW       192.168.122.0/24 # SOCKS5 proxy for VMs
+    2049                       ALLOW       10.0.1.64/27     # NFS
+    2049                       ALLOW       192.168.122.0/24 # NFS for VMs
+    3000                       ALLOW       Anywhere         # Gitea HTTP
+    4080                       ALLOW       192.168.122.0/24 # Nextcloud
+    5000                       ALLOW       Anywhere         # Docker registry
+    8080                       ALLOW       10.0.1.64/27     # Determined intra-cluster (inter-node)
+    8889                       ALLOW       192.168.122.0/24 # HTTP Proxy for for VMs
+    8889 on docker0            ALLOW       Anywhere         # HTTP Proxy for docker containers
+    9090                       ALLOW       Anywhere         # (?)
+    22332                      ALLOW       Anywhere         # SSH
+    23389                      ALLOW       Anywhere         # RDP
 
 # NFS
     # On Node01 as NFS server
@@ -220,7 +229,52 @@ sudo apt-get -y install `check-language-support -l zh-hans`
     openssl rsa -in Server.pvk -out Server-unsecure.pvk
 
 
-    vim  /mnt/sda1/docker/nginx/config/nginx/conf.d/default.conf
+    vim /opt/nginx/config/nginx/nginx.conf
+    ###
+    user  nginx;
+    worker_processes  auto;
+
+    error_log  /var/log/nginx/error.log notice;
+    pid        /var/run/nginx.pid;
+
+
+    events {
+        worker_connections  1024;
+    }
+
+
+    http {
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+
+        log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent" "$http_x_forwarded_for"';
+
+        access_log  /var/log/nginx/access.log  main;
+
+        sendfile        on;
+        #tcp_nopush     on;
+
+        keepalive_timeout  65;
+
+        #gzip  on;
+
+        include /etc/nginx/conf.d/*.conf;
+    }
+
+    stream {
+        upstream gitea_ssh {
+            server 192.168.122.1:222;
+        }
+        server {
+            listen 222;
+            proxy_pass gitea_ssh;
+        }
+    }
+    ###
+
+    vim  /opt/nginx/config/nginx/conf.d/default.conf
     ####
     # top-level http config for websocket headers
     # If Upgrade is defined, Connection = upgrade
@@ -243,8 +297,6 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         server_name  cvgl.lab;
 
         #access_log  /var/log/nginx/host.access.log  main;
-
-        ssl on;
         ssl_certificate /opt/ssl/Server.cer;
         ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
         ssl_session_timeout 5m;
@@ -273,8 +325,6 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         server_name  git.cvgl.lab;
 
         #access_log  /var/log/nginx/host.access.log  main;
-
-        ssl on;
         ssl_certificate /opt/ssl/Server.cer;
         ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
         ssl_session_timeout 5m;
@@ -284,7 +334,7 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         ssl_prefer_server_ciphers on;
 
         location / {
-            proxy_pass http://127.0.0.1:3000;
+            proxy_pass http://192.168.122.1:3000;
         }
 
         #error_page  404              /404.html;
@@ -302,8 +352,6 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         server_name  pan.cvgl.lab;
 
         #access_log  /var/log/nginx/host.access.log  main;
-
-        ssl on;
         ssl_certificate /opt/ssl/Server.cer;
         ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
         ssl_session_timeout 5m;
@@ -319,7 +367,7 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         chunked_transfer_encoding on;
 
         location / {
-            proxy_pass http://127.0.0.1:4080;
+            proxy_pass http://192.168.122.1:4080;
         }
         error_page   500 502 503 504  /50x.html;
         location = /50x.html {
@@ -332,8 +380,6 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         server_name  gpu.cvgl.lab;
 
         #access_log  /var/log/nginx/host.access.log  main;
-
-        ssl on;
         ssl_certificate /opt/ssl/Server.cer;
         ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
         ssl_session_timeout 5m;
@@ -374,7 +420,7 @@ sudo apt-get -y install `check-language-support -l zh-hans`
     }
 
     upstream docker-registry {
-        server 127.0.0.1:5000;
+        server 192.168.122.1:5000;
     }
 
     ## Set a variable to help us decide if we need to add the
@@ -391,8 +437,6 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         server_name  registry.cvgl.lab;
 
         #access_log  /var/log/nginx/host.access.log  main;
-
-        ssl on;
         ssl_certificate /opt/ssl/Server.cer;
         ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
 
@@ -437,7 +481,6 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         server_name  portainer.cvgl.lab;
 
         #access_log  /var/log/nginx/host.access.log  main;
-
         ssl on;
         ssl_certificate /opt/ssl/Server.cer;
         ssl_certificate_key /opt/ssl/Server-unsecure.pvk;
@@ -448,7 +491,7 @@ sudo apt-get -y install `check-language-support -l zh-hans`
         ssl_prefer_server_ciphers on;
 
         location / {
-            proxy_pass http://127.0.0.1:9000;
+            proxy_pass http://192.168.122.1:9000;
         }
 
         #error_page  404              /404.html;
