@@ -74,7 +74,7 @@ In the third line, push your new tagged image.
 
 # Use the custom image
 
-In the Determined AI configuration `.yaml` file, use the newly tagged image (like `harbor.cvgl.lab/library/my_image:v1.0` above) to tell the system to use your new image. Also note that every time you update an image, you need to change the image name, otherwise the system will not be able to detect the image update (probably because it only uses the image name as detection, not its checksum).
+In the Determined AI configuration `.yaml` file (as mentioned in [the previous tutorial](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Determined_AI_User_Guide#task-configuration-template)), use the newly tagged image (like `harbor.cvgl.lab/library/my_image:v1.0` above) to tell the system to use your new image as the task environment. Also note that every time you update an image, you need to change the image name, otherwise the system will not be able to detect the image update (probably because it only uses the image name as detection, not its checksum).
 
 
 # Advanced: build image from scratch
