@@ -1,5 +1,5 @@
 <h1 align="center">SysAdmin's Note</h1>
-<p align="center">2022-06-27 v0.3.1 alpha</p>
+<p align="center">2022-10-21 v0.4 alpha</p>
 
 - [Topology](#topology)
 - [Networking](#networking)

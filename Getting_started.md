@@ -62,12 +62,13 @@ sudo vim /etc/hosts
 
 Append these lines to the end of the *hosts* file:
 ```
+10.0.1.67 login.cvgl.lab
 10.0.1.68 cvgl.lab
 10.0.1.68 git.cvgl.lab
 10.0.1.68 gpu.cvgl.lab
 10.0.1.68 pan.cvgl.lab
-10.0.1.68 registry.cvgl.lab
-10.0.1.68 login.cvgl.lab
+10.0.1.68 harbor.cvgl.lab
+10.0.1.68 grafana.cvgl.lab
 ```
 ## Install the root CA certificate (Optional)
 
@@ -87,7 +88,7 @@ Since we have set up the *hosts* in the [previous section](#hosts), we can use t
 
 | Hostname | IP Address | Port |
 | :-- | :-- | :-- |
-|login.cvgl.lab|10.0.1.68|22332|
+|login.cvgl.lab|10.0.1.67|22332|
 
 ### SSH in Linux, *nix including macOS
 Open a terminal and use the standard ssh command
@@ -109,7 +110,7 @@ where **username** is your username and the **hostname** can be found in the tab
     System load:  0.0                 Users logged in:          1
     Usage of /:   28.0% of 125.49GB   IPv4 address for docker0: 172.17.0.1
     Memory usage: 6%                  IPv4 address for enp1s0:  192.168.122.2
-    Swap usage:   0%                  IPv4 address for enp6s0:  10.0.1.68
+    Swap usage:   0%                  IPv4 address for enp6s0:  10.0.1.67
     Processes:    278
 
     0 updates can be applied immediately.
@@ -262,24 +263,20 @@ Then connect to `localhost:23389` using `mstsc.exe` or Remote Desktop App from [
 
 ![Storage Model](Getting_started/storage_model.svg)
 
-We are currently using NFS to share filesystems between cluster nodes. The storage space of the login node is small (about 100GB), so it is recommended to store code and data in NFS shared folders: `/dataset` for datasets and `/workspace` for workspaces. The two NFS folders are allocated on two different SSDs, each with a capacity of 2TB.
+We are currently using NFS to share filesystems between cluster nodes. The storage space of the login node is small (about 100GB), so it is recommended to store code and data in NFS shared folders: `/dataset` for datasets and `/workspace` for workspaces. The two NFS folders are allocated on the storage server, currently offers a capacity of 143TB, with data redundancy and snapshot backuping powered by TrueNAS ZFS.
 
 We can check the file systems with command `df -H`:
 
     peter@login.cvgl.lab: ~ $ df -H
 
-    Filesystem                Size  Used Avail Use% Mounted on
-    /dev/vda2                 135G   40G   89G  31% /
-    192.168.122.1:/datasets   2.0T  217G  1.7T  12% /datasets
-    192.168.122.1:/workspace  2.0T  217G  1.7T  12% /workspace
+    Filesystem                                  Size  Used Avail Use% Mounted on
+    /dev/nvme0n1p2                              138G   25G  113G  19% /
+    nas.cvgl.lab:/mnt/Peter/Datasets            143T  4.2T  139T   3% /datasets
+    nas.cvgl.lab:/mnt/Peter/Workspace/wangpeng  8.8T  136G  8.7T   2% /workspace/wangpeng
 
-We can create your own folder under workspace:
+You need to ask the system admin to create your workspace folder `/workspace/<username>`.
 
-    mkdir /workspace/<username>
-
-By default, other users have read [permissions](https://scicomp.ethz.ch/wiki/Linux_permissions) on your folder. We can also make it private:
-
-    chmod 700 /workspace/<username>
+By default, other users do not have either read or write [permissions](https://scicomp.ethz.ch/wiki/Linux_permissions) on your folder.
 
 ## Uploading and downloading data
 

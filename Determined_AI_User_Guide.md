@@ -1,7 +1,7 @@
 <h1 align="center">Getting started with the batch system:<br>
 Determined-AI User Guide </h1>
 <p align="center">
-2022-06-24 v0.3 alpha
+2022-10-21 v0.4 alpha
 </p>
 
 - [Introduction](#introduction)
@@ -91,15 +91,8 @@ Notes:
 - You need to change the `task_name` and `user_name` to your own
 - Number of `resources.slots` is the number of GPUs you want to use, which is set to `1` here
 - In `bind_mounts`, the first host_path/container_path maps your workspace directory into the container; And the second maps the dataset directory (`/datasets`) into the container.
-- In `environment.image`, an official image by *Determined AI* is used. *Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency. Notice that instead of pushing the image to Docker Hub, you can use the private registry: `registry.cvgl.lab`. For instance: 
-```
-    docker login -u cvgl -p westlake_liu registry.cvgl.lab    # You only need to login once
-    docker tag my_image:latest  registry.cvgl.lab/my_image:latest
-    docker push registry.cvgl.lab/my_image:latest
-```
-and use the image `localhost:5000/my_image:latest` in the task configuration `.yaml` file. (Currently `registry.cvgl.lab` must be replaced with `localhost:5000` in the task configuration.) Also note that every time you update an image, you need to change the image name, otherwise the system will not be able to detect the image update (probably because It only uses the image name as detection, not its checksum).
-
-How `bind_mounts` works:
+- In `environment.image`, an official image by *Determined AI* is used. *Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency, which will be discussed in this tutorial: [Custom Containerized Environment](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Custom_Containerized_Environment)
+- How `bind_mounts` works:
  
 ![Storage Model](Getting_started/storage_model.svg)
 
