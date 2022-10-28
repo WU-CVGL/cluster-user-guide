@@ -10,6 +10,10 @@ Currently we are hosting these services (available after [configuring the `hosts
 
 [Nextcloud - File storage and sharing](https://pan.cvgl.lab/)
 
+[Harbor - Container registry for GPU cluster](https://harbor.cvgl.lab/)
+
+[Grafana - Statistics and visualization](https://grafana.cvgl.lab/)
+
 Shared Folders:
 
 https://pan.cvgl.lab/s/6P8EyrewEz4G3sm
