@@ -6,7 +6,9 @@ with Docker and Harbor </h1>
 
 # For Beginners: build FROM a base image
 
-*Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency. For beginners, it is recommended that custom images use one of the official Determined images as a base image, using the `FROM` instruction. Here is an example: Suppose you have `environment.yaml` for creating the `conda` environment, `pip_requirements.txt` for `pip` requirements and some `apt` packages that needs to be installed. Put these files in a folder, and create a `Dockerfile` with the following contents:
+*Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency. For beginners, it is recommended that custom images use one of the official Determined images as a base image, using the `FROM` instruction.
+
+Here is an example: Suppose you have `environment.yaml` for creating the `conda` environment, `pip_requirements.txt` for `pip` requirements and some `apt` packages that needs to be installed. Put these files in a folder, and create a `Dockerfile` with the following contents:
 
 ```
 # Determined Image
