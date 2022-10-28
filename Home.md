@@ -20,8 +20,6 @@ https://pan.cvgl.lab/s/6P8EyrewEz4G3sm
 
 ## Quick guide
 
-[Tutorials Overview](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Tutorials)
-
 [Getting Started](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Getting_started)
 
 [Determined-AI User Guide](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Determined_AI_User_Guide)
