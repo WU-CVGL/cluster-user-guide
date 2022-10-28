@@ -79,4 +79,5 @@ In the Determined AI configuration `.yaml` file (as mentioned in [the previous t
 
 # Advanced: build image from scratch
 
-Technically, we will be building FROM an NVIDIA's base image... (TBA)
+Technically, we will be building FROM an NVIDIA's base image, which is based on an Ubuntu image. You can use the minimum template we provide: [click here](https://git.cvgl.lab/Cluster_User_Group/envs/src/branch/master/determined-minimum)
+
