@@ -35,7 +35,7 @@ RUN eval "$(conda shell.bash hook)" && \
 ```
 
 Here is another example:
-`https://git.cvgl.lab/Cluster_User_Group/envs/src/branch/master/lietorch-opencv`
+https://git.cvgl.lab/Cluster_User_Group/envs/src/branch/master/lietorch-opencv
 
 Notice that we are using the `apt` mirror by `ustc.edu.cn` and the `pip` mirror by `bfsu.edu.cn`. They are currently fast and thus recommended by the system admin.
 
