@@ -10,7 +10,7 @@ with Docker and Harbor </h1>
 
 Here is an example: Suppose you have `environment.yaml` for creating the `conda` environment, `pip_requirements.txt` for `pip` requirements and some `apt` packages that needs to be installed. Put these files in a folder, and create a `Dockerfile` with the following contents:
 
-```
+```Dockerfile
 # Determined Image
 FROM determinedai/environments:cuda-11.3-pytorch-1.10-tf-2.8-gpu-0.19.4
 # Some important environment variables in Dockerfile
@@ -44,7 +44,7 @@ Notice that we are using the `apt` mirror by `ustc.edu.cn` and the `pip` mirror 
 
 To build the image, use the following command:
 
-```
+```bash
 docker build -t my_image:v1.0 .
 ```
 
@@ -52,10 +52,11 @@ where `my_image` is your image name, and `v1.0` is the image tag that usually co
 
 if the Dockerfile building process needs international internet access, you can add build arguements to use the public proxy services:
 
-```
+```bash
 docker build -t my_image:v1.0 --build-arg http_proxy=http://192.168.233.8:8889 --build-arg https_proxy=http://192.168.233.8:8889 .
 ```
-The status of our public proxies can be monitored here: [Grafana - vray-dashboard](https://grafana.cvgl.lab/d/CCSvIIEZz/v2ray-dashboard)
+
+The status of our public proxies can be monitored here: [Grafana - v2ray-dashboard](https://grafana.cvgl.lab/d/CCSvIIEZz/v2ray-dashboard)
 
 # Upload the custom image
 
@@ -63,10 +64,11 @@ Instead of pushing the image to Docker Hub (which will be very slow because of t
 
 You need to ask the system admin to create your Harbor user account. Once you have logged in, you can check out the [public library](https://harbor.cvgl.lab/harbor/projects/1/repositories):
 
-![Harbor library](Custom_Containerized_Environment/harbor-library.png)
+<img src="./Custom_Containerized_Environment/harbor-library.png" alt="Harbor library" style="width:40vw;"/>
 
-You can create docker images on the login node or on your own PC following the instructions above, and then push it to the Harbor registry. For instance: 
-```
+You can create docker images on the login node or on your own PC following the instructions above, and then push it to the Harbor registry. For instance:
+
+```bash
     docker login -u <username> -p <password> harbor.cvgl.lab    # You only need to login once
     docker tag my_image:v1.0  harbor.cvgl.lab/library/my_image:v1.0
     docker push harbor.cvgl.lab/library/my_image:v1.0
@@ -80,10 +82,8 @@ In the third line, push your new tagged image.
 
 # Use the custom image
 
-In the Determined AI configuration `.yaml` file (as mentioned in [the previous tutorial](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Determined_AI_User_Guide#task-configuration-template)), use the newly tagged image (like `harbor.cvgl.lab/library/my_image:v1.0` above) to tell the system to use your new image as the task environment. Also note that every time you update an image, you need to change the image name, otherwise the system will not be able to detect the image update (probably because it only uses the image name as detection, not its checksum).
-
+In the Determined AI configuration `.yaml` file (as mentioned in [the previous tutorial](./Determined_AI_User_Guide.md#task-configuration-template)), use the newly tagged image (like `harbor.cvgl.lab/library/my_image:v1.0` above) to tell the system to use your new image as the task environment. Also note that every time you update an image, you need to change the image name, otherwise the system will not be able to detect the image update (probably because it only uses the image name as detection, not its checksum).
 
 # Advanced: build image from scratch
 
-Technically, we will be building FROM an NVIDIA's base image, which is based on an Ubuntu image. You can use the minimum template we provide: [click here](https://git.cvgl.lab/Cluster_User_Group/envs/src/branch/master/determined-minimum)
-
+Technically, we will be building FROM an NVIDIA's base image, which is based on an Ubuntu image. You can use the minimum template we provide: [here](https://git.cvgl.lab/Cluster_User_Group/envs/src/branch/master/determined-minimum)

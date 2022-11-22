@@ -34,20 +34,20 @@ Its architecture is shown below:
 
 ![System Architecture](Determined_AI_User_Guide/detai-high-levl-architecture-thumbnail-v2.png)
 
-
 # User Account
 
 ## Ask for your account
 
 You need to ask system `admin` to get your user account. 
 
-
 ## Authentication
 
 ### WebUI
+
 The WebUI will automatically redirect users to a login page if there is no valid Determined session established on that browser. After logging in, the user will be redirected to the URL they initially attempted to access.
 
 ### CLI
+
 Users can also interact with Determined using a command-line interface (CLI). The CLI is distributed as a Python wheel package; once the wheel has been installed, the CLI can be used via the det command.
 
 You can use the CLI either on the login node or on your local development machine.
@@ -55,27 +55,33 @@ The CLI can be installed via pip:
 
 > Note that determined>=0.18.0 does not show the port number when using command `det shell show_ssh_command`, though this works well with ssh, Visual Studio Code etc., but PyCharm must have this port number. If you uses PyCharm and want to use its remote development on the cluster, you should use version 0.17.x.
 
-```
+```bash
 pip install determined==0.17.15
 ```
 
 In the CLI, the user login subcommand can be used to authenticate a user:
-```
+
+```bash
 det user login <username>
 ```
 
 ## Changing passwords
+
 Users have *blank* passwords by default. If desired, a user can change their own password using the user change-password subcommand:
-```
+
+```bash
 det user change-password
 ```
 
 # Submitting Tasks
+
 ![Diagram of submitting task](Determined_AI_User_Guide/task-diagram.svg)
+
 ## Task Configuration Template
 
 Here is a template of a task configuration file, in YAML format:
-```
+
+```yaml
 description: <task_name>
 resources:
     slots: 1
@@ -87,13 +93,15 @@ bind_mounts:
 environment:
     image: determinedai/environments:cuda-11.3-pytorch-1.10-lightning-1.5-tf-2.8-deepspeed-0.5.10-gpu-0.18.2
 ```
-Notes: 
+
+Notes:
+
 - You need to change the `task_name` and `user_name` to your own
 - Number of `resources.slots` is the number of GPUs you want to use, which is set to `1` here
 - In `bind_mounts`, the first host_path/container_path maps your workspace directory into the container; And the second maps the dataset directory (`/datasets`) into the container.
-- In `environment.image`, an official image by *Determined AI* is used. *Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency, which will be discussed in this tutorial: [Custom Containerized Environment](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Custom_Containerized_Environment)
+- In `environment.image`, an official image by *Determined AI* is used. *Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency, which will be discussed in this tutorial: [Custom Containerized Environment](./Custom_Containerized_Environment.md)
 - How `bind_mounts` works:
- 
+
 ![Storage Model](Getting_started/storage_model.svg)
 
 ## Submit
@@ -101,13 +109,17 @@ Notes:
 Save the YAML configuration to, let's say, `test_task.yaml`. You can start a Jupyter Notebook (Lab) environment or a simple shell environment. A notebook is a web interface thus more user-friendly. However, you can use **Visual Studio Code** or **PyCharm** and connect to a shell environment[[3]](https://gpu.cvgl.lab/docs/features/commands-and-shells.html#ide-integration), which brings more flexibility and productivity if you are familiar with these editors.
 
 For notebook:
-```
+
+```bash
     det notebook start --config-file test_task.yaml
 ```
+
 For shell:
-```
+
+```bash
     det shell start --config-file test_task.yaml
 ```
+
 Now you can see your task pending/running on the WebUI dashboard.
 ![tasks](https://docs.determined.ai/latest/_images/task-list@2x.jpg)
 
@@ -117,14 +129,13 @@ You can manage the tasks on the WebUI.
 
 ![recent-tasks](https://gpu.cvgl.lab/docs/_images/qs01b.png)
 
-
 ## Experiments
 
 (TODO)
 
 ![experiments](https://gpu.cvgl.lab/docs/_images/adaptive-asha-experiment-detail.png)
 
-
 ## References
+
 [[1]](https://gpu.cvgl.lab/docs/sysadmin-basics/users.html)
 [[2]](https://zhuanlan.zhihu.com/p/422462131)
