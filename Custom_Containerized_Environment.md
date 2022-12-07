@@ -58,22 +58,15 @@ docker build -t my_image:v1.0 --build-arg http_proxy=http://192.168.233.8:8889 -
 
 The status of our public proxies can be monitored here: [Grafana - v2ray-dashboard](https://grafana.cvgl.lab/d/CCSvIIEZz/v2ray-dashboard)
 
-# Upload the custom image
+The pulling stage will take about half an hour or longer for the first time. We will discuss how to accelerate this process in the [next section](#accelerating-the-pulling-stage).
 
-Instead of pushing the image to Docker Hub (which will be very slow because of the GFW), it is recommended to use the private Harbor registry: `harbor.cvgl.lab`.
+# Accelerating the pulling stage
 
-You need to ask the system admin to create your Harbor user account. Once you have logged in, you can check out the [public library](https://harbor.cvgl.lab/harbor/projects/1/repositories):
+Instead of pulling determinedai's images from Docker Hub, you can pull them from our Harbor registry.
 
-<img src="./Custom_Containerized_Environment/harbor-library.png" alt="Harbor library" style="width:40vw;"/>
+Check out [here](https://harbor.lins.lab/harbor/projects/2/repositories/environments/) to see the available images. You can also ask the system admin to add or update the images.
 
-Make sure you have configured your `hosts` file with the following settings:
-
-```text
-10.0.1.68 cvgl.lab
-10.0.1.68 harbor.cvgl.lab
-```
-
-Then you need to setup the CA certificate for docker:
+To use our Harbor registry, you need to complete the following setup:
 
 ```bash
 sudo mkdir -p /etc/docker/certs.d/harbor.cvgl.lab
@@ -82,7 +75,40 @@ sudo wget https://cvgl.lab/cvgl.crt --no-check-certificate
 sudo systemctl restart docker
 ```
 
-Now you can create docker image on the login node or on your own PC following the instructions above, and then push the image to the Harbor registry. For instance:
+This configures the CA certificate for Docker.
+
+Then log in to our Harbor registry:
+
+```bash
+docker login -u <username> -p <password> harbor.cvgl.lab    # You only need to login once
+```
+
+Now edit the first `FROM` line in the `Dockerfile`, and change the base image to some existing image in the Harbor registry, for example:
+
+```dockerfile
+FROM harbor.cvgl.lab/determinedai/environments:cuda-11.3-pytorch-1.10-lightning-1.5-tf-2.8-gpu-0.18.5
+```
+
+# Upload the custom image
+
+Instead of pushing the image to Docker Hub (which will be very slow because of the GFW), it is recommended to use the private Harbor registry: `harbor.cvgl.lab`.
+
+You need to ask the system admin to create your Harbor user account. Once you have logged in, you can check out the [public library](https://harbor.cvgl.lab/harbor/projects/1/repositories):
+
+<img src="./Custom_Containerized_Environment/harbor-library.png" alt="Harbor library" style="width:40vw;"/>
+
+Note that instead of using the default `library`, you can also create your own *project* in Harbor.
+
+Make sure you have configured your `hosts` file with the following settings:
+
+```text
+10.0.1.68 cvgl.lab
+10.0.1.68 harbor.cvgl.lab
+```
+
+Also, you need to complete the CA certificate configuration in the [previous section](#accelerating-the-pulling-stage).
+
+Now you can create your custom Docker images on the login node or your PC following the instructions above, and then push the image to the Harbor registry. For instance:
 
 ```bash
 docker login -u <username> -p <password> harbor.cvgl.lab    # You only need to login once
