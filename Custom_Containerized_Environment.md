@@ -66,7 +66,22 @@ You need to ask the system admin to create your Harbor user account. Once you ha
 
 <img src="./Custom_Containerized_Environment/harbor-library.png" alt="Harbor library" style="width:40vw;"/>
 
-You can create docker image on the login node or on your own PC following the instructions above, and then push the image to the Harbor registry. For instance:
+Make sure you have configured your `hosts` file with the following settings:
+
+```text
+10.0.1.68 cvgl.lab
+10.0.1.68 harbor.cvgl.lab
+```
+
+Then you need to setup the CA certificate for docker:
+
+```bash
+sudo mkdir -p /etc/docker/certs.d/harbor.cvgl.lab
+cd /etc/docker/certs.d/harbor.cvgl.lab
+sudo wget https://cvgl.lab/cvgl.crt --no-check-certificate
+```
+
+Now you can create docker image on the login node or on your own PC following the instructions above, and then push the image to the Harbor registry. For instance:
 
 ```bash
     docker login -u <username> -p <password> harbor.cvgl.lab    # You only need to login once
