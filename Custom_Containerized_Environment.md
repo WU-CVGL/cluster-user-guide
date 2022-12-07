@@ -79,14 +79,15 @@ Then you need to setup the CA certificate for docker:
 sudo mkdir -p /etc/docker/certs.d/harbor.cvgl.lab
 cd /etc/docker/certs.d/harbor.cvgl.lab
 sudo wget https://cvgl.lab/cvgl.crt --no-check-certificate
+sudo systemctl restart docker
 ```
 
 Now you can create docker image on the login node or on your own PC following the instructions above, and then push the image to the Harbor registry. For instance:
 
 ```bash
-    docker login -u <username> -p <password> harbor.cvgl.lab    # You only need to login once
-    docker tag my_image:v1.0  harbor.cvgl.lab/library/my_image:v1.0
-    docker push harbor.cvgl.lab/library/my_image:v1.0
+docker login -u <username> -p <password> harbor.cvgl.lab    # You only need to login once
+docker tag my_image:v1.0  harbor.cvgl.lab/library/my_image:v1.0
+docker push harbor.cvgl.lab/library/my_image:v1.0
 ```
 
 In the first line, replace `<username>` with your username and `<password>` with your password.
