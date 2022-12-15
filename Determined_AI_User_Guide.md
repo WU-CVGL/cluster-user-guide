@@ -152,7 +152,7 @@ Now you can see your task pending/running on the WebUI dashboard.
 
 You can manage the tasks on the WebUI.
 
-![recent-tasks](https://gpu.cvgl.lab/docs/_images/qs01b.png)
+![recent-tasks](https://docs.determined.ai/0.13.13/_images/launch-cpu-notebook@2x.jpg)
 
 You are encouraged to check out more operations of Determined.AI in the [API docs](https://gpu.cvgl.lab/docs/interfaces/commands-and-shells.html), e.g., 
 * `det task`
