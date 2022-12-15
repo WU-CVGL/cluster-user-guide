@@ -154,12 +154,19 @@ You can manage the tasks on the WebUI.
 
 ![recent-tasks](https://gpu.cvgl.lab/docs/_images/qs01b.png)
 
+You are encouraged to check out more operations of Determined.AI in the [API docs](https://gpu.cvgl.lab/docs/interfaces/commands-and-shells.html), e.g., 
+* `det task`
+* `det shell open [task id]`
+* `det shell kill [task id]`
+
+
 ## Experiments
 
 (TODO)
 
 ![experiments](https://gpu.cvgl.lab/docs/_images/adaptive-asha-experiment-detail.png)
-
+![experiments](https://www.determined.ai/assets/images/developers/dashboard.jpg)
+![hyper parameter tuning](https://www.determined.ai/assets/images/blogs/core-api/pic-4.png)
 ## References
 
 [[1]](https://gpu.cvgl.lab/docs/sysadmin-basics/users.html)
