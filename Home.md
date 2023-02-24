@@ -77,6 +77,7 @@ GPU Node 1：
 |  SSD   | Intel P4510 2TB * 1 |
 |  NIC   | Intel 82599ES 10GbE   |
 |  RAID  | LSI MegaRAID SAS-3 3108 |
+
 GPU Node 2, 3, 4:
 
 |  Name  |  Spec  |
