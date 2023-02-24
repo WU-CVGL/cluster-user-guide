@@ -13,7 +13,8 @@ Determined-AI User Guide </h1>
   - [Changing passwords](#changing-passwords)
 - [Submitting Tasks](#submitting-tasks)
   - [Task Configuration Template](#task-configuration-template)
-  - [Submit](#submit)
+  - [Submit via Web UI](#submit-via-web-ui)
+  - [Submit via CLI](#submit-via-cli)
   - [Managing Tasks](#managing-tasks)
   - [Experiments](#experiments)
   - [References](#references)
@@ -96,7 +97,25 @@ Notes:
  
 ![Storage Model](Getting_started/storage_model.svg)
 
-## Submit
+## Submit via Web UI
+
+Click "Launch JupyterLab" in the upper left corner of the Determined Web UI:
+
+![Launch JupyterLab](Determined_AI_User_Guide/launch-jupyter.png)
+
+When the sidebar is collapsed the button becomes like this:
+
+![Launch JupyterLab (Collapsed)](Determined_AI_User_Guide/launch-jupyter-collapsed.png)
+
+In the popped out dialog window, select **show full config**:
+
+![show-full-config](Determined_AI_User_Guide/show-full-config.png)
+
+Then enter your YAML configuration and hit **Launch**!
+
+![edit-full-config](Determined_AI_User_Guide/edit-full-config.png)
+
+## Submit via CLI
 
 Save the YAML configuration to, let's say, `test_task.yaml`. You can start a Jupyter Notebook (Lab) environment or a simple shell environment. A notebook is a web interface thus more user-friendly. However, you can use **Visual Studio Code** or **PyCharm** and connect to a shell environment[[3]](https://gpu.cvgl.lab/docs/features/commands-and-shells.html#ide-integration), which brings more flexibility and productivity if you are familiar with these editors.
 
