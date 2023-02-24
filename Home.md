@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Currently we are hosting these services (available after [configuring the `hosts`](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Getting_started#user-content-setting-up-the-hosts-file)):
+Currently, we are hosting these services (available after [configuring the `hosts`](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Getting_started#user-content-setting-up-the-hosts-file)):
 
 [Determined AI - Distributed Deep Learning and Hyperparameter Tuning Platform](https://gpu.cvgl.lab/)
 
@@ -20,16 +20,17 @@ https://pan.cvgl.lab/s/6P8EyrewEz4G3sm
 
 ## Quick guide
 
-[Getting Started](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Getting_started)
+[Getting Started](./Getting_started.md)
 
-[Determined-AI User Guide](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Determined_AI_User_Guide)
+[Determined-AI User Guide](./Determined_AI_User_Guide.md)
 
-[Custom Containerized Environment](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Custom_Containerized_Environment)
+[Custom Containerized Environment](./Custom_Containerized_Environment.md)
 
 ## Cluster Information
-Our cluster is located at the core server room, ground floor of building E6, Yungu Campus (云谷校区-E6-1楼-核心机房), currently has `4` GPU nodes and `1` storage & management node active.
 
-We have been designated with an IP address range: `10.0.1.66-94/27`
+Our cluster is located in the core server room, E6-106; currently has `4` GPU nodes and `1` storage & management node active.
+
+We have been designated with an IP address range: `10.0.1.66-94/27`.
 
 The specifics of the cluster nodes are as follows:
 
