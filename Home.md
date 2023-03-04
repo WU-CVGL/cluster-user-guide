@@ -28,7 +28,7 @@ https://pan.cvgl.lab/s/6P8EyrewEz4G3sm
 
 ## Cluster Information
 
-Our cluster is located in the core server room, E6-106; currently has `4` GPU nodes and `1` storage & management node active.
+Our cluster is located in the core server room, E6-106; currently has `5` GPU nodes and `1` storage & management node active.
 
 We have been designated with an IP address range: `10.0.1.66-94/27`.
 
