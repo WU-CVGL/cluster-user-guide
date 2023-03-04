@@ -111,7 +111,7 @@ Storage & Management node
 |  Name  |  Spec  |
 | :----: | :----  |
 |  Model | Powerleader PR4224AK (Supermicro H11SSL)|
-|  CPU   | AMD EPYC 7302 * 2 (32C/64T, 3.0-3.3GHz)|
+|  CPU   | AMD EPYC 7302 (16C/32T, 3.0-3.3GHz)|
 | Memory | Samsung M393A4K40DB3-CWE DDR4 256G (32G*8) 2933MHz ECC REG |
 |  SSD   | Samsung 970 EVO Plus 500G * 1|
 |  SSD   | Intel S4510 1.92TB * 2 |
