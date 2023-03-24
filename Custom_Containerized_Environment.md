@@ -1,8 +1,5 @@
 <h1 align="center">Custom Containerized Deep Learning Environment<br>
 with Docker and Harbor </h1>
-<p align="center">
-2022-10-21 v0.4 alpha
-</p>
 
 # For Beginners: build FROM a base image
 
