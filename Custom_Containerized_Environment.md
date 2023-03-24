@@ -36,9 +36,9 @@ RUN eval "$(conda shell.bash hook)" && \
 
 Here are some other examples:
 
-> https://git.cvgl.lab/Cluster_User_Group/envs/src/branch/master/svox2
+[svox2](./Example_Envs/svox2/)
 
-> https://git.cvgl.lab/Cluster_User_Group/envs/src/branch/master/lietorch-opencv
+[lietorch-opencv](./Example_Envs/lietorch-opencv/)
 
 Notice that we are using the `apt` mirror by `ustc.edu.cn` and the `pip` mirror by `bfsu.edu.cn`. They are currently fast and thus recommended by the system admin.
 
@@ -128,4 +128,12 @@ In the Determined AI configuration `.yaml` file (as mentioned in [the previous t
 
 # Advanced: build an image from scratch
 
-Technically, we will be building FROM an NVIDIA's base image, which is based on an Ubuntu image. You can use the minimum template we provide: [here](https://git.cvgl.lab/Cluster_User_Group/envs/src/branch/master/determined-minimum)
+Technically, we will be building FROM an NVIDIA's base image, which is based on an Ubuntu image. You can use the minimum template we provide: [determined-minimum](./Example_Envs/determined-minimum/)
+
+Note that for RTX 4090, we need `CUDA` version >= `11.8`, thus you need to use the base image from [NGC/CUDA](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda) with tags >= 11.8, or [NGC/Pytorch](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch) with tags >= 22.12.
+
+Here are some examples tested on RTX 4090:
+
+1. nerf-env [[Dockerfile]](./Example_Envs/nerf-env/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/nerf_env_test/artifacts-tab/artifacts/sha256:206c97c5c92d1268585a70420931b2b3a081a4b3f068ebfa046fcbee56d9a2ec)
+
+2. torch-ngp [[Dockerfile]](./Example_Envs/torch-ngp/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-torch-ngp/artifacts-tab/artifacts/sha256:a5e1d1d87123910bb904426e921c1857d401c73e5789c56600fac1039dd4d024)

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Currently, we are hosting these services (available after [configuring the `hosts`](https://git.cvgl.lab/Cluster_User_Group/cluster-user-guide/wiki/Getting_started#user-content-setting-up-the-hosts-file)):
+Currently, we are hosting these services (available after [configuring the `hosts`](./Getting_started.md#user-content-setting-up-the-hosts-file)):
 
 [Determined AI - Distributed Deep Learning and Hyperparameter Tuning Platform](https://gpu.cvgl.lab/)
 

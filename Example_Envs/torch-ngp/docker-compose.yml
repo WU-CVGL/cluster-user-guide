@@ -1,0 +1,6 @@
+version: '3'
+services:
+  daemon:
+    build: ./
+    extra_hosts:
+      - "git.cvgl.lab:10.0.1.68"
