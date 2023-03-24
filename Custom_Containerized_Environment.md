@@ -130,7 +130,7 @@ In the Determined AI configuration `.yaml` file (as mentioned in [the previous t
 
 Technically, we will be building FROM an NVIDIA's base image, which is based on an Ubuntu image. You can use the minimum template we provide: [determined-minimum](./Example_Envs/determined-minimum/)
 
-Note that for RTX 4090, we need `CUDA` version >= `11.8`, thus you need to use the base image from [NGC/CUDA](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda) with tags >= 11.8, or [NGC/Pytorch](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch) with tags >= 22.12.
+Note that for RTX 4090, we need `CUDA` version >= `11.8`, thus you need to use the base image from [NGC/CUDA](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda) with tags >= 11.8, or [NGC/Pytorch](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch) with tags >= 22.09.
 
 Here are some examples tested on RTX 4090:
 
