@@ -51,6 +51,7 @@ ARG TBB_DIR=tbb44_20160526oss
 ARG TBB_SAVEPATH="/tmp/tbb.tgz"
 ARG TBB_LIB_DIR="intel64/gcc4.4"
 ARG TBBROOT=/tmp/$TBB_DIR
+ENV JUPYTER_CONFIG_DIR=/run/determined/jupyter/config JUPYTER_DATA_DIR=/run/determined/jupyter/data JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
 COPY dockerfile_scripts /tmp/det_dockerfile_scripts
 COPY requirements.txt /tmp
 RUN wget "${TBB_BASEURL}/${TBB_VERSION}/${TBB_DIR}_lin.tgz" -O $TBB_SAVEPATH &&\

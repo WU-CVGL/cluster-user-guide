@@ -135,4 +135,4 @@ Here are some examples tested on RTX 4090:
 
 2. torch-ngp [[Dockerfile]](./Example_Envs/torch-ngp/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-torch-ngp/artifacts-tab/artifacts/sha256:a5e1d1d87123910bb904426e921c1857d401c73e5789c56600fac1039dd4d024)
 
-3. taichi-nerf-slam [[Dockerfile]](./Example_Envs/taichi-nerf-slam/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-taichi-nerf-slam/artifacts-tab/artifacts/sha256:c81ab2a9840a7a423bc20da9872542dc6805befad9bafb8bf1ba2ba157df04ea)
+3. taichi-nerf-slam [[Dockerfile]](./Example_Envs/taichi-nerf-slam/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-taichi-nerf-slam/artifacts-tab/artifacts/sha256:4a6f9395008187921dfe4370164c18e7b000fbff56969a997d950aca43aaa702)
