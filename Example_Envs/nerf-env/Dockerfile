@@ -1,9 +1,7 @@
 FROM nvcr.io/nvidia/pytorch:23.01-py3
 
 ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ=Asia/Shanghai LANG=C.UTF-8 LC_ALL=C.UTF-8 PIP_NO_CACHE_DIR=1
-
-COPY dockerfile_scripts /tmp/det_dockerfile_scripts
+ENV TZ=Asia/Shanghai LANG=C.UTF-8 LC_ALL=C.UTF-8 PIP_NO_CACHE_DIR=1 PYTHONUNBUFFERED=1 PYTHONFAULTHANDLER=1 PYTHONHASHSEED=0
 
 # Install apt packages
 RUN sed -i  "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&\
@@ -21,6 +19,7 @@ RUN sed -i  "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &
         ## Tools
         git curl wget unzip nano net-tools htop iotop \
         cloc rsync xz-utils software-properties-common \
+    && apt-get purge -y unattended-upgrades \
     && rm /etc/ssh/ssh_host_ecdsa_key \
     && rm /etc/ssh/ssh_host_ed25519_key \
     && rm /etc/ssh/ssh_host_rsa_key \
@@ -31,20 +30,17 @@ RUN sed -i  "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Conda and Determined AI stuff
-COPY .condarc /opt/conda/.condarc
-ENV PATH="/opt/conda/bin:${PATH}"
-ENV PYTHONUNBUFFERED=1 PYTHONFAULTHANDLER=1 PYTHONHASHSEED=0
-ENV JUPYTER_CONFIG_DIR=/run/determined/jupyter/config
-ENV JUPYTER_DATA_DIR=/run/determined/jupyter/data
-ENV JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
+# Install Determined AI & pip stuff
+COPY dockerfile_scripts /tmp/det_dockerfile_scripts
+ENV JUPYTER_CONFIG_DIR=/run/determined/jupyter/config JUPYTER_DATA_DIR=/run/determined/jupyter/data JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
 RUN pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple &&\
     pip install -U pip &&\
     pip install determined && pip uninstall -y determined &&\
     pip install -r /tmp/det_dockerfile_scripts/notebook-requirements.txt &&\
     # Dependencies
     pip install "imageio[ffmpeg]" &&\
-    pip install scikit-image lpips configargparse &&\
+    pip install scikit-image lpips configargparse trimesh visdom easydict \
+                PyMCubes rich torch-ema pyvista numba ipdb dearpygui protobuf==3.20.1 &&\
     /tmp/det_dockerfile_scripts/add_det_nobody_user.sh &&\
     /tmp/det_dockerfile_scripts/install_libnss_determined.sh &&\
     rm -rf /tmp/*

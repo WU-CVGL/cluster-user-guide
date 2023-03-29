@@ -131,7 +131,7 @@ Note that for RTX 4090, we need `CUDA` version >= `11.8`, thus you need to use t
 
 Here are some examples tested on RTX 4090:
 
-1. nerf-env [[Dockerfile]](./Example_Envs/nerf-env/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/nerf_env_test/artifacts-tab/artifacts/sha256:206c97c5c92d1268585a70420931b2b3a081a4b3f068ebfa046fcbee56d9a2ec)
+1. nerf-env [[Dockerfile]](./Example_Envs/nerf-env/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/nerf_env_test/artifacts-tab/artifacts/sha256:fd1376632bd15ea92eb9791723e95fab833f4f30185a9a8c3f765d158713bc60)
 
 2. torch-ngp [[Dockerfile]](./Example_Envs/torch-ngp/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-torch-ngp/artifacts-tab/artifacts/sha256:a5e1d1d87123910bb904426e921c1857d401c73e5789c56600fac1039dd4d024)
 
