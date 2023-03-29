@@ -125,7 +125,7 @@ In the Determined AI configuration `.yaml` file (as mentioned in [the previous t
 
 # Advanced: build an image from scratch
 
-Technically, we will be building FROM an NVIDIA's base image, which is based on an Ubuntu image. You can use the minimum template we provide: [determined-minimum](./Example_Envs/determined-minimum/)
+To make our life easier, we will build our custom image FROM NVIDIA's base image. You can use the minimum template we provide: [determined-minimum](./Example_Envs/determined-minimum/)
 
 Note that for RTX 4090, we need `CUDA` version >= `11.8`, thus you need to use the base image from [NGC/CUDA](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda) with tags >= 11.8, or [NGC/Pytorch](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch) with tags >= 22.09.
 
@@ -135,4 +135,4 @@ Here are some examples tested on RTX 4090:
 
 2. torch-ngp [[Dockerfile]](./Example_Envs/torch-ngp/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-torch-ngp/artifacts-tab/artifacts/sha256:a5e1d1d87123910bb904426e921c1857d401c73e5789c56600fac1039dd4d024)
 
-3. taichi-nerf-slam [[Dockerfile]](./Example_Envs/taichi-nerf-slam/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-taichi-nerf-slam/artifacts-tab/artifacts/sha256:e012fb1a6be9e668f4b372f6a96b569908ea02b8440ed48a0932f386d10de328)
+3. taichi-nerf-slam [[Dockerfile]](./Example_Envs/taichi-nerf-slam/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-taichi-nerf-slam/artifacts-tab/artifacts/sha256:c81ab2a9840a7a423bc20da9872542dc6805befad9bafb8bf1ba2ba157df04ea)

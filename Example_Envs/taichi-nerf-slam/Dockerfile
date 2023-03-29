@@ -9,10 +9,11 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
     rm -f /etc/apt/sources.list.d/* &&\
     apt-get update && apt-get upgrade -y &&\
     apt-get install -y --no-install-recommends \
-        autoconf automake autotools-dev build-essential ca-certificates \
+        autoconf automake autotools-dev build-essential ca-certificates software-properties-common \
         make cmake ninja-build yasm pkg-config checkinstall ccache doxygen gdb \
         gcc gcc-multilib g++ g++-multilib gfortran \
-        git nano curl wget unzip p7zip-full net-tools cloc htop iftop iotop ffmpeg \
+        git nano curl wget unzip p7zip-full xz-utils zstd \
+        daemontools net-tools cloc htop iftop iotop rsync \
         libatlas-base-dev libboost-all-dev libcereal-dev libcgal-dev \
         libcxsparse3 libeigen3-dev liblapack-dev liblapacke-dev \
         metis libmetis-dev libopenblas-dev libsuitesparse-dev \
@@ -20,16 +21,28 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
         libgflags-dev libgoogle-glog-dev libgtest-dev libprotobuf-dev protobuf-compiler \
         libgphoto2-dev libhdf5-dev libjpeg-dev libpng-dev libtiff-dev libtiff-dev \
         libavcodec-dev libavformat-dev libavutil-dev libavdevice-dev libavresample-dev \
-        libpostproc-dev libpq-dev libswscale-dev ffmpeg \
+        libpostproc-dev libpq-dev libswscale-dev \
         libtbb2 libtbb-dev libxine2-dev zlib1g-dev \
-        libkrb5-dev libssl-dev libtool libyaml-dev libyaml-cpp-dev \
+        krb5-user libkrb5-dev libssl-dev libtool libyaml-dev libyaml-cpp-dev \
+        ibverbs-providers libibverbs1 librdmacm1 \
+        libnuma1 libnuma-dev libpmi2-0-dev \
         libxvidcore-dev x264 libx264-dev libfaac-dev libmp3lame-dev libtheora-dev \
         libfaac-dev libmp3lame-dev libvorbis-dev \
         libopencore-amrnb-dev libopencore-amrwb-dev \
         libv4l-dev v4l-utils \
         libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
-        colmap &&\
-    apt-get clean
+        openssh-server openssh-client nfs-common\
+        colmap ffmpeg \
+    && apt-get purge -y unattended-upgrades \
+    && rm /etc/ssh/ssh_host_ecdsa_key \
+    && rm /etc/ssh/ssh_host_ed25519_key \
+    && rm /etc/ssh/ssh_host_rsa_key \
+    && cp /etc/ssh/sshd_config /etc/ssh/sshd_config_bak \
+    && sed -i "s/^.*X11Forwarding.*$/X11Forwarding yes/" /etc/ssh/sshd_config \
+    && sed -i "s/^.*X11UseLocalhost.*$/X11UseLocalhost no/" /etc/ssh/sshd_config \
+    && grep "^X11UseLocalhost" /etc/ssh/sshd_config || echo "X11UseLocalhost no" >> /etc/ssh/sshd_config \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install TBB & Determined AI & pip stuff && torchvision
 ARG TBB_BASEURL=https://github.com/oneapi-src/oneTBB/releases/download
@@ -38,7 +51,6 @@ ARG TBB_DIR=tbb44_20160526oss
 ARG TBB_SAVEPATH="/tmp/tbb.tgz"
 ARG TBB_LIB_DIR="intel64/gcc4.4"
 ARG TBBROOT=/tmp/$TBB_DIR
-ENV JUPYTER_CONFIG_DIR=/run/determined/jupyter/config JUPYTER_DATA_DIR=/run/determined/jupyter/data JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
 COPY dockerfile_scripts /tmp/det_dockerfile_scripts
 COPY requirements.txt /tmp
 RUN wget "${TBB_BASEURL}/${TBB_VERSION}/${TBB_DIR}_lin.tgz" -O $TBB_SAVEPATH &&\
@@ -74,10 +86,8 @@ RUN wget "${TBB_BASEURL}/${TBB_VERSION}/${TBB_DIR}_lin.tgz" -O $TBB_SAVEPATH &&\
 
 # Build NeRF-SLAM
 WORKDIR /workspace
-RUN git clone https://github.com/DmitriZhao/NeRF-SLAM --recurse-submodules &&\
+RUN git clone https://github.com/DmitriZhao/NeRF-SLAM --recursive &&\
     cd NeRF-SLAM &&\
-    git submodule update --init --recursive &&\
-    git submodule add https://github.com/taichi-dev/taichi-nerfs thirdparty/taichi-nerfs &&\
     cmake ./thirdparty/instant-ngp -B build_ngp &&\
     cmake --build build_ngp --config RelWithDebInfo -j &&\
     cmake ./thirdparty/gtsam -DGTSAM_BUILD_PYTHON=1 -B build_gtsam &&\
