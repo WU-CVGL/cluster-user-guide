@@ -28,7 +28,7 @@ https://pan.cvgl.lab/s/6P8EyrewEz4G3sm
 
 ## Cluster Information
 
-Our cluster is located in the core server room, E6-106; currently has `5` GPU nodes and `1` storage & management node active.
+Our cluster is located in the core server room, E6-106; currently has `5` GPU nodes, `1` storage server and `1` management server active.
 
 We have been designated with an IP address range: `10.0.1.66-94/27`.
 
@@ -72,10 +72,10 @@ GPU Node 1：
 | :----: | :----  |
 |  Model | Powerleader PR4908R (Supermicro 4124GS-TNR)|
 |  CPU   | AMD EPYC 7302 * 2 (32C/64T, 3.0-3.3GHz)|
-| Memory | Samsung M393A2K43DB2-CVF DDR4 256G (16G*16) 2933MHz ECC REG|
+| Memory | Samsung M393A2K43DB2-CVF DDR4 256G (16G*16) 2933MT/s ECC REG|
 |  GPU   | MSI RTX 3090 Turbo * 8 |
 |  SSD   | Intel P4510 2TB * 1 |
-|  NIC   | Intel 82599ES 10GbE   |
+|  NIC   | Intel 82599ES 10GbE |
 |  RAID  | LSI MegaRAID SAS-3 3108 |
 
 GPU Node 2, 3, 4:
@@ -84,10 +84,10 @@ GPU Node 2, 3, 4:
 | :----: | :----  |
 |  Model | Powerleader PR4908R (Supermicro 4124GS-TNR)|
 |  CPU   | AMD EPYC 7402 * 2 (48C/96T, 2.8-3.35GHz)|
-| Memory | SK Hynix† / Samsung‡ / Samsung‡ DDR4 512G (32G*16) 3200MHz ECC REG|
+| Memory | SK Hynix† / Samsung‡ / Samsung‡ DDR4 512G (32G*16) 3200MT/s ECC REG|
 |  GPU   | NVIDIA / MSI / MSI RTX 3090 * 8 |
 |  SSD   | Intel P4510 2TB * 1 |
-|  NIC   | Intel 82599ES 10GbE   |
+|  NIC   | Intel 82599ES 10GbE |
 
 > † SK Hynix 3200: HMA84GR7DJR4N-XN
 > 
@@ -99,24 +99,35 @@ GPU Node 5:
 | :----: | :----  |
 |  Model | ASUS ESC8000A-E11|
 |  CPU   | AMD EPYC 7543 * 2 (64C/128T, 2.8-3.7GHz)|
-| Memory | Samsung M393A4K40EB3-CWE DDR4 512G (32G*16) 3200MHz ECC REG|
+| Memory | Samsung M393A4K40EB3-CWE DDR4 512G (32G*16) 3200MT/s ECC REG|
 |  GPU   | MANLI RTX 4090 * 8 |
 |  SSD   | Intel S4610 (SSDSC2KG96) 960G * 2 (RAID 1) |
 |  NIC   | Intel I350-T4 |
-|  NIC   | Intel X520-DA2 (82599ES) |
+|  NIC   | Intel 82599ES 10GbE Dual Port |
 |  RAID  | LSI SAS3008 PCI-Express Fusion-MPT SAS-3 |
 
-Storage & Management node
+Storage Server
 
 |  Name  |  Spec  |
 | :----: | :----  |
 |  Model | Powerleader PR4224AK (Supermicro H11SSL)|
 |  CPU   | AMD EPYC 7302 (16C/32T, 3.0-3.3GHz)|
-| Memory | Samsung M393A4K40DB3-CWE DDR4 256G (32G*8) 2933MHz ECC REG |
+| Memory | Samsung M393A4K40DB3-CWE DDR4 256G (32G*8) 2933MT/s ECC REG |
 |  SSD   | Samsung 970 EVO Plus 500G * 1|
 |  SSD   | Intel S4510 1.92TB * 2 |
 |  HDD   | Seagate Exos X18 18TB * 14 |
 |  NIC   | Intel 82599ES 10GbE Dual Port |
+|  RAID  | LSI SAS3008 PCI-Express Fusion-MPT SAS-3 |
+
+Management Server
+
+|  Name  |  Spec  |
+| :----: | :----  |
+|  Model | ASUS RS520-E9-RS8 V2 |
+|  CPU   | Intel Xeon Silver 4210R * 2 (20C/40T, 2.4-3.2GHz) |
+| Memory | Samsung M393A4K40EB3-CWE DDR4 64G (32G*2) 3200MT/s @ 2400MT/s ECC REG |
+|  SSD   | Intel S4610 (SSDSC2KG96) 960G * 2 (RAID 1) |
+|  NIC   | Intel i350-AM2 Dual Port |
 |  RAID  | LSI SAS3008 PCI-Express Fusion-MPT SAS-3 |
 
 <details>
