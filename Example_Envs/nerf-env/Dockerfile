@@ -37,10 +37,6 @@ RUN pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple 
     pip install -U pip &&\
     pip install determined && pip uninstall -y determined &&\
     pip install -r /tmp/det_dockerfile_scripts/notebook-requirements.txt &&\
-    # Dependencies
-    pip install "imageio[ffmpeg]" &&\
-    pip install scikit-image lpips configargparse trimesh visdom easydict \
-                PyMCubes rich torch-ema pyvista numba ipdb dearpygui protobuf==3.20.1 &&\
     /tmp/det_dockerfile_scripts/add_det_nobody_user.sh &&\
     /tmp/det_dockerfile_scripts/install_libnss_determined.sh &&\
     rm -rf /tmp/*

@@ -2,3 +2,19 @@
 # For now, let's avoid needing to install Rust. When the time comes, see here: https://stackoverflow.com/questions/49676490/when-installing-rust-toolchain-in-docker-bash-source-command-doesnt-work
 jupyterlab~=3.5.0
 jupyter-archive~=3.2
+imageio[ffmpeg]
+scikit-learn<1
+scikit-image
+lpips
+configargparse
+trimesh
+visdom
+easydict
+PyMCubes
+rich
+torch-ema
+pyvista
+numba
+ipdb
+dearpygui
+protobuf==3.20.1 

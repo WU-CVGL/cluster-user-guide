@@ -26,3 +26,7 @@ einops>=0.4.1
 kornia>=0.6.5
 pytorch-lightning>=1.7.7,<2.0
 pyparsing>=2.4.2
+
+trimesh
+scikit-learn<1
+scikit-image
