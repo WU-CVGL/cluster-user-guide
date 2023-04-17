@@ -40,14 +40,14 @@ ENV JUPYTER_DATA_DIR=/run/determined/jupyter/data
 ENV JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
 RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     cd determinedai-container-scripts &&\
-    install_python.sh ${PYTHON_VERSION} &&\
+    ./install_python.sh ${PYTHON_VERSION} &&\
     cp .condarc /opt/conda/.condarc &&\
     pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple &&\
     pip install determined && pip uninstall -y determined &&\
     pip install -r notebook-requirements.txt &&\
     pip install -r additional-requirements.txt &&\
-    add_det_nobody_user.sh &&\
-    install_libnss_determined.sh &&\
+    ./add_det_nobody_user.sh &&\
+    ./install_libnss_determined.sh &&\
     rm -rf /tmp/*
 
 #! ----EDIT HERE TO INSTALL CONDA PACKAGES----

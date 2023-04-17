@@ -31,6 +31,7 @@ RUN sed -i  "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &
     && rm -rf /var/lib/apt/lists/*
 
 # Install Determined AI & pip stuff
+WORKDIR /tmp
 ENV JUPYTER_CONFIG_DIR=/run/determined/jupyter/config JUPYTER_DATA_DIR=/run/determined/jupyter/data JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
 RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     cd determinedai-container-scripts &&\
@@ -39,6 +40,6 @@ RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     pip install determined && pip uninstall -y determined &&\
     pip install -r notebook-requirements.txt &&\
     pip install -r additional-requirements.txt &&\
-    add_det_nobody_user.sh &&\
-    install_libnss_determined.sh &&\
+    ./add_det_nobody_user.sh &&\
+    ./install_libnss_determined.sh &&\
     rm -rf /tmp/*

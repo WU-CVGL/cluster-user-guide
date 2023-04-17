@@ -71,6 +71,7 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
     && rm -rf /var/lib/apt/lists/*
 
 # Install TBB & Determined AI & pip stuff && torchvision
+WORKDIR /tmp
 ARG TBB_BASEURL=https://github.com/oneapi-src/oneTBB/releases/download
 ARG TBB_VERSION=4.4.5
 ARG TBB_DIR=tbb44_20160526oss
@@ -93,9 +94,9 @@ RUN wget "${TBB_BASEURL}/${TBB_VERSION}/${TBB_DIR}_lin.tgz" -O $TBB_SAVEPATH &&\
     pip install cmake==${CMAKE_VERSION} &&\
     pip install taichi-nightly -i https://pypi.taichi.graphics/simple/ &&\
     pip install -r /tmp/requirements.txt &&\
-    add_det_nobody_user.sh &&\
-    install_libnss_determined.sh &&\
-    update_alternatives_clang.sh ${CLANG_VER} 100
+    ./add_det_nobody_user.sh &&\
+    ./install_libnss_determined.sh &&\
+    ./update_alternatives_clang.sh ${CLANG_VER} 100
     # cd /tmp &&\
     # git clone https://github.com/pytorch/vision.git &&\
     # cd vision &&\

@@ -30,6 +30,7 @@ RUN sed -i  "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &
     && rm -rf /var/lib/apt/lists/*
 
 # Install Conda and Determined AI stuff
+WORKDIR /tmp
 ENV PYTHONUNBUFFERED=1 PYTHONFAULTHANDLER=1 PYTHONHASHSEED=0
 ENV JUPYTER_CONFIG_DIR=/run/determined/jupyter/config
 ENV JUPYTER_DATA_DIR=/run/determined/jupyter/data
@@ -40,11 +41,10 @@ RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     pip install determined && pip uninstall -y determined &&\
     pip install -r notebook-requirements.txt &&\
     pip install -r additional-requirements.txt &&\
-    add_det_nobody_user.sh &&\
-    install_libnss_determined.sh &&\
+    ./add_det_nobody_user.sh &&\
+    ./install_libnss_determined.sh &&\
     rm -rf /tmp/*
 
-WORKDIR /tmp
 ENV TCNN_CUDA_ARCHITECTURES "86;89"
 ARG MAX_JOBS 32
 RUN git clone https://github.com/ashawkey/torch-ngp &&\
