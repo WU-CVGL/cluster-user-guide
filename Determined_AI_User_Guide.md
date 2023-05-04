@@ -112,6 +112,7 @@ description: <task_name>
 resources:
     slots: 1
     resource_pool: 32c64t_256_3090
+    shm_size: 4G
 bind_mounts:
     - host_path: /workspace/<user_name>/
       container_path: /run/determined/workdir/home/
@@ -126,6 +127,7 @@ Notes:
 - You need to change the `task_name` and `user_name` to your own
 - Number of `resources.slots` is the number of GPUs you are requesting to use, which is set to `1` here
 - `resources.resource_pool` is the resource pool you are requesting to use. Currently we have three resource pools: `32c64t_256_3090`, `48c96t_512_3090` and `64c128t_512_4090`.
+- `resources.shm_size` is set to `4G` by default. You may need a greater size if you use multiple dataloader workers in pytorch, etc.
 - In `bind_mounts`, the first host_path/container_path maps your workspace directory (`/workspace/<user_name>/`) into the container; And the second maps the dataset directory (`/datasets`) into the container.
 - In `environment.image`, an official image by *Determined AI* is used. *Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that include common deep-learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency, which will be discussed in this tutorial: [Custom Containerized Environment](./Custom_Containerized_Environment)
 - How `bind_mounts` works:

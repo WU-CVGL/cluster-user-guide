@@ -9,8 +9,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai LANG=C.UTF-8 LC_ALL=C.UTF-8 PIP_NO_CACHE_DIR=1
 
 # Install apt packages
-RUN sed -i  "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&\
-    sed -i  "s/security.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&\
+RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&\
+    sed -i "s/security.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&\
     rm -f /etc/apt/sources.list.d/* &&\
     apt-get update && apt-get upgrade -y &&\
     apt-get install -y --no-install-recommends \
@@ -45,6 +45,7 @@ ENV JUPYTER_DATA_DIR=/run/determined/jupyter/data
 ENV JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
 RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     cd determinedai-container-scripts &&\
+    git checkout v0.1 &&\
     ./install_python.sh ${PYTHON_VERSION} &&\
     cp .condarc /opt/conda/.condarc &&\
     pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple &&\

@@ -86,6 +86,7 @@ RUN wget "${TBB_BASEURL}/${TBB_VERSION}/${TBB_DIR}_lin.tgz" -O $TBB_SAVEPATH &&\
     cp -R $TBBROOT/include/ /usr/local/include/ &&\
     git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     cd determinedai-container-scripts &&\
+    git checkout v0.1 &&\
     pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple &&\
     pip install -U pip &&\
     pip install determined && pip uninstall -y determined &&\
