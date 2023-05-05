@@ -46,7 +46,7 @@ RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     ./install_libnss_determined.sh &&\
     rm -rf /tmp/*
 
-ENV TCNN_CUDA_ARCHITECTURES "86;89"
+ENV TORCH_CUDA_ARCH_LIST="8.6;8.9" TCNN_CUDA_ARCHITECTURES="86;89"
 ARG MAX_JOBS 32
 RUN git clone https://github.com/ashawkey/torch-ngp &&\
     cd torch-ngp &&\
