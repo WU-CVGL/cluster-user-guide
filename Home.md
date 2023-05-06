@@ -1,5 +1,13 @@
 # Welcome to the Wiki.
 
+## Quick guide
+
+[1. Getting Started](./Getting_started.md)
+
+[2. Determined-AI User Guide](./Determined_AI_User_Guide.md)
+
+[3. Custom Containerized Environment](./Custom_Containerized_Environment.md)
+
 ## Introduction
 
 Currently, we are hosting these services (available after [configuring the `hosts`](./Getting_started.md#user-content-setting-up-the-hosts-file)):
@@ -17,14 +25,6 @@ Currently, we are hosting these services (available after [configuring the `host
 Shared Folders:
 
 https://pan.cvgl.lab/s/6P8EyrewEz4G3sm
-
-## Quick guide
-
-[Getting Started](./Getting_started.md)
-
-[Determined-AI User Guide](./Determined_AI_User_Guide.md)
-
-[Custom Containerized Environment](./Custom_Containerized_Environment.md)
 
 ## Cluster Information
 
