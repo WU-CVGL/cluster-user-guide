@@ -362,6 +362,13 @@ Here is an example of using Baidu Netdisk:
 
 We have configured both HTTP and SOCKS5 proxy services on the cluster:
 
+- Osaka, central Japan, with unlimited traffic
+  - http://10.0.1.68:8889
+  - socks5://10.0.1.68:1089
+- San Jose, US west, with 1TB/mo traffic
+  - http://10.0.1.68:28889
+  - socks5://10.0.1.68:20089
+
 #### Proxychains
 
 Project homepage: [proxychains-ng](https://github.com/rofl0r/proxychains-ng)
@@ -373,7 +380,7 @@ proxychains curl google.com
 
 proxychains -q curl google.com # Quite mode
 
-proxychains git clone https://github.com/LINs-lab/cluster_tutorial
+proxychains git clone https://github.com/WU-CVGL/BAD-NeRF
 ```
 
 #### Environment variable
