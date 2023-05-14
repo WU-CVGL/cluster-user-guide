@@ -271,7 +271,7 @@ environment:
         proxy_tcp: true
 ```
 
-where where 7007 is the websocket port used by nerfstudio's vistualization, and the `bind_mount` with `.cache` is used to store pytorch cache files so that it won't download the pretrained weights again and again.
+where where `7007` is the websocket port used by nerfstudio's vistualization, and the `bind_mount` with `.cache` is used to store pytorch cache files so that it won't download the pretrained weights again and again.
 
 Then run a nerfstudio training in the terminal of your notebook or shell task:
 
@@ -290,6 +290,10 @@ python -m determined.cli.tunnel --listener 7007 --auth $DET_MASTER $TASK_ID:7007
 Remember to change **YOUR_TASK_UUID** to your task's UUID.
 
 Finally you can open the URL given in the nerfstudio's terminal with your browser, in my case it's https://viewer.nerf.studio/versions/23-05-01-0/?websocket_url=ws://localhost:7007
+
+
+P.S. for tensorboard, just change the port `7007` to `6006`.
+
 
 Reference: [Expossing custom ports - Determined AI docs](https://docs.determined.ai/latest/interfaces/proxy-ports.html#exposing-custom-ports)
 
