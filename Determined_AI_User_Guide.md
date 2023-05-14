@@ -16,8 +16,8 @@ Determined-AI User Guide </h1>
   - [Connect to a shell task](#connect-to-a-shell-task)
     - [First-time setup of connecting VS Code to a shell task](#first-time-setup-of-connecting-vs-code-to-a-shell-task)
     - [Update the setup of connecting VS Code to a shell task](#update-the-setup-of-connecting-vs-code-to-a-shell-task)
+  - [Port forwarding](#port-forwarding)
   - [Experiments](#experiments)
-  - [References](#references)
 
 # Introduction
 
@@ -29,8 +29,7 @@ You can open the dashboard (a.k.a WebUI) by the following URL and log in:
 
 [https://gpu.cvgl.lab/](https://gpu.cvgl.lab/)
 
-Determined is a successful (acquired by Hewlett Packard Enterprise in 2021) open-source deep learning training platform that helps researchers train models more quickly, easily share GPU resources, and collaborate more effectively. [1](https://developer.hpe.com/blog/deep-learning-model-training-%E2%80%93-a-first-time-user%E2%80%99s-experience-with-determined-part-1/)
-
+Determined is a successful (acquired by Hewlett Packard Enterprise in 2021) open-source deep learning training platform that helps researchers train models more quickly, easily share GPU resources, and collaborate more effectively.
 Its architecture is shown below:
 
 ![System Architecture](Determined_AI_User_Guide/detai-high-levl-architecture-thumbnail-v2.png)
@@ -246,15 +245,58 @@ You can use **Visual Studio Code** or **PyCharm** to connect to a shell task.
 
     ![ssh config update](./Determined_AI_User_Guide/ssh_8.png)
 
+## Port forwarding
+
+You will need do the *port forwarding* from the task container to your personal computer through the SSH tunnel (managed by the `determined-cli`) when you want to set up services like `tensorboard`, etc, in your task container. 
+
+Here is an example. First launch a notebook or shell task with the `proxy_ports` configurations:
+
+```yaml
+description: nerfstudio-test
+resources:
+    slots: 1
+    resource_pool: 32c64t_256_3090
+    shm_size: 4G
+bind_mounts:
+    - host_path: /workspace/lzzhao/
+      container_path: /run/determined/workdir/home/
+    - host_path: /workspace/lzzhao/.cache
+      container_path: /run/determined/workdir/.cache/
+    - host_path: /datasets/
+      container_path: /run/determined/workdir/data/
+environment:
+    image: harbor.cvgl.lab/library/zlz-nerfstudio:cuda-11.8-devel-ubuntu22.04-torch-1.13.1-cu117-230513
+    proxy_ports:
+      - proxy_port: 7007
+        proxy_tcp: true
+```
+
+where where 7007 is the websocket port used by nerfstudio's vistualization, and the `bind_mount` with `.cache` is used to store pytorch cache files so that it won't download the pretrained weights again and again.
+
+Then run a nerfstudio training in the terminal of your notebook or shell task:
+
+```bash
+ns-train nerfacto --data ~/data/nerfstudio/nerfstudio/poster/
+```
+
+Then launch port forwarding on you personal computer with this command:
+
+```bash
+export DET_MASTER=10.0.1.66
+export TASK_ID=YOUR_TASK_UUID
+python -m determined.cli.tunnel --listener 7007 --auth $DET_MASTER $TASK_ID:7007
+```
+
+Remember to change **YOUR_TASK_UUID** to your task's UUID.
+
+Finally you can open the URL given in the nerfstudio's terminal with your browser, in my case it's https://viewer.nerf.studio/versions/23-05-01-0/?websocket_url=ws://localhost:7007
+
+Reference: [Expossing custom ports - Determined AI docs](https://docs.determined.ai/latest/interfaces/proxy-ports.html#exposing-custom-ports)
+
 ## Experiments
 
 (TODO)
 
-![experiments](https://gpu.cvgl.lab/docs/_images/adaptive-asha-experiment-detail.png)
+![experiments](https://docs.determined.ai/latest/_images/adaptive-asha-experiment-detail.png)
 ![experiments](https://www.determined.ai/assets/images/developers/dashboard.jpg)
 ![hyper parameter tuning](https://www.determined.ai/assets/images/blogs/core-api/pic-4.png)
-## References
-
-[[1]](https://gpu.cvgl.lab/docs/sysadmin-basics/users.html)
-[[2]](https://zhuanlan.zhihu.com/p/422462131)
-[[3]](https://gpu.cvgl.lab/docs/interfaces/ide-integration.html)

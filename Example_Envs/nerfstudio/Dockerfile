@@ -1,0 +1,153 @@
+FROM nvcr.io/nvidia/cuda:11.8.0-devel-ubuntu22.04
+
+LABEL org.opencontainers.image.version = "0.1.18"
+LABEL org.opencontainers.image.source = "https://github.com/nerfstudio-project/nerfstudio"
+LABEL org.opencontainers.image.licenses = "Apache License 2.0"
+LABEL org.opencontainers.image.base.name="docker.io/library/nvidia/cuda:11.8.0-devel-ubuntu22.04"
+
+ARG MAX_JOBS 32
+ARG DEBIAN_FRONTEND=noninteractive
+ARG CUDA_ARCHITECTURES=89;86
+ENV TORCH_CUDA_ARCH_LIST="8.9;8.6"
+ENV TCNN_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
+ENV TZ=Asia/Shanghai LANG=C.UTF-8 LC_ALL=C.UTF-8 PIP_NO_CACHE_DIR=1 PIP_CACHE_DIR=/tmp/
+
+RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&\
+    sed -i "s/security.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&\
+    rm -f /etc/apt/sources.list.d/* &&\
+    rm -rf /opt/hpcx/ &&\
+    apt-get update && apt-get upgrade -y &&\
+    apt-get install -y --no-install-recommends \
+        # Determined requirements and common tools
+        autoconf automake autotools-dev build-essential ca-certificates \
+        make cmake ninja-build pkg-config g++ ccache yasm \
+        ccache doxygen graphviz plantuml \
+        daemontools krb5-user ibverbs-providers libibverbs1 \
+        libkrb5-dev librdmacm1 libssl-dev libtool \
+        libnuma1 libnuma-dev libpmi2-0-dev \
+        openssh-server openssh-client pkg-config nfs-common \
+        ## Tools
+        git curl wget unzip nano vim-tiny net-tools sudo htop iotop \
+        cloc rsync xz-utils software-properties-common \
+        ## Deps
+        ffmpeg \
+        libatlas-base-dev \
+        libboost-filesystem-dev \
+        libboost-graph-dev \
+        libboost-program-options-dev \
+        libboost-system-dev \
+        libboost-test-dev \
+        libhdf5-dev \
+        libcgal-dev \
+        libeigen3-dev \
+        libflann-dev \
+        libfreeimage-dev \
+        libgflags-dev \
+        libglew-dev \
+        libgoogle-glog-dev \
+        libmetis-dev \
+        libprotobuf-dev \
+        libqt5opengl5-dev \
+        libsqlite3-dev \
+        libsuitesparse-dev \
+        protobuf-compiler \
+        python-is-python3 \
+        python3.10-dev \
+        python3-pip \
+        qtbase5-dev \
+    && rm /etc/ssh/ssh_host_ecdsa_key \
+    && rm /etc/ssh/ssh_host_ed25519_key \
+    && rm /etc/ssh/ssh_host_rsa_key \
+    && cp /etc/ssh/sshd_config /etc/ssh/sshd_config_bak \
+    && sed -i "s/^.*X11Forwarding.*$/X11Forwarding yes/" /etc/ssh/sshd_config \
+    && sed -i "s/^.*X11UseLocalhost.*$/X11UseLocalhost no/" /etc/ssh/sshd_config \
+    && grep "^X11UseLocalhost" /etc/ssh/sshd_config || echo "X11UseLocalhost no" >> /etc/ssh/sshd_config \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /tmp
+
+# Install GLOG (required by ceres).
+RUN git clone --branch v0.6.0 https://github.com/google/glog.git --single-branch && \
+    cd glog && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
+    make -j `nproc` && \
+    make install && \
+    cd ../.. && \
+    rm -rf glog
+# Add glog path to LD_LIBRARY_PATH.
+ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
+
+# Install Ceres-solver (required by colmap).
+RUN git clone --branch 2.1.0 https://ceres-solver.googlesource.com/ceres-solver.git --single-branch && \
+    cd ceres-solver && \
+    git checkout $(git describe --tags) && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF && \
+    make -j `nproc` && \
+    make install && \
+    cd ../.. && \
+    rm -rf ceres-solver
+
+# Install colmap.
+RUN git clone --branch 3.8 https://github.com/colmap/colmap.git --single-branch && \
+    cd colmap && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DCUDA_ENABLED=ON \
+             -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} && \
+    make -j `nproc` && \
+    make install && \
+    rm -rf /tmp/*
+
+# Install pycolmap 0.3.0, required by hloc.
+# TODO(https://github.com/colmap/pycolmap/issues/111) use wheel when available for Python 3.10
+RUN git clone --branch v0.3.0 --recursive https://github.com/colmap/pycolmap.git && \
+    cd pycolmap && \
+    python3.10 -m pip install . && \
+    rm -rf /tmp/*
+
+# Install hloc master (last release (1.3) is too old) as alternative feature detector and matcher option for nerfstudio.
+RUN git clone --branch master --recursive https://github.com/cvg/Hierarchical-Localization && \
+    cd Hierarchical-Localization && \
+    python3.10 -m pip install -e . && \
+    rm -rf /tmp/*
+
+# Install pyceres from source
+RUN git clone --branch main --recursive https://github.com/cvg/pyceres.git && \
+    cd pyceres && \
+    python3.10 -m pip install -e . && \
+    rm -rf /tmp/*
+
+# Install pixel perfect sfm.
+RUN git clone --branch main --recursive https://github.com/cvg/pixel-perfect-sfm && \
+    cd pixel-perfect-sfm && \
+    python3.10 -m pip install -e . && \
+    rm -rf /tmp/*
+
+ENV PATH="/opt/conda/bin:${PATH}"
+ENV PYTHONUNBUFFERED=1 PYTHONFAULTHANDLER=1 PYTHONHASHSEED=0
+ENV JUPYTER_CONFIG_DIR=/run/determined/jupyter/config
+ENV JUPYTER_DATA_DIR=/run/determined/jupyter/data
+ENV JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
+COPY requirements.txt /tmp/requirements.txt
+RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
+    cd determinedai-container-scripts &&\
+    git checkout v0.1 &&\
+    pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple &&\
+    pip install -U pip setuptools pathtools promise pybind11 &&\
+    pip install determined && pip uninstall -y determined &&\
+    pip install -r notebook-requirements.txt &&\
+    pip install open3d>=0.16.0 --ignore-installed &&\
+    pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117 &&\
+    pip install -r /tmp/requirements.txt &&\
+    pip install git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch &&\
+    pip install nerfstudio --no-deps &&\
+    ./add_det_nobody_user.sh &&\
+    ./install_libnss_determined.sh &&\
+    rm -rf /tmp/*
+
+CMD ns-install-cli --mode install && /bin/bash
