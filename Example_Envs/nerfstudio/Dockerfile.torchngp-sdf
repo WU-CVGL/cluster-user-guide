@@ -8,7 +8,6 @@ RUN pip install -U pip setuptools pathtools promise pybind11 &&\
     pip install nerfacc==0.3.5
 
 COPY pyproject.toml /tmp
-
 RUN cd /tmp &&\
     git clone https://github.com/autonomousvision/sdfstudio.git &&\
     cd sdfstudio &&\
