@@ -295,7 +295,7 @@ Finally you can open the URL given in the nerfstudio's terminal with your browse
 P.S. for tensorboard, just change the port `7007` to `6006`.
 
 
-Reference: [Expossing custom ports - Determined AI docs](https://docs.determined.ai/latest/interfaces/proxy-ports.html#exposing-custom-ports)
+Reference: [Exposing custom ports - Determined AI docs](https://docs.determined.ai/latest/interfaces/proxy-ports.html#exposing-custom-ports)
 
 ## Experiments
 
