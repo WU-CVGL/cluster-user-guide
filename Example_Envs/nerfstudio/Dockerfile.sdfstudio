@@ -1,0 +1,20 @@
+FROM base
+ARG NERF_ACC_VER=0.3.5
+
+RUN cd /tmp &&\
+    wget https://github.com/KAIR-BAIR/nerfacc/archive/refs/tags/v${NERF_ACC_VER}.tar.gz &&\
+    tar xvzf v${NERF_ACC_VER}.tar.gz &&\
+    cd nerfacc-${NERF_ACC_VER} &&\
+    python setup.py install &&\
+    rm -rf /tmp/*
+
+COPY pyproject.toml /tmp
+RUN cd /tmp &&\
+    git clone https://github.com/autonomousvision/sdfstudio.git &&\
+    cd sdfstudio &&\
+    rm pyproject.toml &&\
+    cp /tmp/pyproject.toml . &&\
+    pip install . &&\
+    rm -rf /tmp/*
+
+CMD ns-install-cli --mode install && /bin/bash

@@ -128,12 +128,11 @@ RUN git clone --branch main --recursive https://github.com/cvg/pixel-perfect-sfm
     python3.10 -m pip install -e . && \
     rm -rf /tmp/*
 
-ENV PATH="/opt/conda/bin:${PATH}"
+# Install Determined AI and python deps
 ENV PYTHONUNBUFFERED=1 PYTHONFAULTHANDLER=1 PYTHONHASHSEED=0
 ENV JUPYTER_CONFIG_DIR=/run/determined/jupyter/config
 ENV JUPYTER_DATA_DIR=/run/determined/jupyter/data
 ENV JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
-COPY requirements.txt /tmp/requirements.txt
 RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     cd determinedai-container-scripts &&\
     git checkout v0.1 &&\
@@ -141,13 +140,28 @@ RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     pip install -U pip setuptools pathtools promise pybind11 &&\
     pip install determined && pip uninstall -y determined &&\
     pip install -r notebook-requirements.txt &&\
-    pip install open3d>=0.16.0 --ignore-installed &&\
-    pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117 &&\
-    pip install -r /tmp/requirements.txt &&\
-    pip install git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch &&\
-    pip install nerfstudio --no-deps &&\
     ./add_det_nobody_user.sh &&\
     ./install_libnss_determined.sh &&\
     rm -rf /tmp/*
 
-CMD ns-install-cli --mode install && /bin/bash
+RUN git clone --recursive https://github.com/pytorch/pytorch && \
+    cd pytorch && \
+    git checkout 44dac51 && \
+    git submodule sync && \
+    git submodule update --init --recursive --jobs 0 && \
+    TORCH_CUDA_ARCH_LIST="8.6;8.9" TORCH_NVCC_FLAGS="-Xfatbin -compress-all" \
+    python setup.py install && \
+    cd .. && rm -rf pytorch
+
+RUN git clone https://github.com/pytorch/vision.git torchvision \
+    && cd torchvision \
+    && git checkout tags/v0.14.1 \
+    && python setup.py install && \
+    cd .. && rm -rf torchvision
+
+# Install nerfstudio deps
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch
+RUN pip install open3d>=0.16.0 --ignore-installed &&\
+    pip install lpips --no-deps &&\
+    pip install -r /tmp/requirements.txt

@@ -1,0 +1,20 @@
+FROM harbor.cvgl.lab/library/zlz-torch-ngp:22.12
+
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install -U pip setuptools pathtools promise pybind11 &&\
+    pip install open3d>=0.16.0 --ignore-installed &&\
+    pip install lpips --no-deps &&\
+    pip install -r /tmp/requirements.txt &&\
+    pip install nerfacc==0.3.5
+
+COPY pyproject.toml /tmp
+
+RUN cd /tmp &&\
+    git clone https://github.com/autonomousvision/sdfstudio.git &&\
+    cd sdfstudio &&\
+    rm pyproject.toml &&\
+    cp /tmp/pyproject.toml . &&\
+    pip install . &&\
+    rm -rf /tmp/*
+
+CMD ns-install-cli --mode install && /bin/bash
