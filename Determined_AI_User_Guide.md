@@ -284,9 +284,7 @@ ns-train nerfacto --data ~/data/nerfstudio/nerfstudio/poster/
 Then launch port forwarding on you personal computer with this command:
 
 ```bash
-export DET_MASTER=10.0.1.66
-export TASK_ID=YOUR_TASK_UUID
-python -m determined.cli.tunnel --listener 7007 --auth $DET_MASTER $TASK_ID:7007
+python -m determined.cli.tunnel --listener 7007 --auth 10.0.1.66 YOUR_TASK_UUID:7007
 ```
 
 Remember to change **YOUR_TASK_UUID** to your task's UUID.
