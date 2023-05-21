@@ -1,27 +1,24 @@
 NERF_NAME=harbor.cvgl.lab/library/zlz-nerfstudio
+NERF_VERSION=0.3.0-cuda-11.8-devel-ubuntu22.04-torch-2.0.1-230521
+NERF=$(NERF_NAME):$(NERF_VERSION)
+
 SDF_NAME=harbor.cvgl.lab/library/zlz-sdfstudio
-BASE_VERSION=cuda-11.8-devel-ubuntu22.04-torch-1.14.0a0_44dac51-230515
-PREBUILT_VERSION=22.12
+SDF_VERSION=nightly-cuda-11.8-devel-ubuntu22.04-torch-1.14.0a0_44dac51-230521
+SDF=$(SDF_NAME):$(SDF_VERSION)
 
-build: build_from_scratch build_from_prebuilt
+MY_HTTP_PROXY=http://10.0.1.68:8889
+BUILD_ARGS=--build-arg http_proxy=$(MY_HTTP_PROXY) --build-arg https_proxy=$(MY_HTTP_PROXY)
 
-# Build pytorch, torchvision, nerfacc
-build_from_scratch: build_from_scratch_nerf build_from_scratch_sdf
+build: push_nerf push_sdf
 
-build_from_scratch_base:
-	docker build -t base -f Dockerfile.base .
+build_nerf:
+	docker build -t $(NERF) --target nerfstudio $(BUILD_ARGS) .
 
-build_from_scratch_nerf: build_from_scratch_base
-	docker build -t $(NERF_NAME):$(BASE_VERSION) -f Dockerfile.nerfstudio .
+push_nerf: build_nerf
+	docker push $(NERF)
 
-build_from_scratch_sdf: build_from_scratch_base
-	docker build -t $(SDF_NAME):$(BASE_VERSION) -f Dockerfile.sdfstudio .
+build_sdf:
+	docker build -t $(SDF) --target sdfstudio $(BUILD_ARGS) .
 
-# Use prebuilt pytorch, torchvision (from torchngp env) and nerfacc
-build_from_prebuilt: build_from_prebuilt_nerf build_from_prebuilt_sdf
-
-build_from_prebuilt_nerf:
-	docker build -t ${NERF_NAME}:${PREBUILT_VERSION} -f Dockerfile.torchngp-nerf .
-
-build_from_prebuilt_sdf:
-	docker build -t ${SDF_NAME}:${PREBUILT_VERSION} -f Dockerfile.torchngp-sdf .
+push_sdf: build_sdf
+	docker push $(SDF)

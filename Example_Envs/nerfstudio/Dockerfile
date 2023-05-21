@@ -1,6 +1,6 @@
-FROM nvcr.io/nvidia/cuda:11.8.0-devel-ubuntu22.04
+FROM nvcr.io/nvidia/cuda:11.8.0-devel-ubuntu22.04 AS base
 
-LABEL org.opencontainers.image.version = "0.5.15"
+LABEL org.opencontainers.image.version = "0.5.21"
 LABEL org.opencontainers.image.source = "https://github.com/WU-CVGL/cluster-user-guide"
 LABEL org.opencontainers.image.licenses = "Apache License 2.0"
 LABEL org.opencontainers.image.base.name="nvcr.io/nvidia/cuda:11.8.0-devel-ubuntu22.04"
@@ -68,64 +68,37 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
 WORKDIR /tmp
 
 # Install GLOG (required by ceres).
-RUN git clone --branch v0.6.0 https://github.com/google/glog.git --single-branch && \
-    cd glog && \
-    mkdir build && \
-    cd build && \
-    cmake .. && \
-    make -j `nproc` && \
-    make install && \
-    cd ../.. && \
-    rm -rf glog
+RUN git clone --branch v0.6.0 https://github.com/google/glog --single-branch &&\
+    cd glog &&\
+    mkdir build &&\
+    cd build &&\
+    cmake .. &&\
+    make -j `nproc` &&\
+    make install &&\
+    rm -rf /tmp/*
 # Add glog path to LD_LIBRARY_PATH.
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
 
 # Install Ceres-solver (required by colmap).
-RUN git clone --branch 2.1.0 https://ceres-solver.googlesource.com/ceres-solver.git --single-branch && \
-    cd ceres-solver && \
-    git checkout $(git describe --tags) && \
-    mkdir build && \
-    cd build && \
-    cmake .. -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF && \
-    make -j `nproc` && \
-    make install && \
-    cd ../.. && \
-    rm -rf ceres-solver
+RUN git clone --branch 2.1.0 https://ceres-solver.googlesource.com/ceres-solver --single-branch &&\
+    cd ceres-solver &&\
+    git checkout $(git describe --tags) &&\
+    mkdir build &&\
+    cd build &&\
+    cmake .. -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF &&\
+    make -j `nproc` &&\
+    make install &&\
+    rm -rf /tmp/*
 
 # Install colmap.
-RUN git clone --branch 3.8 https://github.com/colmap/colmap.git --single-branch && \
-    cd colmap && \
-    mkdir build && \
-    cd build && \
+RUN git clone --branch 3.8 https://github.com/colmap/colmap --single-branch &&\
+    cd colmap &&\
+    mkdir build &&\
+    cd build &&\
     cmake .. -DCUDA_ENABLED=ON \
-             -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} && \
-    make -j `nproc` && \
-    make install && \
-    rm -rf /tmp/*
-
-# Install pycolmap 0.3.0, required by hloc.
-# TODO(https://github.com/colmap/pycolmap/issues/111) use wheel when available for Python 3.10
-RUN git clone --branch v0.3.0 --recursive https://github.com/colmap/pycolmap.git && \
-    cd pycolmap && \
-    python3.10 -m pip install . && \
-    rm -rf /tmp/*
-
-# Install hloc master (last release (1.3) is too old) as alternative feature detector and matcher option for nerfstudio.
-RUN git clone --branch master --recursive https://github.com/cvg/Hierarchical-Localization && \
-    cd Hierarchical-Localization && \
-    python3.10 -m pip install -e . && \
-    rm -rf /tmp/*
-
-# Install pyceres from source
-RUN git clone --branch main --recursive https://github.com/cvg/pyceres.git && \
-    cd pyceres && \
-    python3.10 -m pip install -e . && \
-    rm -rf /tmp/*
-
-# Install pixel perfect sfm.
-RUN git clone --branch main --recursive https://github.com/cvg/pixel-perfect-sfm && \
-    cd pixel-perfect-sfm && \
-    python3.10 -m pip install -e . && \
+             -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} &&\
+    make -j `nproc` &&\
+    make install &&\
     rm -rf /tmp/*
 
 # Install Determined AI and python deps
@@ -144,23 +117,72 @@ RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     ./install_libnss_determined.sh &&\
     rm -rf /tmp/*
 
-RUN git clone --recursive https://github.com/pytorch/pytorch && \
-    cd pytorch && \
-    git checkout 44dac51 && \
-    git submodule sync && \
-    git submodule update --init --recursive --jobs 0 && \
-    python setup.py install && \
-    cd .. && rm -rf pytorch
+# Install pycolmap 0.3.0, required by hloc.
+# TODO(https://github.com/colmap/pycolmap/issues/111) use wheel when available for Python 3.10
+RUN git clone --branch v0.3.0 --recursive https://github.com/colmap/pycolmap &&\
+    cd pycolmap &&\
+    pip install . &&\
+    rm -rf /tmp/*
 
-RUN git clone https://github.com/pytorch/vision.git torchvision \
-    && cd torchvision \
-    && git checkout tags/v0.14.1 \
-    && python setup.py install && \
-    cd .. && rm -rf torchvision
+# Install pyceres from source
+RUN git clone --branch main --recursive https://github.com/cvg/pyceres &&\
+    cd pyceres &&\
+    pip install -e . &&\
+    rm -rf /tmp/*
 
-# Install nerfstudio deps
-COPY requirements.txt /tmp/requirements.txt
-RUN pip install git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch
+
+FROM base AS nerfstudio
+RUN pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118 &&\
+    pip install git+https://github.com/cvg/Hierarchical-Localization@master &&\
+    pip install git+https://github.com/cvg/pixel-perfect-sfm@main &&\
+    pip install git+https://github.com/NVlabs/tiny-cuda-nn@master#subdirectory=bindings/torch &&\
+    rm -rf /tmp/*
+
 RUN pip install open3d>=0.16.0 --ignore-installed &&\
+    pip install nerfstudio==0.3.0 -i https://pypi.org/simple/ &&\
+    pip install einops &&\
+    rm -rf /tmp/*
+
+CMD ns-install-cli --mode install && /bin/bash
+
+
+FROM base AS sdfstudio
+ARG NERF_ACC_VER=0.3.5
+RUN git clone --recursive https://github.com/pytorch/pytorch &&\
+    cd pytorch &&\
+    git checkout 44dac51 &&\
+    git submodule sync &&\
+    git submodule update --init --recursive --jobs 0 &&\
+    python setup.py install &&\
+    rm -rf /tmp/*
+
+RUN git clone --branch v0.14.1 https://github.com/pytorch/vision torchvision --single-branch &&\
+    cd torchvision &&\
+    python setup.py install &&\
+    rm -rf /tmp/*
+
+COPY sdfstudio/requirements.txt /tmp/requirements.txt
+RUN pip install git+https://github.com/cvg/Hierarchical-Localization@master &&\
+    pip install git+https://github.com/NVlabs/tiny-cuda-nn@master#subdirectory=bindings/torch &&\
+    pip install open3d>=0.16.0 --ignore-installed &&\
     pip install lpips --no-deps &&\
-    pip install -r /tmp/requirements.txt
+    pip install -r /tmp/requirements.txt &&\
+    rm -rf /tmp/*
+
+RUN cd /tmp &&\
+    wget https://github.com/KAIR-BAIR/nerfacc/archive/refs/tags/v${NERF_ACC_VER}.tar.gz &&\
+    tar xvzf v${NERF_ACC_VER}.tar.gz &&\
+    cd nerfacc-${NERF_ACC_VER} &&\
+    python setup.py install &&\
+    rm -rf /tmp/*
+
+COPY sdfstudio/pyproject.toml /tmp
+RUN cd /tmp &&\
+    git clone https://github.com/autonomousvision/sdfstudio &&\
+    cd sdfstudio &&\
+    rm pyproject.toml &&\
+    cp /tmp/pyproject.toml . &&\
+    pip install . &&\
+    rm -rf /tmp/*
+
+CMD ns-install-cli --mode install && /bin/bash
