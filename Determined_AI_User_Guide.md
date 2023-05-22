@@ -265,7 +265,7 @@ bind_mounts:
     - host_path: /datasets/
       container_path: /run/determined/workdir/data/
 environment:
-    image: harbor.cvgl.lab/library/zlz-nerfstudio:0.3.0-cuda-11.8-devel-ubuntu22.04-torch-2.0.1-230521
+    image: harbor.cvgl.lab/library/zlz-nerfstudio:0.3.0-cuda-11.8-devel-ubuntu22.04-torch-2.0.1-230522
     proxy_ports:
       - proxy_port: 7007
         proxy_tcp: true
@@ -273,7 +273,7 @@ environment:
 
 where where `7007` is the websocket port used by nerfstudio's vistualization, and the `bind_mount` with `.cache` is used to store pytorch cache files so that it won't download the pretrained weights again and again.
 
-> P.S. You can also try out `sdfstudio` by using `harbor.cvgl.lab/library/zlz-sdfstudio:nightly-cuda-11.8-devel-ubuntu22.04-torch-1.14.0a0_44dac51-230521` in `environment.image`.
+> P.S. You can also try out `sdfstudio` by using `harbor.cvgl.lab/library/zlz-sdfstudio:nightly-cuda-11.8-devel-ubuntu22.04-torch-1.14.0a0_44dac51-230522` in `environment.image`.
 
 Then run a nerfstudio training in the terminal of your notebook or shell task:
 

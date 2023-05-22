@@ -36,6 +36,7 @@ tensorboard>=2.13.0
 # torch>=1.12.1<2.0.0
 # torchmetrics[image]>=0.9.3
 torchmetrics
+torch-fidelity
 torchtyping>=0.1.4
 # torchvision>=0.13.0
 trimesh>=3.20.2
