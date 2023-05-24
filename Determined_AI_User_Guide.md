@@ -56,10 +56,14 @@ You can use the CLI either on the login node or on your local development machin
 
     The CLI can be installed via pip:
 
+    ```bash
+    pip install determined-cli
+    ```
+
     > Note that determined>=0.18.0 does not show the port number when using command `det shell show_ssh_command`, though this works well with ssh, Visual Studio Code etc., but PyCharm must have this port number. If you uses PyCharm and want to use its remote development on the cluster, you should use version 0.17.x.
 
     ```bash
-    pip install determined==0.17.15
+    pip install determined-cli==0.17.15 # For pycharm users
     ```
 
 2) Configure environment variable
