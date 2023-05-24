@@ -307,17 +307,6 @@ Then connect to `localhost:23389` using `mstsc.exe` or Remote Desktop App from [
 
 We are currently using NFS to share filesystems between cluster nodes. The storage space of the login node is small (about 100GB), so it is recommended to store code and data in NFS shared folders: `/dataset` for datasets and `/workspace` for workspaces. The two NFS folders are allocated on the storage server, which currently offers a capacity of 143TB, with data redundancy and snapshot capability powered by TrueNAS ZFS.
 
-We can check the file systems with the command `df -H`:
-
-```text
-peter@login.cvgl.lab: ~ $ df -H
-
-Filesystem                                  Size  Used Avail Use% Mounted on
-/dev/nvme0n1p2                              138G   25G  113G  19% /
-nas.cvgl.lab:/mnt/Peter/Datasets            143T  4.2T  139T   3% /datasets
-nas.cvgl.lab:/mnt/Peter/Workspace/wangpeng  8.8T  136G  8.7T   2% /workspace/wangpeng
-```
-
 You need to ask the system admin to create your workspace folder `/workspace/<username>`.
 
 By default, other users do not have either read or write [permissions](https://scicomp.ethz.ch/wiki/Linux_permissions) on your folder.
