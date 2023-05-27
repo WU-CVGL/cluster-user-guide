@@ -1,10 +1,5 @@
 FROM nvcr.io/nvidia/cuda:11.8.0-devel-ubuntu22.04 AS base
 
-LABEL org.opencontainers.image.version = "0.5.21"
-LABEL org.opencontainers.image.source = "https://github.com/WU-CVGL/cluster-user-guide"
-LABEL org.opencontainers.image.licenses = "Apache License 2.0"
-LABEL org.opencontainers.image.base.name="nvcr.io/nvidia/cuda:11.8.0-devel-ubuntu22.04"
-
 ARG MAX_JOBS 32
 ARG DEBIAN_FRONTEND=noninteractive
 ARG CUDA_ARCHITECTURES=89;86
@@ -139,7 +134,10 @@ RUN pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url h
     rm -rf /tmp/*
 
 RUN pip install open3d>=0.16.0 --ignore-installed &&\
-    pip install nerfstudio==0.3.0 -i https://pypi.org/simple/ &&\
+    # Stable version
+    # pip install nerfstudio==0.3.1 -i https://pypi.org/simple/ &&\
+    # Nightly version
+    pip install git+https://github.com/nerfstudio-project/nerfstudio@main -i https://pypi.org/simple/ &&\
     pip install einops torchtyping>=0.1.4 kplanes-nerfstudio &&\
     rm -rf /tmp/*
 
