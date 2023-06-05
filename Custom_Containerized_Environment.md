@@ -46,17 +46,17 @@ Notice that we are using the `apt` mirror by `ustc.edu.cn` and the `pip` mirror 
 To build the image, use the following command:
 
 ```bash
-docker build -t my_image:v1.0 .
+DOCKER_BUILDKIT=0 docker build -t my_image:v1.0 .
 ```
 
-where `my_image` is your image name, and `v1.0` is the image tag that usually contains descriptions and version information.
+where `my_image` is your image name, and `v1.0` is the image tag that usually contains descriptions and version information. `DOCKER_BUILDKIT=0` is needed if you are using private Docker registry (i.e. our Harbor) [[Reference]](https://stackoverflow.com/questions/75766469/docker-build-cannot-pull-base-image-from-private-docker-registry-that-requires).
 
 Don't forget the dot "." at the end of the command!
 
 If the Dockerfile building process needs international internet access, you can add build arguments to use the public proxy services:
 
 ```bash
-docker build -t my_image:v1.0 --build-arg http_proxy=http://10.0.1.68:8889 --build-arg https_proxy=http://10.0.1.68:8889 .
+DOCKER_BUILDKIT=0 docker build -t my_image:v1.0 --build-arg http_proxy=http://10.0.1.68:8889 --build-arg https_proxy=http://10.0.1.68:8889 .
 ```
 
 The status of our public proxies can be monitored here: [Grafana - v2ray-dashboard](https://grafana.cvgl.lab/d/CCSvIIEZz/v2ray-dashboard)
