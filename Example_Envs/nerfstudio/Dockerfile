@@ -135,7 +135,7 @@ RUN pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url h
 
 RUN pip install open3d>=0.16.0 --ignore-installed &&\
     # Stable version
-    # pip install nerfstudio==0.3.1 -i https://pypi.org/simple/ &&\
+    pip install "nerfstudio[dev,doc]" -i https://pypi.org/simple/ &&\
     # Nightly version
     pip install git+https://github.com/nerfstudio-project/nerfstudio@main -i https://pypi.org/simple/ &&\
     pip install einops torchtyping>=0.1.4 kplanes-nerfstudio &&\

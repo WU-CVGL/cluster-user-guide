@@ -1,5 +1,5 @@
 NERF_NAME=harbor.cvgl.lab/library/zlz-nerfstudio
-NERF_VERSION=nightly-cuda-11.8-devel-ubuntu22.04-torch-2.0.1-230527
+NERF_VERSION=nightly-cuda-11.8-devel-ubuntu22.04-torch-2.0.1-230605
 NERF=$(NERF_NAME):$(NERF_VERSION)
 
 SDF_NAME=harbor.cvgl.lab/library/zlz-sdfstudio
