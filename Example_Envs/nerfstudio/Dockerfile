@@ -23,7 +23,7 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
         openssh-server openssh-client pkg-config nfs-common \
         ## Tools
         git curl wget unzip nano vim-tiny net-tools sudo htop iotop \
-        cloc rsync xz-utils software-properties-common \
+        cloc rsync screen tmux xz-utils software-properties-common \
         ## Deps
         ffmpeg \
         libatlas-base-dev \
@@ -138,7 +138,7 @@ RUN pip install open3d>=0.16.0 --ignore-installed &&\
     pip install "nerfstudio[dev,doc]" -i https://pypi.org/simple/ &&\
     # Nightly version
     pip install git+https://github.com/nerfstudio-project/nerfstudio@main -i https://pypi.org/simple/ &&\
-    pip install einops torchtyping>=0.1.4 kplanes-nerfstudio &&\
+    pip install coverage einops torchtyping>=0.1.4 kplanes-nerfstudio &&\
     rm -rf /tmp/*
 
 CMD ns-install-cli --mode install && /bin/bash
