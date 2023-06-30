@@ -79,21 +79,29 @@ GPU Node 1：
 |  NIC   | Intel X520-SR2 (82599ES) 10GbE Dual Port |
 |  RAID  | LSI MegaRAID SAS-3 3108 |
 
-GPU Node 2, 3, 4:
+GPU Node 2:
 
 |  Name  |  Spec  |
 | :----: | :----  |
 |  Model | Powerleader PR4908R (Supermicro 4124GS-TNR)|
 |  CPU   | AMD EPYC 7402 * 2 (48C/96T, 2.8-3.35GHz)|
-|  RAM   | SK Hynix† / Samsung‡ / Samsung‡ DDR4 512G (32G*16) 3200MT/s ECC REG|
-|  GPU   | NVIDIA (0x10DE) / MSI (0x1462) / MSI (0x1462) RTX 3090 * 8 |
+|  RAM   | SK Hynix HMA84GR7DJR4N-XN DDR4 512G (32G*16) 3200MT/s ECC REG|
+|  GPU   | MANLI (NVIDIA/0x10DE) RTX 4090 * 8 |
 |  SSD   | Intel P4510 2TB * 1 |
 |  NIC   | Intel I350-T2 1GbE Dual Port|
 |  NIC   | Intel X520-SR2 (82599ES) 10GbE Dual Port |
 
-> † SK Hynix 3200: HMA84GR7DJR4N-XN
-> 
-> ‡ Samsung 3200: M393A4K40DB3-CWE
+GPU Node 3, 4:
+
+|  Name  |  Spec  |
+| :----: | :----  |
+|  Model | Powerleader PR4908R (Supermicro 4124GS-TNR)|
+|  CPU   | AMD EPYC 7402 * 2 (48C/96T, 2.8-3.35GHz)|
+|  RAM   | Samsung M393A4K40DB3-CWE DDR4 512G (32G*16) 3200MT/s ECC REG|
+|  GPU   | MSI (0x1462) RTX 3090 * 8 |
+|  SSD   | Intel P4510 2TB * 1 |
+|  NIC   | Intel I350-T2 1GbE Dual Port|
+|  NIC   | Intel X520-SR2 (82599ES) 10GbE Dual Port |
 
 GPU Node 5:
 

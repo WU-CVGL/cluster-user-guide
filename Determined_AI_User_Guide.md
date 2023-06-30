@@ -70,6 +70,8 @@ You can use the CLI either on the login node or on your local development machin
 
     If you are using your own PC, you need to add the environment variable `DET_MASTER=10.0.1.66`.
 
+    > P.S. For some historical reasons, if you are using VPN. you should set this to `DET_MASTER=10.0.1.68`.
+
     For Linux, *nix including macOS, if you are using `bash` append this line to the end of `~/.bashrc` (most systems) or `~/.bash_profile` (some macOS);
 
     If you are using `zsh`, append it to the end of `~/.zshrc`:
@@ -93,6 +95,8 @@ You can use the CLI either on the login node or on your local development machin
     ```bash
     det -m 10.0.1.66 user login <username>
     ```
+
+    P.S. If you are using VPN. you should use `det -m 10.0.1.68 user login <username>`.
 
 ## Changing passwords
 
@@ -290,6 +294,8 @@ Then launch port forwarding on you personal computer with this command:
 ```bash
 python -m determined.cli.tunnel --listener 7007 --auth 10.0.1.66 YOUR_TASK_UUID:7007
 ```
+
+P.S. If you are using VPN. you should use `10.0.1.68` instead of `10.0.1.66`.
 
 Remember to change **YOUR_TASK_UUID** to your task's UUID.
 
