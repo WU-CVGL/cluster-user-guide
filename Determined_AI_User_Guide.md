@@ -96,7 +96,7 @@ You can use the CLI either on the login node or on your local development machin
     det -m 10.0.1.66 user login <username>
     ```
 
-    P.S. If you are using VPN. you should use `det -m 10.0.1.68 user login <username>`.
+    > P.S. If you are using VPN. you should use `det -m 10.0.1.68 user login <username>`.
 
 ## Changing passwords
 
@@ -295,14 +295,14 @@ Then launch port forwarding on you personal computer with this command:
 python -m determined.cli.tunnel --listener 7007 --auth 10.0.1.66 YOUR_TASK_UUID:7007
 ```
 
-P.S. If you are using VPN. you should use `10.0.1.68` instead of `10.0.1.66`.
+> P.S. If you are using VPN. you should use `10.0.1.68` instead of `10.0.1.66`.
 
 Remember to change **YOUR_TASK_UUID** to your task's UUID.
 
 Finally you can open the URL given in the nerfstudio's terminal with your browser, in my case it's https://viewer.nerf.studio/versions/23-05-01-0/?websocket_url=ws://localhost:7007
 
 
-P.S. for tensorboard, just change the port `7007` to `6006`.
+> P.S. for tensorboard, just change the port `7007` to `6006`.
 
 
 Reference: [Exposing custom ports - Determined AI docs](https://docs.determined.ai/latest/interfaces/proxy-ports.html#exposing-custom-ports)
