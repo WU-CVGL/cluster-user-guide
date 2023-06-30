@@ -7,7 +7,11 @@ with Docker and Harbor </h1>
 
 For beginners, it is recommended that custom images use one of the Determined AI's official images as a base image, using the `FROM` instruction.
 
+## Example
+
 Here is an example: Suppose you have `environment.yaml` for creating the `conda` environment, `pip_requirements.txt` for `pip` requirements and some `apt` packages that need to be installed.
+
+> Before proceeding to build your custom Docker image, you need to [install Docker](https://docs.docker.com/engine/install/), or you can choose the *easier* way: build it on the **login-node**.
 
 Put these files in a folder, and create a `Dockerfile` with the following contents:
 
