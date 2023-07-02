@@ -273,7 +273,7 @@ bind_mounts:
     - host_path: /datasets/
       container_path: /run/determined/workdir/data/
 environment:
-    image: harbor.cvgl.lab/library/zlz-nerfstudio:0.3.0-cuda-11.8-devel-ubuntu22.04-torch-2.0.1-230522
+    image: harbor.cvgl.lab/library/zlz-nerfstudio:nightly-cuda-11.8-devel-ubuntu22.04-torch-2.0.1-230628
     proxy_ports:
       - proxy_port: 7007
         proxy_tcp: true
