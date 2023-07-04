@@ -71,7 +71,7 @@ The pulling stage will take about half an hour or longer for the first time. We 
 
 Instead of pulling determinedai's images from Docker Hub, you can pull them from our Harbor registry.
 
-Check out [here](https://harbor.lins.lab/harbor/projects/2/repositories/environments/) to see the available images. You can also ask the system admin to add or update the images.
+Check out [here](https://harbor.cvgl.lab/harbor/projects/2/repositories/environments/) to see the available images. You can also ask the system admin to add or update the images.
 
 To use our Harbor registry, you need to complete the following setup:
 

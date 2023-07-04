@@ -32,7 +32,7 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
         libboost-program-options-dev \
         libboost-system-dev \
         libboost-test-dev \
-        libhdf5-dev \
+        libcereal-dev \
         libcgal-dev \
         libeigen3-dev \
         libflann-dev \
@@ -40,6 +40,7 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
         libgflags-dev \
         libglew-dev \
         libgoogle-glog-dev \
+        libhdf5-dev \
         libmetis-dev \
         libprotobuf-dev \
         libqt5opengl5-dev \
