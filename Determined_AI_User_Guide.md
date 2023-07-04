@@ -266,10 +266,8 @@ resources:
     resource_pool: 32c64t_256_3090
     shm_size: 4G
 bind_mounts:
-    - host_path: /workspace/lzzhao/
+    - host_path: /workspace/<user_name>/
       container_path: /run/determined/workdir/home/
-    - host_path: /workspace/lzzhao/.cache
-      container_path: /run/determined/workdir/.cache/
     - host_path: /datasets/
       container_path: /run/determined/workdir/data/
 environment:
