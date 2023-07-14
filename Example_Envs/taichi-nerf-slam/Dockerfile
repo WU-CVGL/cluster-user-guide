@@ -7,7 +7,7 @@ ARG CMAKE_VERSION=3.26.3
 ARG OPENEXR_VERSION=3.1.7
 ARG OPENCV_VERSION=4.7.0
 ARG CLANG_VER=12
-ARG MAX_JOBS=32
+ARG MAX_JOBS=16
 
 RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&\
     sed -i "s/security.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&\
