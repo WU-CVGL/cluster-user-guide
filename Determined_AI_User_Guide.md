@@ -57,13 +57,13 @@ You can use the CLI either on the login node or on your local development machin
     The CLI can be installed via pip:
 
     ```bash
-    pip install determined-cli
+    pip install determined
     ```
 
     > Note that determined>=0.18.0 does not show the port number when using command `det shell show_ssh_command`, though this works well with ssh, Visual Studio Code etc., but PyCharm must have this port number. If you uses PyCharm and want to use its remote development on the cluster, you should use version 0.17.x.
 
     ```bash
-    pip install determined-cli==0.17.15 # For pycharm users
+    pip install determined==0.17.15 # For pycharm users
     ```
 
 2) Configure environment variable
@@ -255,7 +255,7 @@ You can use **Visual Studio Code** or **PyCharm** to connect to a shell task.
 
 ## Port forwarding
 
-You will need do the *port forwarding* from the task container to your personal computer through the SSH tunnel (managed by the `determined-cli`) when you want to set up services like `tensorboard`, etc, in your task container. 
+You will need do the *port forwarding* from the task container to your personal computer through the SSH tunnel (managed by the `determined`) when you want to set up services like `tensorboard`, etc, in your task container. 
 
 Here is an example. First launch a notebook or shell task with the `proxy_ports` configurations:
 
