@@ -113,15 +113,14 @@ RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     ./install_libnss_determined.sh &&\
     rm -rf /tmp/*
 
-# Install pycolmap 0.3.0, required by hloc.
-# TODO(https://github.com/colmap/pycolmap/issues/111) use wheel when available for Python 3.10
-RUN git clone --branch v0.3.0 --recursive https://github.com/colmap/pycolmap &&\
+# Install pycolmap, required by hloc.
+RUN git clone --branch v0.4.0 --recursive https://github.com/colmap/pycolmap &&\
     cd pycolmap &&\
     pip install . &&\
     rm -rf /tmp/*
 
 # Install pyceres from source
-RUN git clone --branch main --recursive https://github.com/cvg/pyceres &&\
+RUN git clone --branch v1.0 --recursive https://github.com/cvg/pyceres &&\
     cd pyceres &&\
     pip install -e . &&\
     rm -rf /tmp/*
