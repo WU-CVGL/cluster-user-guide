@@ -397,3 +397,15 @@ The document has moved
 <A HREF="http://www.google.com/">here</A>.
 </BODY></HTML>
 ```
+
+If this proxy server does not work well, you can try another proxy service:
+
+```bash
+export http_proxy=http://10.0.1.68:28889 &&\
+export https_proxy=http://10.0.1.68:28889 &&\
+export HTTP_PROXY=http://10.0.1.68:28889 &&\
+export HTTPS_PROXY=http://10.0.1.68:28889
+curl google.com
+```
+
+> P.S. You can monitor the status of the proxy services in the [grafana dashboard](https://grafana.cvgl.lab/d/CCSvIIEZz/v2ray-dashboard?orgId=1).

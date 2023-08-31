@@ -18,6 +18,7 @@ Determined-AI User Guide </h1>
     - [Update the setup of connecting VS Code to a shell task](#update-the-setup-of-connecting-vs-code-to-a-shell-task)
   - [Port forwarding](#port-forwarding)
   - [Experiments](#experiments)
+  - [Monitoring](#monitoring)
 
 # Introduction
 
@@ -312,3 +313,7 @@ Reference: [Exposing custom ports - Determined AI docs](https://docs.determined.
 ![experiments](https://docs.determined.ai/latest/_images/adaptive-asha-experiment-detail.png)
 ![experiments](https://www.determined.ai/assets/images/developers/dashboard.jpg)
 ![hyper parameter tuning](https://www.determined.ai/assets/images/blogs/core-api/pic-4.png)
+
+## Monitoring
+
+You can check the realtime utilization of the cluster in the [grafana dashboard](https://grafana.cvgl.lab/d/glTohhh7k/cluster-realtime-hardware-utilization-cadvisor-tba-and-dcgm-exporter?orgId=1).
