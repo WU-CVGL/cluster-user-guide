@@ -54,7 +54,6 @@ RUN pip install \
     omegaconf test-tube streamlit setuptools pillow einops torch-fidelity \
     transformers torchmetrics kornia
 
-WORKDIR /tmp
 RUN git clone https://github.com/CompVis/taming-transformers &&\
     cd taming-transformers &&\
     pip install . &&\
@@ -62,5 +61,10 @@ RUN git clone https://github.com/CompVis/taming-transformers &&\
 
 RUN git clone https://github.com/openai/CLIP &&\
     cd CLIP &&\
+    pip install . &&\
+    rm -rf /tmp/*
+
+RUN git clone https://github.com/XavierXiao/Dreambooth-Stable-Diffusion &&\
+    cd Dreambooth-Stable-Diffusion &&\
     pip install . &&\
     rm -rf /tmp/*
