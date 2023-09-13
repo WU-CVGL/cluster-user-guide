@@ -126,6 +126,8 @@ bind_mounts:
       container_path: /run/determined/workdir/home/
     - host_path: /datasets/
       container_path: /run/determined/workdir/data/
+    - host_path: /SSD/
+      container_path: /run/determined/workdir/ssd_data/
 environment:
     image: determinedai/environments:cuda-11.3-pytorch-1.10-lightning-1.5-tf-2.8-deepspeed-0.5.10-gpu-0.18.2
 ```
@@ -271,6 +273,8 @@ bind_mounts:
       container_path: /run/determined/workdir/home/
     - host_path: /datasets/
       container_path: /run/determined/workdir/data/
+    - host_path: /SSD/
+      container_path: /run/determined/workdir/ssd_data/
 environment:
     image: harbor.cvgl.lab/library/zlz-nerfstudio:nightly-cuda-11.8-devel-ubuntu22.04-torch-2.0.1-230720
     proxy_ports:

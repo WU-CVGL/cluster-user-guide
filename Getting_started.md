@@ -36,7 +36,6 @@ Accounts that need to be created by the administrator include:
 - An account for the batch system (Determined AI, [gpu.cvgl.lab](https://gpu.cvgl.lab/)).
 - An account for Harbor - the container registry ([harbor.cvgl.lab](https://harbor.cvgl.lab/))
 - A Nextcloud account ([pan.cvgl.lab](https://pan.cvgl.lab/))
-- Gitea account ([git.cvgl.lab](https://git.cvgl.lab/))
 
 # Accessing the cluster
 
@@ -75,7 +74,7 @@ Append these lines to the end of the `hosts` file:
 ```text
 10.0.1.67 login.cvgl.lab
 10.0.1.68 cvgl.lab
-10.0.1.68 git.cvgl.lab
+10.0.1.68 frp.cvgl.lab
 10.0.1.68 gpu.cvgl.lab
 10.0.1.68 pan.cvgl.lab
 10.0.1.68 harbor.cvgl.lab
