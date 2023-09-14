@@ -196,6 +196,8 @@ You are encouraged to check out more operations of Determined.AI in the [API doc
 
 You can use **Visual Studio Code** or **PyCharm** to connect to a shell task.
 
+You also need to [install](#cli) and use `determined` on your local computer, in order to get the SSH IdentityFile.
+
 ### First-time setup of connecting VS Code to a shell task
 
 1. First, you need to install the [Remote-SSH](https://code.visualstudio.com/docs/remote/ssh) plugin.
