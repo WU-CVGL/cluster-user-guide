@@ -26,7 +26,9 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
         cloc rsync screen tmux xz-utils software-properties-common \
         ## Deps
         ffmpeg \
+        libassimp-dev \
         libatlas-base-dev \
+        libavdevice-dev \
         libboost-filesystem-dev \
         libboost-graph-dev \
         libboost-program-options-dev \
@@ -35,10 +37,12 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
         libcereal-dev \
         libcgal-dev \
         libeigen3-dev \
+        libembree-dev \
         libflann-dev \
         libfreeimage-dev \
         libgflags-dev \
         libglew-dev \
+        libglfw3-dev \
         libgoogle-glog-dev \
         libhdf5-dev \
         libmetis-dev \
@@ -51,6 +55,7 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
         python3.10-dev \
         python3-pip \
         qtbase5-dev \
+        xorg-dev \
     && rm /etc/ssh/ssh_host_ecdsa_key \
     && rm /etc/ssh/ssh_host_ed25519_key \
     && rm /etc/ssh/ssh_host_rsa_key \
