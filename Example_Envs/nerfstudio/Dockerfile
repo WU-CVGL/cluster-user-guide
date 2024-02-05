@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/cuda:11.8.0-devel-ubuntu22.04 AS base
+FROM nvcr.io/nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04 AS base
 
 ARG MAX_JOBS 32
 ARG DEBIAN_FRONTEND=noninteractive
@@ -20,9 +20,9 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
         daemontools krb5-user ibverbs-providers libibverbs1 \
         libkrb5-dev librdmacm1 libssl-dev libtool \
         libnuma1 libnuma-dev libpmi2-0-dev \
-        openssh-server openssh-client pkg-config nfs-common \
+        openssh-server openssh-client nfs-common \
         ## Tools
-        git curl wget unzip nano vim-tiny net-tools sudo htop iotop \
+        git curl wget unzip nano vim-tiny net-tools sudo htop iotop iputils-ping \
         cloc rsync screen tmux xz-utils software-properties-common \
         ## Deps
         ffmpeg \
@@ -44,18 +44,38 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
         libglew-dev \
         libglfw3-dev \
         libgoogle-glog-dev \
+        libgtk2.0-dev \
         libhdf5-dev \
+        liblapack-dev \
         libmetis-dev \
+        libopenblas-dev \
         libprotobuf-dev \
         libqt5opengl5-dev \
         libsqlite3-dev \
-        libsuitesparse-dev \
+        libsuitesparse-dev libcusparse11 \
         protobuf-compiler \
         python-is-python3 \
         python3.10-dev \
         python3-pip \
         qtbase5-dev \
         xorg-dev \
+        intel-mkl \
+        libtbb2 libtbb-dev \
+        libavformat-dev libavcodec-dev libavutil-dev libswscale-dev \
+        libjpeg-dev libpng-dev libtiff-dev \
+        # VTK
+        libvtk9-dev \
+        # OSMesa build dependencies
+        libosmesa6-dev \
+        # EGL build dependencies
+        libopengl-dev \
+        libglvnd-dev \
+        libgl-dev \
+        libglx-dev \
+        libegl-dev \
+        # x11 utils
+        mesa-utils \
+        x11-apps \
     && rm /etc/ssh/ssh_host_ecdsa_key \
     && rm /etc/ssh/ssh_host_ed25519_key \
     && rm /etc/ssh/ssh_host_rsa_key \
@@ -67,6 +87,22 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /tmp
+
+# Install Determined AI and python deps
+ENV PYTHONUNBUFFERED=1 PYTHONFAULTHANDLER=1 PYTHONHASHSEED=0
+ENV JUPYTER_CONFIG_DIR=/run/determined/jupyter/config
+ENV JUPYTER_DATA_DIR=/run/determined/jupyter/data
+ENV JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
+RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
+    cd determinedai-container-scripts &&\
+    git checkout v0.1 &&\
+    pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple &&\
+    pip install -U pip setuptools pathtools promise pybind11 &&\
+    pip install determined && pip uninstall -y determined &&\
+    pip install -r notebook-requirements.txt &&\
+    ./add_det_nobody_user.sh &&\
+    ./install_libnss_determined.sh &&\
+    rm -rf /tmp/*
 
 # Install GLOG (required by ceres).
 RUN git clone --branch v0.6.0 https://github.com/google/glog --single-branch &&\
@@ -91,31 +127,51 @@ RUN git clone --branch 2.1.0 https://ceres-solver.googlesource.com/ceres-solver 
     make install &&\
     rm -rf /tmp/*
 
+ARG OPENEXR_VERSION=3.2.1
+RUN wget https://github.com/AcademySoftwareFoundation/openexr/archive/refs/tags/v${OPENEXR_VERSION}.tar.gz &&\
+    tar -xvzf v${OPENEXR_VERSION}.tar.gz &&\
+    cd openexr-${OPENEXR_VERSION} &&\
+    cmake -B build -GNinja &&\
+    cmake --build build -t install &&\
+    ldconfig && rm -rf /tmp/*
+
+# Install OpenCV from source.
+ARG OPENCV_VERSION="4.8.1"
+RUN wget https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip &&\
+    unzip $OPENCV_VERSION.zip &&\
+    rm $OPENCV_VERSION.zip &&\
+    wget https://github.com/opencv/opencv_contrib/archive/$OPENCV_VERSION.zip &&\
+    unzip ${OPENCV_VERSION}.zip &&\
+    cd opencv-${OPENCV_VERSION} &&\
+    cmake \
+        -B /tmp/opencv-${OPENCV_VERSION}/build \
+        -GNinja \
+        -DCMAKE_CXX_STANDARD=17 \
+        -DOPENCV_EXTRA_MODULES_PATH=/tmp/opencv_contrib-${OPENCV_VERSION}/modules \
+        -DOPENCV_ENABLE_NONFREE=ON \
+        -DWITH_TBB=ON \
+        -DWITH_QT=ON \
+        -DWITH_OPENGL=ON \
+        -DWITH_VTK=ON \
+        -DWITH_CUDA=ON \
+        -DCUDA_ARCH_BIN=${TORCH_CUDA_ARCH_LIST} \
+        -DHAVE_FFMPEG=ON \
+        -DCMAKE_BUILD_TYPE=RELEASE \
+        -DCMAKE_INSTALL_PREFIX=/usr/local &&\
+    cmake --build build -t install &&\
+    ldconfig && rm -rf /tmp/*
+
 # Install colmap.
-RUN git clone --branch 3.8 https://github.com/colmap/colmap --single-branch &&\
+RUN git clone https://github.com/colmap/colmap &&\
     cd colmap &&\
+    # Fix CUDA 12.x compile for tag/3.8
+    git checkout 1f80118456f4b587a44f288ce5874099fbfebc36 &&\
     mkdir build &&\
     cd build &&\
     cmake .. -DCUDA_ENABLED=ON \
              -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} &&\
     make -j `nproc` &&\
     make install &&\
-    rm -rf /tmp/*
-
-# Install Determined AI and python deps
-ENV PYTHONUNBUFFERED=1 PYTHONFAULTHANDLER=1 PYTHONHASHSEED=0
-ENV JUPYTER_CONFIG_DIR=/run/determined/jupyter/config
-ENV JUPYTER_DATA_DIR=/run/determined/jupyter/data
-ENV JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
-RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
-    cd determinedai-container-scripts &&\
-    git checkout v0.1 &&\
-    pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple &&\
-    pip install -U pip setuptools pathtools promise pybind11 &&\
-    pip install determined && pip uninstall -y determined &&\
-    pip install -r notebook-requirements.txt &&\
-    ./add_det_nobody_user.sh &&\
-    ./install_libnss_determined.sh &&\
     rm -rf /tmp/*
 
 # Install pycolmap, required by hloc.
@@ -132,18 +188,45 @@ RUN git clone --branch v1.0 --recursive https://github.com/cvg/pyceres &&\
 
 
 FROM base AS nerfstudio
-RUN pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118 &&\
-    pip install git+https://github.com/cvg/Hierarchical-Localization@master &&\
-    pip install git+https://github.com/cvg/pixel-perfect-sfm@main &&\
-    pip install git+https://github.com/NVlabs/tiny-cuda-nn@master#subdirectory=bindings/torch &&\
+# # Install pytorch and torchvision from source
+# # Use CXX11 ABI to work with our custom pybind11 extensions
+# ARG TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
+# RUN git clone --recursive https://github.com/pytorch/pytorch &&\
+#     cd pytorch &&\
+#     git checkout v2.1.2 &&\
+#     git submodule sync &&\
+#     git submodule update --init --recursive --jobs 0 &&\
+#     TORCH_USE_CUDA_DSA=1 USE_NUMPY=1 USE_CUDNN=1 USE_OPENCV=1 USE_BLAS=1 USE_LAPACK=1 USE_MKL=1 \
+#         python setup.py install &&\
+#     rm -rf /tmp/*
+# RUN pip install sympy &&\
+#     git clone --branch v0.16.2 https://github.com/pytorch/vision torchvision --single-branch &&\
+#     cd torchvision &&\
+#     python setup.py install &&\
+#     rm -rf /tmp/*
+
+# Install pre-built pytorch and torchvision
+RUN pip install torch==2.1.2+cu118 torchvision==0.16.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118 &&\
     rm -rf /tmp/*
 
+ARG FORCE_CUDA="1"
+ARG CPATH="/usr/local/include:/usr/local/cuda/include:$CPATH"
+RUN pip install torch-sparse torch-scatter &&\
+    rm -rf /tmp/*
+
+RUN pip install git+https://github.com/cvg/Hierarchical-Localization@master &&\
+    pip install git+https://github.com/cvg/pixel-perfect-sfm@main &&\
+    pip install git+https://github.com/NVlabs/tiny-cuda-nn@master#subdirectory=bindings/torch &&\
+    pip install open3d>=0.16.0 --ignore-installed &&\
+    rm -rf /tmp/*
+
+ARG NS_VER=1.0.1
 RUN pip install open3d>=0.16.0 --ignore-installed &&\
     # Stable version
-    pip install "nerfstudio[dev,doc]" -i https://pypi.org/simple/ &&\
+    pip install "nerfstudio[dev,doc,gen]==${NS_VER}" -i https://pypi.org/simple/ &&\
     # Nightly version
-    pip install git+https://github.com/nerfstudio-project/nerfstudio@main -i https://pypi.org/simple/ &&\
-    pip install coverage einops torchtyping>=0.1.4 kplanes-nerfstudio &&\
+    # pip install git+https://github.com/nerfstudio-project/nerfstudio@main -i https://pypi.org/simple/ &&\
+    pip install coverage einops torchtyping>=0.1.4 &&\
     rm -rf /tmp/*
 
 CMD ns-install-cli --mode install && /bin/bash

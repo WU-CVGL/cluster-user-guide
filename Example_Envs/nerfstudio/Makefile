@@ -1,9 +1,9 @@
 NERF_NAME=harbor.cvgl.lab/library/zlz-nerfstudio
-NERF_VERSION=nightly-cuda-11.8-devel-ubuntu22.04-torch-2.0.1-230720
+NERF_VERSION=v1.0.1-cu118-ubuntu2204-torch2.1.2-240205
 NERF=$(NERF_NAME):$(NERF_VERSION)
 
 SDF_NAME=harbor.cvgl.lab/library/zlz-sdfstudio
-SDF_VERSION=nightly-cuda-11.8-devel-ubuntu22.04-torch-1.14.0a0_44dac51-230720
+SDF_VERSION=nightly-cu118-ubuntu2204-torch1.14.0a0_44dac51-230720
 SDF=$(SDF_NAME):$(SDF_VERSION)
 
 MY_HTTP_PROXY=http://10.0.1.68:8889

@@ -28,7 +28,7 @@ https://pan.cvgl.lab/s/6P8EyrewEz4G3sm
 
 ## Cluster Information
 
-Our cluster is located in the core server room, E6-106; currently has `5` GPU nodes, `1` storage server and `1` management server active.
+Our cluster is located in the core server room, E6-106; currently has `7` GPU nodes, `1` storage server and `1` management server active.
 
 We have been designated with an IP address range: `10.0.1.66-94/27`.
 
@@ -123,10 +123,10 @@ GPU Node 6, 7:
 | :----: | :----  |
 |  Model | ASUS ESC8000A-E12|
 |  CPU   | AMD EPYC 9554 * 2 (128C/256T, 3.1-3.75GHz)|
-|  RAM   | [TO BE ADDED] DDR5 1536G (64G*24) 4800MT/s ECC REG|
-|  GPU   | MSI (0x1462) RTX 4090 * 8 |
+|  RAM   | Samsung M321R8GA0BB0-CQKZJ / Micron MTC40F2046S1RC48BA1 DDR5 1536G (64G*24) 4800MT/s ECC REG|
+|  GPU   | MSI (NVIDIA/0x10DE) RTX 4090 * 8 |
 |  SSD   | Samsung PM9A3 1.92T (U.2 PCIe 4.0) * 1|
-|  NIC   | [TO BE ADDED] 1GbE |
+|  NIC   | Intel I350-AM2 1GbE Dual Port |
 |  NIC   | Mellanox ConnectX-4 VPI EDR QSFP28 MCX455A-ECAT 100Gb ETH/IB Single Port|
 
 Storage Server
@@ -161,6 +161,7 @@ Switch
 |  Brand          |  Model & Spec  |
 |  :----:         | :---- |
 | NVIDIA Mellanox | Spectrum SN2700 100GbE 1U Open Ethernet Switch with NVIDIA Onyx, 32 QSFP28 ports, 2 PSU, x86 CPU, Standard depth |
+
 
 <details>
 <summary> Click to show photo </summary>
