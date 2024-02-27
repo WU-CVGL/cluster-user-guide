@@ -186,11 +186,9 @@ RUN git clone --branch v1.0 --recursive https://github.com/cvg/pyceres &&\
     pip install -e . &&\
     rm -rf /tmp/*
 
-
-FROM base AS nerfstudio
 # # Install pytorch and torchvision from source
 # # Use CXX11 ABI to work with our custom pybind11 extensions
-# ARG TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
+# # ARG TORCH_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
 # RUN git clone --recursive https://github.com/pytorch/pytorch &&\
 #     cd pytorch &&\
 #     git checkout v2.1.2 &&\
@@ -212,14 +210,13 @@ RUN pip install torch==2.1.2+cu118 torchvision==0.16.2+cu118 --extra-index-url h
 ARG FORCE_CUDA="1"
 ARG CPATH="/usr/local/include:/usr/local/cuda/include:$CPATH"
 RUN pip install torch-sparse torch-scatter &&\
-    rm -rf /tmp/*
-
-RUN pip install git+https://github.com/cvg/Hierarchical-Localization@master &&\
+    pip install git+https://github.com/cvg/Hierarchical-Localization@master &&\
     pip install git+https://github.com/cvg/pixel-perfect-sfm@main &&\
     pip install git+https://github.com/NVlabs/tiny-cuda-nn@master#subdirectory=bindings/torch &&\
     pip install open3d>=0.16.0 --ignore-installed &&\
     rm -rf /tmp/*
 
+FROM base AS nerfstudio
 ARG NS_VER=1.0.1
 RUN pip install open3d>=0.16.0 --ignore-installed &&\
     # Stable version
@@ -227,48 +224,6 @@ RUN pip install open3d>=0.16.0 --ignore-installed &&\
     # Nightly version
     # pip install git+https://github.com/nerfstudio-project/nerfstudio@main -i https://pypi.org/simple/ &&\
     pip install coverage einops torchtyping>=0.1.4 &&\
-    rm -rf /tmp/*
-
-CMD ns-install-cli --mode install && /bin/bash
-
-
-FROM base AS sdfstudio
-ARG NERF_ACC_VER=0.3.5
-RUN git clone --recursive https://github.com/pytorch/pytorch &&\
-    cd pytorch &&\
-    git checkout 44dac51 &&\
-    git submodule sync &&\
-    git submodule update --init --recursive --jobs 0 &&\
-    python setup.py install &&\
-    rm -rf /tmp/*
-
-RUN git clone --branch v0.14.1 https://github.com/pytorch/vision torchvision --single-branch &&\
-    cd torchvision &&\
-    python setup.py install &&\
-    rm -rf /tmp/*
-
-COPY sdfstudio/requirements.txt /tmp/requirements.txt
-RUN pip install git+https://github.com/cvg/Hierarchical-Localization@master &&\
-    pip install git+https://github.com/NVlabs/tiny-cuda-nn@master#subdirectory=bindings/torch &&\
-    pip install open3d>=0.16.0 --ignore-installed &&\
-    pip install lpips --no-deps &&\
-    pip install -r /tmp/requirements.txt &&\
-    rm -rf /tmp/*
-
-RUN cd /tmp &&\
-    wget https://github.com/KAIR-BAIR/nerfacc/archive/refs/tags/v${NERF_ACC_VER}.tar.gz &&\
-    tar xvzf v${NERF_ACC_VER}.tar.gz &&\
-    cd nerfacc-${NERF_ACC_VER} &&\
-    python setup.py install &&\
-    rm -rf /tmp/*
-
-COPY sdfstudio/pyproject.toml /tmp
-RUN cd /tmp &&\
-    git clone https://github.com/autonomousvision/sdfstudio &&\
-    cd sdfstudio &&\
-    rm pyproject.toml &&\
-    cp /tmp/pyproject.toml . &&\
-    pip install . &&\
     rm -rf /tmp/*
 
 CMD ns-install-cli --mode install && /bin/bash

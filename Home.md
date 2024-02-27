@@ -12,6 +12,8 @@
 
 Currently, we are hosting these services (available after [configuring the `hosts`](./Getting_started.md#user-content-setting-up-the-hosts-file)):
 
+[CVGL homepage](https://cvgl.lab/)
+
 [Determined AI - Distributed Deep Learning and Hyperparameter Tuning Platform](https://gpu.cvgl.lab/)
 
 [Nextcloud - File storage and sharing](https://pan.cvgl.lab/)
@@ -20,7 +22,9 @@ Currently, we are hosting these services (available after [configuring the `host
 
 [Grafana - Statistics and visualization](https://grafana.cvgl.lab/)
 
-[FRP - Port forwarding](https://frp.cvgl.lab)
+[FRP - Port forwarding](https://frp.cvgl.lab/)
+
+[Wandb local - Self-hosted weights & biases](https://wandb.cvgl.lab/)
 
 Shared Folders:
 

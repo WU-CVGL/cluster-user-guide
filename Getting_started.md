@@ -76,9 +76,10 @@ Append these lines to the end of the `hosts` file:
 10.0.1.68 cvgl.lab
 10.0.1.68 frp.cvgl.lab
 10.0.1.68 gpu.cvgl.lab
-10.0.1.68 pan.cvgl.lab
-10.0.1.68 harbor.cvgl.lab
 10.0.1.68 grafana.cvgl.lab
+10.0.1.68 harbor.cvgl.lab
+10.0.1.68 pan.cvgl.lab
+10.0.1.68 wandb.cvgl.lab
 ```
 
 ## Install the root CA certificate (Optional)
