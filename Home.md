@@ -30,6 +30,46 @@ Shared Folders:
 
 https://pan.cvgl.lab/s/6P8EyrewEz4G3sm
 
+## Useful Resources
+
+### Mirrors hosted in Westlake University
+
+#### Pypi
+
+```bash
+pip config set global.index-url https://mirrors.westlake.edu.cn/pypi/simple/
+```
+
+#### Conda
+
+Create a `.condarc` file in your home folder with:
+
+```bash
+channels:
+  - defaults
+show_channel_urls: true
+default_channels:
+  - http://mirrors.westlake.edu.cn/ANACONDA/pkgs/main
+  - http://mirrors.westlake.edu.cn/ANACONDA/pkgs/r
+  - http://mirrors.westlake.edu.cn/ANACONDA/pkgs/msys2
+custom_channels:
+  bioconda: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  caffee2: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  conda-forge: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  deepmodeling: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  intel: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  menpo: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  msys2: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  numba: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  nvidia: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  Paddle: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  pytorch: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  pytorch-lts: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  pytorch-test: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  pytorch3d: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+  qiime2: http://mirrors.westlake.edu.cn/ANACONDA/cloud
+```
+
 ## Cluster Information
 
 Our cluster is located in the core server room, E6-106; currently has `7` GPU nodes, `1` storage server and `1` management server active.
