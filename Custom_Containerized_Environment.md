@@ -40,6 +40,12 @@ RUN eval "$(conda shell.bash hook)" && \
     pip install --requirement /tmp/pip_requirements.txt
 ```
 
+If you want to adapt your custom containerized environment for NVIDIA RTX 4090, updated CUDA drivers and PyTorch versions are required. You can replace the `FROM` instruction as follow:
+
+```Dockerfile
+FROM determinedai/environments:cuda-11.8-pytorch-2.0-gpu-mpi-0.30.1
+```
+
 Here are some other examples:
 
 [svox2](./Example_Envs/svox2/)
@@ -61,7 +67,7 @@ Don't forget the dot "." at the end of the command!
 If the Dockerfile building process needs international internet access, you can add build arguments to use the public proxy services:
 
 ```bash
-DOCKER_BUILDKIT=0 docker build -t my_image:v1.0 --build-arg http_proxy=http://10.0.1.68:8889 --build-arg https_proxy=http://10.0.1.68:8889 .
+DOCKER_BUILDKIT=0 docker build -t my_image:v1.0 --build-arg http_proxy=http://10.0.1.68:18889 --build-arg https_proxy=http://10.0.1.68:18889 .
 ```
 
 The status of our public proxies can be monitored here: [Grafana - v2ray-dashboard](https://grafana.cvgl.lab/d/CCSvIIEZz/v2ray-dashboard)
