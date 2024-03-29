@@ -31,6 +31,7 @@ RUN sed -i  "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &
     apt-get install -y unzip python-opencv graphviz
 COPY environment.yml /tmp/environment.yml
 COPY pip_requirements.txt /tmp/pip_requirements.txt
+RUN conda install -n base libarchive -c main --force-reinstall --yes
 RUN conda env update --name base --file /tmp/environment.yml
 RUN conda clean --all --force-pkgs-dirs --yes
 RUN eval "$(conda shell.bash hook)" && \
