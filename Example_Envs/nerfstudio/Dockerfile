@@ -13,56 +13,46 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
     rm -rf /opt/hpcx/ &&\
     apt-get update && apt-get upgrade -y &&\
     apt-get install -y --no-install-recommends \
-        # Determined requirements and common tools
-        autoconf automake autotools-dev build-essential ca-certificates \
-        make cmake ninja-build pkg-config g++ ccache yasm \
-        ccache doxygen graphviz plantuml \
-        daemontools krb5-user ibverbs-providers libibverbs1 \
-        libkrb5-dev librdmacm1 libssl-dev libtool \
-        libnuma1 libnuma-dev libpmi2-0-dev \
-        openssh-server openssh-client nfs-common \
-        ## Tools
-        git curl wget unzip nano vim-tiny net-tools sudo htop iotop iputils-ping \
-        cloc rsync screen tmux xz-utils software-properties-common \
-        ## Deps
-        ffmpeg \
-        libassimp-dev \
+        # Determined requirements and common tools / libs
+        autoconf automake autotools-dev build-essential ca-certificates gnupg2 \
+        make cmake yasm pkg-config gdb gcovr binutils-dev libiberty-dev \
+        ninja-build ccache cppcheck doxygen graphviz plantuml \
+        cimg-dev \
+        clang-format \
+        dh-autoreconf \
         libatlas-base-dev \
-        libavdevice-dev \
-        libboost-filesystem-dev \
-        libboost-graph-dev \
-        libboost-program-options-dev \
-        libboost-system-dev \
-        libboost-test-dev \
+        libboost-all-dev \
+        liblog4cplus-dev \
+        libssh2-1-dev \
+        libreadline-dev \
         libcereal-dev \
         libcgal-dev \
-        libeigen3-dev \
-        libembree-dev \
-        libflann-dev \
-        libfreeimage-dev \
-        libgflags-dev \
-        libglew-dev \
-        libglfw3-dev \
-        libgoogle-glog-dev \
-        libgtk2.0-dev \
-        libhdf5-dev \
-        liblapack-dev \
-        libmetis-dev \
-        libopenblas-dev \
-        libprotobuf-dev \
-        libqt5opengl5-dev \
-        libsqlite3-dev \
-        libsuitesparse-dev libcusparse11 \
-        protobuf-compiler \
-        python-is-python3 \
-        python3.10-dev \
-        python3-pip \
-        qtbase5-dev \
-        xorg-dev \
-        intel-mkl \
-        libtbb2 libtbb-dev \
-        libavformat-dev libavcodec-dev libavutil-dev libswscale-dev \
-        libjpeg-dev libpng-dev libtiff-dev \
+        libblas-dev libcxsparse3 libceres-dev libeigen3-dev libfftw3-dev liblapack-dev liblapacke-dev libnlopt-dev \
+        libflann-dev metis libmetis-dev libopenblas-dev libsuitesparse-dev \
+        libgtk2.0-dev libglew-dev libglm-dev libglu1-mesa-dev mesa-utils \
+        freeglut3-dev libassimp-dev libglfw3-dev libproj-dev libqt5opengl5-dev \
+        libxrandr-dev libxxf86vm-dev \
+        libgflags-dev libgoogle-glog-dev libgtest-dev \
+        libfreeimage-dev libjpeg-dev libpng-dev libtiff-dev libtiff5-dev \
+        libavcodec-dev libavformat-dev libavutil-dev libavdevice-dev libv4l-dev v4l-utils \
+        libpcap-dev libpostproc-dev libpq-dev libswscale-dev libxine2-dev \
+        intel-mkl libopenmpi-dev libtbb2 libtbb-dev  \
+        daemontools krb5-user libkrb5-dev \
+        ibverbs-providers libibverbs1 libnuma1 libnuma-dev libpmi2-0-dev \
+        libhdf5-dev protobuf-compiler libprotobuf-dev librdmacm1 libsqlite3-dev libssl-dev libtool \
+        libyaml-dev libyaml-cpp-dev libicu-dev libsimpleini-dev \
+        libpcl-dev \
+        libopencv-dev libopenexr-dev \
+        ffmpeg zlib1g-dev \
+        ## Useful tools
+        git curl wget unzip xz-utils nano vim-tiny \
+        net-tools sudo htop iotop iputils-ping \
+        cloc rsync screen tmux \
+        daemontools nfs-common rsync proxychains \
+        openssh-server openssh-client \
+        software-properties-common \
+        # Python
+        python-is-python3 python3.10-dev python3-pip python3-numpy \
         # VTK
         libvtk9-dev \
         # OSMesa build dependencies
@@ -73,9 +63,13 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list &&
         libgl-dev \
         libglx-dev \
         libegl-dev \
-        # x11 utils
+        # X11 utils
         mesa-utils \
         x11-apps \
+        xorg-dev \
+        # QT
+        qtbase5-dev \
+    && apt-get purge unattended-upgrades \
     && rm /etc/ssh/ssh_host_ecdsa_key \
     && rm /etc/ssh/ssh_host_ed25519_key \
     && rm /etc/ssh/ssh_host_rsa_key \
@@ -95,7 +89,7 @@ ENV JUPYTER_DATA_DIR=/run/determined/jupyter/data
 ENV JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
 RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     cd determinedai-container-scripts &&\
-    git checkout v0.1 &&\
+    git checkout v0.2.1 &&\
     pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple &&\
     pip install -U pip setuptools pathtools promise pybind11 &&\
     pip install determined && pip uninstall -y determined &&\
@@ -217,13 +211,13 @@ RUN pip install torch-sparse torch-scatter &&\
     rm -rf /tmp/*
 
 FROM base AS nerfstudio
-ARG NS_VER=1.0.1
-RUN pip install open3d>=0.16.0 --ignore-installed &&\
+ARG NS_VER=1.0.3
+RUN \
     # Stable version
-    pip install "nerfstudio[dev,doc,gen]==${NS_VER}" -i https://pypi.org/simple/ &&\
+    # pip install "nerfstudio[dev,doc,gen]==${NS_VER}" -i https://pypi.org/simple/ &&\
     # Nightly version
-    # pip install git+https://github.com/nerfstudio-project/nerfstudio@main -i https://pypi.org/simple/ &&\
-    pip install coverage einops torchtyping>=0.1.4 &&\
+    pip install git+https://github.com/nerfstudio-project/nerfstudio@main -i https://pypi.org/simple/ &&\
+    pip install coverage einops pypose torchtyping>=0.1.4 tyro>=0.8.1&&\
     rm -rf /tmp/*
 
 CMD ns-install-cli --mode install && /bin/bash
