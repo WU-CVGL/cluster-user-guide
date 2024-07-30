@@ -30,49 +30,9 @@ Shared Folders:
 
 https://pan.cvgl.lab/s/6P8EyrewEz4G3sm
 
-## Useful Resources
-
-### Mirrors hosted in Westlake University
-
-#### Pypi
-
-```bash
-pip config set global.index-url https://mirrors.westlake.edu.cn/pypi/simple/
-```
-
-#### Conda
-
-Create a `.condarc` file in your home folder with:
-
-```bash
-channels:
-  - defaults
-show_channel_urls: true
-default_channels:
-  - http://mirrors.westlake.edu.cn/ANACONDA/pkgs/main
-  - http://mirrors.westlake.edu.cn/ANACONDA/pkgs/r
-  - http://mirrors.westlake.edu.cn/ANACONDA/pkgs/msys2
-custom_channels:
-  bioconda: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  caffee2: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  conda-forge: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  deepmodeling: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  intel: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  menpo: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  msys2: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  numba: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  nvidia: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  Paddle: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  pytorch: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  pytorch-lts: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  pytorch-test: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  pytorch3d: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-  qiime2: http://mirrors.westlake.edu.cn/ANACONDA/cloud
-```
-
 ## Cluster Information
 
-Our cluster is located in the core server room, E6-106; currently has `7` GPU nodes, `1` storage server and `1` management server active.
+Our cluster is located in the core server room, E6-106; currently has `8` GPU servers (`64` GPUs), `2` storage servers and `1` management server active.
 
 We have been designated with an IP address range: `10.0.1.66-94/27`.
 
@@ -181,8 +141,8 @@ GPU Node 8:
 |  CPU   | AMD EPYC 9554 * 2 (128C/256T, 3.1-3.75GHz)|
 |  RAM   | SK Hynix HMCG94AEBRA109N DDR5 1536G (64G*24) 4800MT/s ECC REG|
 |  GPU   | NVIDIA (0x10de) RTX 6000 Ada Generation 48G * 8 |
-|  SSD   | Samsung PM9A3 1.92TB 2.5" NVMe U.2 drive * 2|
-|  NIC   | Mellanox ConnectX-6 VPI HDR100 QSFP56 MCX653106A-ECAT 100Gb ETH/IB Dual Port|
+|  SSD   | Samsung PM9A3 (MZQL21T9HCJR-00A07) 1.92TB 2.5" NVMe U.2 drive * 2|
+|  NIC   | Mellanox ConnectX-6 VPI NIC; HDR100, EDR IB/100GbE; dual-port QSFP56; PCIe4.0 x16; (MCX653106A-ECAT)|
 |  NIC   | Intel I350-T2 1GbE Dual Port |
 
 Storage Server
@@ -199,6 +159,17 @@ Storage Server
 |  NIC   | Intel i210 1GbE * 2 |
 |  NIC   | Mellanox ConnectX-4 VPI EDR QSFP28 MCX455A-ECAT 100Gb ETH/IB Single Port|
 |  RAID  | LSI SAS3008 PCI-Express Fusion-MPT SAS-3 |
+
+Storage Server (2U, SSD-only):
+
+|  Name  |  Spec  |
+| :----: | :----  |
+|  Model | Dell PowerEdge R7525|
+|  CPU   | AMD EPYC 7313 * 2  (32C/64T, 3.0-3.7GHz)|
+|  RAM   | Samsung DDR4 ECC REG 3200MHz 512G (32G * 16)|
+|  SSD   | KIOXIA DC CD7 RI 960GB 2.5" NVMe U.2 drive|
+|  NIC   | Broadcom BCM5720 Gigabit Ethernet * 2|
+|  NIC   | Mellanox ConnectX-6 VPI NIC; HDR100, EDR IB/100GbE; dual-port QSFP56; PCIe4.0 x16; (MCX653106A-ECAT)|
 
 Management Server
 
