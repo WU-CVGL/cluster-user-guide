@@ -119,6 +119,8 @@ resources:
 bind_mounts:
     - host_path: /workspace/<user_name>/
       container_path: /run/determined/workdir/home/
+    - host_path: /workspace/<user_name>/.cache/
+      container_path: /run/determined/workdir/.cache/
     - host_path: /datasets/
       container_path: /run/determined/workdir/data/
     - host_path: /SSD/
@@ -301,12 +303,14 @@ resources:
 bind_mounts:
     - host_path: /workspace/<user_name>/
       container_path: /run/determined/workdir/home/
+    - host_path: /workspace/<user_name>/.cache/
+      container_path: /run/determined/workdir/.cache/
     - host_path: /datasets/
       container_path: /run/determined/workdir/data/
     - host_path: /SSD/
       container_path: /run/determined/workdir/ssd_data/
 environment:
-    image: harbor.cvgl.lab/library/zlz-nerfstudio:nightly-cuda-11.8-devel-ubuntu22.04-torch-2.0.1-230720
+    image: harbor.cvgl.lab/library/zlz-nerfstudio:v1.1.3-gsplat_880425c-cu118-ubuntu2204-torch2.1.2_cxx11abi-240725
     proxy_ports:
       - proxy_port: 7007
         proxy_tcp: true
