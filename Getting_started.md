@@ -27,6 +27,7 @@
     - [Using proxy service](#using-proxy-service)
       - [Proxychains](#proxychains)
       - [Environment variable](#environment-variable)
+    - [Using our aria2 service](#using-our-aria2-service)
 
 # Requesting accounts
 
@@ -409,3 +410,22 @@ curl google.com
 ```
 
 > P.S. You can monitor the status of the proxy services in the [grafana dashboard](https://grafana.cvgl.lab/d/CCSvIIEZz/v2ray-dashboard?orgId=1).
+
+
+### Using our aria2 service
+
+You can use our deployed aria2 server on the login-node to download large datasets on the serverside.
+
+It is deployed on this URL:
+
+```text
+http://10.0.1.67:6800/jsonrpc
+```
+
+And you need to ask the administrator for the password.
+
+1. First install the AriaNg browser extension. You can install it from the [Chrome web store](https://chromewebstore.google.com/detail/aria2-explorer/mpkodccbngfoacfalldjimigbofkhgjn).
+2. Pin the extension. ![pin-browser-extension](./Getting_started/pin_aria_ng.png)
+3. Configure the web UI. ![aria-ng-config](./Getting_started/aria_ng_config.png)
+4. Configure the extension options for monitoring and automatic download capture. ![aria-ng-options](./Getting_started/aria_ng_options.png)
+5. You can also manually create download tasks. First configure the download options, set `max-conn-per-server` (`5` in the image below) to larger values like `16`. Also change the `all-proxy` (`6` in the image below)if needed. If the server of the desired resource is located in the mainland China, then you can make this value empty. Finally paste the download URLs in the first tab (`7` in the image below). ![manual-tasks](./Getting_started/aria_ng_manual.png)
