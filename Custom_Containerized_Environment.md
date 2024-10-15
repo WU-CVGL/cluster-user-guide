@@ -1,11 +1,63 @@
 <h1 align="center">Custom Containerized Deep Learning Environment<br>
 with Docker and Harbor </h1>
 
+- [For Beginners: build FROM a base image](#for-beginners-build-from-a-base-image)
+  - [Set up the CVGL CA certificate to use our Harbor registry](#set-up-the-cvgl-ca-certificate-to-use-our-harbor-registry)
+  - [Example](#example)
+- [Upload the custom image](#upload-the-custom-image)
+- [Use the custom image](#use-the-custom-image)
+- [Advanced: build an image from scratch](#advanced-build-an-image-from-scratch)
+- [Proxy](#proxy)
+  - [Set up proxy for the docker daemon](#set-up-proxy-for-the-docker-daemon)
+  - [Set up proxy in the temporary building container](#set-up-proxy-in-the-temporary-building-container)
+
 # For Beginners: build FROM a base image
 
 *Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep-learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency.
 
 For beginners, it is recommended that custom images use one of the Determined AI's official images as a base image, using the `FROM` instruction.
+
+## Set up the CVGL CA certificate to use our Harbor registry
+
+Instead of pulling determinedai's images from Docker Hub (which requires setting up proxy now), you can pull them from our Harbor registry.
+
+Make sure you have configured your `hosts` file with the following settings:
+
+```text
+10.0.1.68 cvgl.lab
+10.0.1.68 harbor.cvgl.lab
+```
+
+Check out [here](https://harbor.cvgl.lab/harbor/projects) to see the available images.
+
+We have mirrored some of the determined ai's environments in `harbor`. [Here is the link](https://harbor.cvgl.lab/harbor/projects/3/repositories/environments).
+
+You can also ask the system admin to add or update the images.
+
+If you want to use the images from the docker hub, you will need to [use the proxy service](#proxy).
+
+To use our Harbor registry, you need to complete the following setup:
+
+```bash
+sudo mkdir -p /etc/docker/certs.d/harbor.cvgl.lab
+cd /etc/docker/certs.d/harbor.cvgl.lab
+sudo wget https://cvgl.lab/cvgl.crt --no-check-certificate
+sudo systemctl restart docker
+```
+
+This configures the CA certificate for Docker.
+
+Then log in to our Harbor registry:
+
+```bash
+docker login -u <username> -p <password> harbor.cvgl.lab    # You only need to login once
+```
+
+Now edit the first `FROM` line in the `Dockerfile`, and change the base image to some existing image in the Harbor registry, for example:
+
+```dockerfile
+FROM harbor.cvgl.lab/determinedai/environments:cuda-11.8-pytorch-2.0-gpu-mpi-0.31.1
+```
 
 ## Example
 
@@ -17,7 +69,7 @@ Put these files in a folder, and create a `Dockerfile` with the following conten
 
 ```Dockerfile
 # Determined Image
-FROM determinedai/environments:cuda-11.3-pytorch-1.10-tf-2.8-gpu-0.19.4
+FROM harbor.cvgl.lab/determinedai/environments:cuda-11.8-pytorch-2.0-gpu-mpi-0.31.1
 # Some important environment variables in Dockerfile
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai LANG=C.UTF-8 LC_ALL=C.UTF-8 PIP_NO_CACHE_DIR=1
@@ -40,11 +92,7 @@ RUN eval "$(conda shell.bash hook)" && \
     pip install --requirement /tmp/pip_requirements.txt
 ```
 
-If you want to adapt your custom containerized environment for NVIDIA RTX 4090, updated CUDA drivers and PyTorch versions are required. You can replace the `FROM` instruction as follow:
-
-```Dockerfile
-FROM determinedai/environments:cuda-11.8-pytorch-2.0-gpu-mpi-0.30.1
-```
+If you want to adapt your custom containerized environment for NVIDIA RTX 4090, `CUDA version >= 11.8` is required.
 
 Here are some other examples:
 
@@ -62,65 +110,17 @@ DOCKER_BUILDKIT=0 docker build -t my_image:v1.0 .
 
 where `my_image` is your image name, and `v1.0` is the image tag that usually contains descriptions and version information. `DOCKER_BUILDKIT=0` is needed if you are using private Docker registry (i.e. our Harbor) [[Reference]](https://stackoverflow.com/questions/75766469/docker-build-cannot-pull-base-image-from-private-docker-registry-that-requires).
 
-Don't forget the dot "." at the end of the command!
-
-If the Dockerfile building process needs international internet access, you can add build arguments to use the public proxy services:
-
-```bash
-DOCKER_BUILDKIT=0 docker build -t my_image:v1.0 --build-arg http_proxy=http://10.0.1.68:18889 --build-arg https_proxy=http://10.0.1.68:18889 .
-```
-
-The status of our public proxies can be monitored here: [Grafana - v2ray-dashboard](https://grafana.cvgl.lab/d/CCSvIIEZz/v2ray-dashboard)
-
-The pulling stage will take about half an hour or longer for the first time. We will discuss how to accelerate this process in the [next section](#accelerating-the-pulling-stage).
-
-# Accelerating the pulling stage
-
-Instead of pulling determinedai's images from Docker Hub, you can pull them from our Harbor registry.
-
-Check out [here](https://harbor.cvgl.lab/harbor/projects/2/repositories/environments/) to see the available images. You can also ask the system admin to add or update the images.
-
-To use our Harbor registry, you need to complete the following setup:
-
-```bash
-sudo mkdir -p /etc/docker/certs.d/harbor.cvgl.lab
-cd /etc/docker/certs.d/harbor.cvgl.lab
-sudo wget https://cvgl.lab/cvgl.crt --no-check-certificate
-sudo systemctl restart docker
-```
-
-This configures the CA certificate for Docker.
-
-Then log in to our Harbor registry:
-
-```bash
-docker login -u <username> -p <password> harbor.cvgl.lab    # You only need to login once
-```
-
-Now edit the first `FROM` line in the `Dockerfile`, and change the base image to some existing image in the Harbor registry, for example:
-
-```dockerfile
-FROM harbor.cvgl.lab/determinedai/environments:cuda-11.3-pytorch-1.10-lightning-1.5-tf-2.8-gpu-0.18.5
-```
+Don't forget the dot "." at the end of the command (which represents *the current directory* that contains the Dockerfile)!
 
 # Upload the custom image
 
-Instead of pushing the image to Docker Hub (which will be very slow because of the GFW), it is recommended to use the private Harbor registry: `harbor.cvgl.lab`.
+Instead of pushing the image to Docker Hub (which has already been blocked), it is recommended to use the private Harbor registry: `harbor.cvgl.lab`.
 
 You need to ask the system admin to create your Harbor user account. Once you have logged in, you can check out the [public library](https://harbor.cvgl.lab/harbor/projects/1/repositories):
 
 <img src="./Custom_Containerized_Environment/harbor-library.png" alt="Harbor library" style="width:40vw;"/>
 
 Note that instead of using the default `library`, you can also create your own *project* in Harbor.
-
-Make sure you have configured your `hosts` file with the following settings:
-
-```text
-10.0.1.68 cvgl.lab
-10.0.1.68 harbor.cvgl.lab
-```
-
-Also, you need to complete the CA certificate configuration in the [previous section](#accelerating-the-pulling-stage).
 
 Now you can create your custom Docker images on the login node or your PC following the instructions above, and then push the image to the Harbor registry. For instance:
 
@@ -152,8 +152,52 @@ Here are some examples tested on RTX 4090:
 
 1. nerf-env [[Dockerfile]](./Example_Envs/nerf-env/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/nerf_env_test/artifacts-tab/artifacts/sha256:fd1376632bd15ea92eb9791723e95fab833f4f30185a9a8c3f765d158713bc60)
 
-2. torch-ngp [[Dockerfile]](./Example_Envs/torch-ngp/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-torch-ngp/artifacts-tab/artifacts/sha256:a5e1d1d87123910bb904426e921c1857d401c73e5789c56600fac1039dd4d024)
+2. nerfstudio [[Dockerfile]](./Example_Envs/nerfstudio/) [[Harbor - nerfstudio]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-nerfstudio/artifacts-tab) 
 
-3. taichi-nerf-slam [[Dockerfile]](./Example_Envs/taichi-nerf-slam/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-taichi-nerf-slam/artifacts-tab/artifacts/sha256:4a6f9395008187921dfe4370164c18e7b000fbff56969a997d950aca43aaa702)
+# Proxy
 
-4. nerfstudio & sdfstudio [[Dockerfile]](./Example_Envs/nerfstudio/) [[Harbor - nerfstudio]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-nerfstudio/artifacts-tab/artifacts/sha256:4b4f8939e3fb027a2d601007c6f70e627e1416798478c86718c334d93f7eba62) [[Harbor - sdfstudio]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-sdfstudio/artifacts-tab/artifacts/sha256:b6f1516d26a5c9f4ec5a20f61371f73feb884bd00ec910daf6b61fcfc0ec33ee)
+## Set up proxy for the docker daemon
+
+You need to set up proxy for the docker daemon in order to pull images from the docker hub (i.e. `docker pull <image>` command or `FROM <image>` in the first line of your `Dockerfile`) since it has been blocked.
+
+The status of our public proxies can be monitored here: [Grafana - v2ray-dashboard](https://grafana.cvgl.lab/d/CCSvIIEZz/v2ray-dashboard)
+
+1) To proceed, recursively create the folder:
+
+    ```sh
+    sudo mkdir -p /etc/systemd/system/docker.service.d
+    ```
+
+2) Add environment variables to the configuration file `/etc/systemd/system/docker.service.d/proxy.conf`:
+
+    ```conf
+    [Service]
+    Environment="HTTP_PROXY=http://10.0.1.68:8889"
+    Environment="HTTPS_PROXY=http://10.0.1.68:8889"
+    Environment="NO_PROXY=localhost,127.0.0.1,nvcr.io,aliyuncs.com,edu.cn,cvgl.lab"
+    ```
+
+    You can change `10.0.1.68` and `8889` to the other proxy address and port respectively.
+
+    Note that the `http` is intentionally used in `HTTPS_PROXY` - this is how most HTTP proxies work.
+
+3) Update configuration and restart `Docker`:
+
+    ```sh
+    systemctl daemon-reload
+    systemctl restart docker
+    ```
+
+4) Check the proxy:
+
+    ```sh
+    docker info
+    ```
+
+## Set up proxy in the temporary building container
+
+If you also need international internet access during the Dockerfile building process, you can add build arguments to use the public proxy services:
+
+```bash
+DOCKER_BUILDKIT=0 docker build -t my_image:v1.0 --build-arg http_proxy=http://10.0.1.68:8889 --build-arg https_proxy=http://10.0.1.68:8889 .
+```
