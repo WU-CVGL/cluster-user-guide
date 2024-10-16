@@ -89,7 +89,7 @@ ENV JUPYTER_DATA_DIR=/run/determined/jupyter/data
 ENV JUPYTER_RUNTIME_DIR=/run/determined/jupyter/runtime
 RUN git clone https://github.com/LingzheZhao/determinedai-container-scripts &&\
     cd determinedai-container-scripts &&\
-    git checkout v0.2.1 &&\
+    git checkout v0.2.3 &&\
     pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple &&\
     pip install -U pip setuptools pathtools promise pybind11 &&\
     pip install determined && pip uninstall -y determined &&\
