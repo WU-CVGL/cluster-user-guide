@@ -352,12 +352,24 @@ Here is an example of using Baidu Netdisk:
 
 We have configured both HTTP and SOCKS5 proxy services on the cluster:
 
-- Osaka, central Japan, with unlimited traffic
-  - http://10.0.1.68:8889
-  - socks5://10.0.1.68:1089
-- San Jose, US west, with 1TB/mo traffic
+- Oracle Cloud Japan: Osaka, with 10TB/mo **free** traffic (14 USD/TB beyond)
+  - http://10.0.1.68:48889
+  - socks5://10.0.1.68:40089
+
+- Bandwagon US: Los Angeles, with 2TB/mo traffic
+  - Service: NODESEEK-MEGABOX-PRO
+  - Annually: $45.68
+  - Routing: (DC1 CT CN2GIA, CMIN2) [USCA_1]
   - http://10.0.1.68:28889
   - socks5://10.0.1.68:20089
+
+- Bandwagon US: Los Angeles, with 1TB/mo **fast** traffic
+  - Service: SPECIAL 40G KVM PROMO V5 - LOS ANGELES - CN2 GIA LIMITED EDITION
+  - Annually: $93.10
+  - Routing: (DC6 CT CN2GIA-E, CMIN2, CUP) [USCA_6]
+  - http://10.0.1.68:18889
+  - socks5://10.0.1.68:10089
+
 
 #### Proxychains
 
@@ -373,6 +385,42 @@ proxychains -q curl google.com # Quite mode
 proxychains git clone https://github.com/WU-CVGL/BAD-NeRF
 ```
 
+#### Any python downloading that uses `urllib`
+
+Add this code snippet right after the `import urllib`:
+
+```python
+import urllib
+
+print("configuring proxy...")
+
+proxy_support = urllib.request.ProxyHandler({
+    'http' : 'http://10.0.1.68:28889', 
+    'https': 'http://10.0.1.68:28889'
+})
+opener = urllib.request.build_opener(proxy_support)
+urllib.request.install_opener(opener)
+```
+
+> Ref: https://docs.python.org/3/library/urllib.request.html#urllib.request.build_opener
+
+#### Huggingface
+
+Just use the `hf-mirror` service.
+
+```sh
+export HF_ENDPOINT=https://hf-mirror.com
+```
+
+or in python script:
+
+```python
+import os
+os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
+```
+
+> Ref: https://hf-mirror.com/
+
 #### Environment variable
 
 Export these environment variables before program execution.
@@ -381,10 +429,10 @@ This is useful when some programs that do not use `libc` cannot be hooked by `pr
 such as many programs written in `python` or `golang`.
 
 ```bash
-export http_proxy=http://10.0.1.68:8889 &&\
-export https_proxy=http://10.0.1.68:8889 &&\
-export HTTP_PROXY=http://10.0.1.68:8889 &&\
-export HTTPS_PROXY=http://10.0.1.68:8889
+export http_proxy=http://10.0.1.68:28889 &&\
+export https_proxy=http://10.0.1.68:28889 &&\
+export HTTP_PROXY=http://10.0.1.68:28889 &&\
+export HTTPS_PROXY=http://10.0.1.68:28889
 curl google.com
 ```
 

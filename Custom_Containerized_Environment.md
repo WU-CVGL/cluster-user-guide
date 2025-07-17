@@ -172,8 +172,8 @@ The status of our public proxies can be monitored here: [Grafana - v2ray-dashboa
 
     ```conf
     [Service]
-    Environment="HTTP_PROXY=http://10.0.1.68:8889"
-    Environment="HTTPS_PROXY=http://10.0.1.68:8889"
+    Environment="HTTP_PROXY=http://10.0.1.68:28889"
+    Environment="HTTPS_PROXY=http://10.0.1.68:28889"
     Environment="NO_PROXY=localhost,127.0.0.1,nvcr.io,aliyuncs.com,edu.cn,cvgl.lab"
     ```
 
@@ -199,5 +199,5 @@ The status of our public proxies can be monitored here: [Grafana - v2ray-dashboa
 If you also need international internet access during the Dockerfile building process, you can add build arguments to use the public proxy services:
 
 ```bash
-DOCKER_BUILDKIT=0 docker build -t my_image:v1.0 --build-arg http_proxy=http://10.0.1.68:8889 --build-arg https_proxy=http://10.0.1.68:8889 .
+DOCKER_BUILDKIT=0 docker build -t my_image:v1.0 --build-arg http_proxy=http://10.0.1.68:28889 --build-arg https_proxy=http://10.0.1.68:28889 .
 ```

@@ -6,7 +6,7 @@ NERF_VERSION=v1.0.3-$(TAG)-$(DATE)
 BASE=$(REPO_NAME):$(BASE_VERSION)
 NERF=$(REPO_NAME):$(NERF_VERSION)
 
-MY_HTTP_PROXY=http://10.0.1.68:8889
+MY_HTTP_PROXY=http://10.0.1.68:28889
 BUILD_ARGS=--build-arg http_proxy=$(MY_HTTP_PROXY) --build-arg https_proxy=$(MY_HTTP_PROXY)
 
 build: push_base push_nerf
