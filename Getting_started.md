@@ -352,18 +352,25 @@ Here is an example of using Baidu Netdisk:
 
 We have configured both HTTP and SOCKS5 proxy services on the cluster:
 
+- RackNerd US: Los Angeles DC-03 Datacenter, with 12TB/mo **lots of** traffic
+  - Service: 5 GB KVM VPS (Black Friday 2024)
+  - Annually: $55.93
+  - Routing: Basic BGP
+  - http://10.0.1.68:58889
+  - socks5://10.0.1.68:50089
+
 - Oracle Cloud Japan: Osaka, with 10TB/mo **free** traffic (14 USD/TB beyond)
   - http://10.0.1.68:48889
   - socks5://10.0.1.68:40089
 
-- Bandwagon US: Los Angeles, with 2TB/mo traffic
+- Bandwagon US: Los Angeles DC1, with 2TB/mo traffic
   - Service: NODESEEK-MEGABOX-PRO
   - Annually: $45.68
   - Routing: (DC1 CT CN2GIA, CMIN2) [USCA_1]
   - http://10.0.1.68:28889
   - socks5://10.0.1.68:20089
 
-- Bandwagon US: Los Angeles, with 1TB/mo **fast** traffic
+- Bandwagon US: Los Angeles DC6, with 1TB/mo **fast** traffic
   - Service: SPECIAL 40G KVM PROMO V5 - LOS ANGELES - CN2 GIA LIMITED EDITION
   - Annually: $93.10
   - Routing: (DC6 CT CN2GIA-E, CMIN2, CUP) [USCA_6]
