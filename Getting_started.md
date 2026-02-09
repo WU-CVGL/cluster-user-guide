@@ -25,7 +25,21 @@
     - [Uploading](#uploading)
     - [Downloading](#downloading)
     - [Using proxy service](#using-proxy-service)
+      - [Self-provisioned services](#self-provisioned-services)
+        - [RackNerd US: Los Angeles DC-03 Datacenter, with 12TB/mo **lots of** traffic](#racknerd-us-los-angeles-dc-03-datacenter-with-12tbmo-lots-of-traffic)
+        - [Oracle Cloud Japan: Osaka, with 10TB/mo **free** traffic (14 USD/TB beyond)](#oracle-cloud-japan-osaka-with-10tbmo-free-traffic-14-usdtb-beyond)
+        - [Bandwagon US: Los Angeles DC1, with 2TB/mo traffic](#bandwagon-us-los-angeles-dc1-with-2tbmo-traffic)
+        - [Bandwagon US: Los Angeles DC6, with 1TB/mo **fast** traffic](#bandwagon-us-los-angeles-dc6-with-1tbmo-fast-traffic)
+      - [IPLC services](#iplc-services)
+        - [IPLC-HK01](#iplc-hk01)
+        - [IPLC-HK02](#iplc-hk02)
+        - [IPLC-US52](#iplc-us52)
+        - [IPLC-US53](#iplc-us53)
+        - [jms-iplc-temp-workaround-hk-s01](#jms-iplc-temp-workaround-hk-s01)
+        - [jms-iplc-temp-workaround-us-s02](#jms-iplc-temp-workaround-us-s02)
       - [Proxychains](#proxychains)
+      - [Any python downloading that uses `urllib`](#any-python-downloading-that-uses-urllib)
+      - [Huggingface](#huggingface)
       - [Environment variable](#environment-variable)
     - [Using our aria2 service](#using-our-aria2-service)
 
@@ -350,32 +364,117 @@ Here is an example of using Baidu Netdisk:
 
 ### Using proxy service
 
+#### Self-provisioned services
+
 We have configured both HTTP and SOCKS5 proxy services on the cluster:
 
-- RackNerd US: Los Angeles DC-03 Datacenter, with 12TB/mo **lots of** traffic
+##### RackNerd US: Los Angeles DC-03 Datacenter, with 12TB/mo **lots of** traffic
   - Service: 5 GB KVM VPS (Black Friday 2024)
   - Annually: $55.93
   - Routing: Basic BGP
   - http://10.0.1.68:58889
   - socks5://10.0.1.68:50089
 
-- Oracle Cloud Japan: Osaka, with 10TB/mo **free** traffic (14 USD/TB beyond)
+##### Oracle Cloud Japan: Osaka, with 10TB/mo **free** traffic (14 USD/TB beyond)
   - http://10.0.1.68:48889
   - socks5://10.0.1.68:40089
 
-- Bandwagon US: Los Angeles DC1, with 2TB/mo traffic
+##### Bandwagon US: Los Angeles DC1, with 2TB/mo traffic
   - Service: NODESEEK-MEGABOX-PRO
   - Annually: $45.68
   - Routing: (DC1 CT CN2GIA, CMIN2) [USCA_1]
   - http://10.0.1.68:28889
   - socks5://10.0.1.68:20089
 
-- Bandwagon US: Los Angeles DC6, with 1TB/mo **fast** traffic
+##### Bandwagon US: Los Angeles DC6, with 1TB/mo **fast** traffic
   - Service: SPECIAL 40G KVM PROMO V5 - LOS ANGELES - CN2 GIA LIMITED EDITION
   - Annually: $93.10
   - Routing: (DC6 CT CN2GIA-E, CMIN2, CUP) [USCA_6]
   - http://10.0.1.68:18889
   - socks5://10.0.1.68:10089
+
+#### IPLC services
+
+We have purchased IPLC services from Bandwagon Host:
+- Service: JMS IPLC HK 1000 V2 EARLY ACCESS
+- Annually: $558.37
+- Routing: HongKong IPLC
+
+> You can ask for out-of-campus access from the system admin.
+
+Deployed proxies services:
+
+##### IPLC-HK01
+Campus Network
+```
+socks5://10.0.1.68:50180
+http://10.0.1.68:50189
+```
+Cluster 100G LAN
+```
+socks5://192.168.233.8:50180
+http://192.168.233.8:50180
+```
+
+##### IPLC-HK02
+Campus Network
+```
+socks5://10.0.1.68:50280
+http://10.0.1.68:50289
+```
+Cluster 100G LAN
+```
+socks5://192.168.233.8:50289
+http://192.168.233.8:50289
+```
+
+##### IPLC-US52
+Campus Network
+```
+socks5://10.0.1.68:55280
+http://10.0.1.68:55289
+```
+Cluster 100G LAN
+```
+socks5://192.168.233.8:55280
+http://192.168.233.8:55280
+```
+
+##### IPLC-US53
+Campus Network
+```
+socks5://10.0.1.68:55380
+http://10.0.1.68:55389
+```
+Cluster 100G LAN
+```
+socks5://192.168.233.8:55380
+http://192.168.233.8:55380
+```
+
+##### jms-iplc-temp-workaround-hk-s01
+Campus Network
+```
+socks5://10.0.1.68:59180
+http://10.0.1.68:59189
+```
+Cluster 100G LAN
+```
+socks5://192.168.233.8:59180
+http://192.168.233.8:59189
+```
+
+##### jms-iplc-temp-workaround-us-s02
+Campus Network
+```
+socks5://10.0.1.68:59280
+http://10.0.1.68:59289
+```
+Cluster 100G LAN
+```
+socks5://192.168.233.8:59280
+http://192.168.233.8:59289
+```
 
 
 #### Proxychains
@@ -484,3 +583,4 @@ And you need to ask the administrator for the password.
 3. Configure the web UI. ![aria-ng-config](./Getting_started/aria_ng_config.png)
 4. Configure the extension options for monitoring and automatic download capture. ![aria-ng-options](./Getting_started/aria_ng_options.png)
 5. You can also manually create download tasks. First configure the download options, set `max-conn-per-server` (`5` in the image below) to larger values like `16`. Also change the `all-proxy` (`6` in the image below)if needed. If the server of the desired resource is located in the mainland China, then you can make this value empty. Finally paste the download URLs in the first tab (`7` in the image below). ![manual-tasks](./Getting_started/aria_ng_manual.png)
+
