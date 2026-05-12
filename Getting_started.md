@@ -26,17 +26,11 @@
     - [Downloading](#downloading)
     - [Using proxy service](#using-proxy-service)
       - [Self-provisioned services](#self-provisioned-services)
+      - [Self-provisioned services with SLA](#self-provisioned-services-with-sla)
+        - [Bandwagon US: Los Angeles DC5, with 1TB/mo **enterprise-level** traffic and 99.99% SLA](#bandwagon-us-los-angeles-dc5-with-1tbmo-enterprise-level-traffic-and-9999-sla)
         - [RackNerd US: Los Angeles DC-03 Datacenter, with 12TB/mo **lots of** traffic](#racknerd-us-los-angeles-dc-03-datacenter-with-12tbmo-lots-of-traffic)
-        - [Oracle Cloud Japan: Osaka, with 10TB/mo **free** traffic (14 USD/TB beyond)](#oracle-cloud-japan-osaka-with-10tbmo-free-traffic-14-usdtb-beyond)
         - [Bandwagon US: Los Angeles DC1, with 2TB/mo traffic](#bandwagon-us-los-angeles-dc1-with-2tbmo-traffic)
         - [Bandwagon US: Los Angeles DC6, with 1TB/mo **fast** traffic](#bandwagon-us-los-angeles-dc6-with-1tbmo-fast-traffic)
-      - [IPLC services](#iplc-services)
-        - [IPLC-HK01](#iplc-hk01)
-        - [IPLC-HK02](#iplc-hk02)
-        - [IPLC-US52](#iplc-us52)
-        - [IPLC-US53](#iplc-us53)
-        - [jms-iplc-temp-workaround-hk-s01](#jms-iplc-temp-workaround-hk-s01)
-        - [jms-iplc-temp-workaround-us-s02](#jms-iplc-temp-workaround-us-s02)
       - [Proxychains](#proxychains)
       - [Any python downloading that uses `urllib`](#any-python-downloading-that-uses-urllib)
       - [Huggingface](#huggingface)
@@ -368,6 +362,31 @@ Here is an example of using Baidu Netdisk:
 
 We have configured both HTTP and SOCKS5 proxy services on the cluster:
 
+> You can ask for out-of-campus access from the system admin.
+
+#### Self-provisioned services with SLA
+
+Deployed proxies services:
+
+##### Bandwagon US: Los Angeles DC5, with 1TB/mo **enterprise-level** traffic and 99.99% SLA
+  - Service: 20G KVM - ECOMMERCE SLA LOS ANGELES
+  - Annually: $239.99
+  - Routing: (DC5 with **99.99% SLA** CT CN2GIA-E, CMIN2, CU via CN2GIA-E) [USCA_5]
+
+    Campus Network
+    ```
+    socks5://10.0.1.68:59880
+    http://10.0.1.68:59889
+
+    ```
+    Cluster 100G LAN
+    ```
+    socks5://192.168.233.8:59880
+    http://192.168.233.8:59889
+    ```
+
+    > P.S. All services follow the pattern above: Use 192.168.233.8 with the cluster.
+
 ##### RackNerd US: Los Angeles DC-03 Datacenter, with 12TB/mo **lots of** traffic
   - Service: 5 GB KVM VPS (Black Friday 2024)
   - Annually: $55.93
@@ -375,9 +394,9 @@ We have configured both HTTP and SOCKS5 proxy services on the cluster:
   - http://10.0.1.68:58889
   - socks5://10.0.1.68:50089
 
-##### Oracle Cloud Japan: Osaka, with 10TB/mo **free** traffic (14 USD/TB beyond)
-  - http://10.0.1.68:48889
-  - socks5://10.0.1.68:40089
+~~##### Oracle Cloud Japan: Osaka, with 10TB/mo **free** traffic (14 USD/TB beyond)~~
+  - ~~http://10.0.1.68:48889~~
+  - ~~socks5://10.0.1.68:40089~~
 
 ##### Bandwagon US: Los Angeles DC1, with 2TB/mo traffic
   - Service: NODESEEK-MEGABOX-PRO
@@ -392,90 +411,6 @@ We have configured both HTTP and SOCKS5 proxy services on the cluster:
   - Routing: (DC6 CT CN2GIA-E, CMIN2, CUP) [USCA_6]
   - http://10.0.1.68:18889
   - socks5://10.0.1.68:10089
-
-#### IPLC services
-
-We have purchased IPLC services from Bandwagon Host:
-- Service: JMS IPLC HK 1000 V2 EARLY ACCESS
-- Annually: $558.37
-- Routing: HongKong IPLC
-
-> You can ask for out-of-campus access from the system admin.
-
-Deployed proxies services:
-
-##### IPLC-HK01
-Campus Network
-```
-socks5://10.0.1.68:50180
-http://10.0.1.68:50189
-```
-Cluster 100G LAN
-```
-socks5://192.168.233.8:50180
-http://192.168.233.8:50180
-```
-
-##### IPLC-HK02
-Campus Network
-```
-socks5://10.0.1.68:50280
-http://10.0.1.68:50289
-```
-Cluster 100G LAN
-```
-socks5://192.168.233.8:50289
-http://192.168.233.8:50289
-```
-
-##### IPLC-US52
-Campus Network
-```
-socks5://10.0.1.68:55280
-http://10.0.1.68:55289
-```
-Cluster 100G LAN
-```
-socks5://192.168.233.8:55280
-http://192.168.233.8:55280
-```
-
-##### IPLC-US53
-Campus Network
-```
-socks5://10.0.1.68:55380
-http://10.0.1.68:55389
-```
-Cluster 100G LAN
-```
-socks5://192.168.233.8:55380
-http://192.168.233.8:55380
-```
-
-##### jms-iplc-temp-workaround-hk-s01
-Campus Network
-```
-socks5://10.0.1.68:59180
-http://10.0.1.68:59189
-```
-Cluster 100G LAN
-```
-socks5://192.168.233.8:59180
-http://192.168.233.8:59189
-```
-
-##### jms-iplc-temp-workaround-us-s02
-Campus Network
-```
-socks5://10.0.1.68:59280
-http://10.0.1.68:59289
-```
-Cluster 100G LAN
-```
-socks5://192.168.233.8:59280
-http://192.168.233.8:59289
-```
-
 
 #### Proxychains
 
