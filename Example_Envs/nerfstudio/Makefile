@@ -7,18 +7,21 @@ BASE=$(REPO_NAME):$(BASE_VERSION)
 NERF=$(REPO_NAME):$(NERF_VERSION)
 
 MY_HTTP_PROXY=http://10.0.1.68:28889
-BUILD_ARGS=--build-arg http_proxy=$(MY_HTTP_PROXY) --build-arg https_proxy=$(MY_HTTP_PROXY)
+MAX_JOBS?=32
+BUILD_ARGS=--build-arg http_proxy=$(MY_HTTP_PROXY) --build-arg https_proxy=$(MY_HTTP_PROXY) --build-arg MAX_JOBS=$(MAX_JOBS)
 
-build: push_base push_nerf
+.PHONY: build build_base build_nerf push_base push_nerf
+
+build: build_base build_nerf
 
 build_base:
-	docker build -t $(BASE) --target base $(BUILD_ARGS) .
+	DOCKER_BUILDKIT=0 docker build -t $(BASE) --target base $(BUILD_ARGS) .
 
 push_base: build_base
 	docker push $(BASE)
 
 build_nerf:
-	docker build -t $(NERF) --target nerfstudio $(BUILD_ARGS) .
+	DOCKER_BUILDKIT=0 docker build -t $(NERF) --target nerfstudio $(BUILD_ARGS) .
 
 push_nerf: build_nerf
 	docker push $(NERF)

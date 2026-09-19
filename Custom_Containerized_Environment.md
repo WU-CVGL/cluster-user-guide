@@ -1,203 +1,213 @@
-<h1 align="center">Custom Containerized Deep Learning Environment<br>
-with Docker and Harbor </h1>
+# Build and use a custom container image
 
-- [For Beginners: build FROM a base image](#for-beginners-build-from-a-base-image)
-  - [Set up the CVGL CA certificate to use our Harbor registry](#set-up-the-cvgl-ca-certificate-to-use-our-harbor-registry)
-  - [Example](#example)
-- [Upload the custom image](#upload-the-custom-image)
-- [Use the custom image](#use-the-custom-image)
-- [Advanced: build an image from scratch](#advanced-build-an-image-from-scratch)
-- [Proxy](#proxy)
-  - [Set up proxy for the docker daemon](#set-up-proxy-for-the-docker-daemon)
-  - [Set up proxy in the temporary building container](#set-up-proxy-in-the-temporary-building-container)
+This HOWTO covers the current CVGL Harbor workflow. It assumes that Docker is
+already installed and that you are allowed to build images on the selected
+machine. On managed hosts, ask an administrator before changing Docker trust or
+restarting the Docker service.
 
-# For Beginners: build FROM a base image
+The files under [`Example_Envs`](./Example_Envs/README.md) are historical
+references. Review and pin every dependency before using one; an example's
+presence does not mean that its image currently builds or runs.
 
-*Determined AI* provides [*Docker* images](https://hub.docker.com/r/determinedai/environments/tags) that includes common deep-learning libraries and frameworks. You can also [develop your custom image](https://gpu.cvgl.lab/docs/prepare-environment/custom-env.html) based on your project dependency.
+## 1. Choose and pin a base image
 
-For beginners, it is recommended that custom images use one of the Determined AI's official images as a base image, using the `FROM` instruction.
+Prefer an administrator-approved image mirrored in `harbor.cvgl.lab`. Use a
+versioned tag, and use a digest when reproducibility matters:
 
-## Set up the CVGL CA certificate to use our Harbor registry
-
-Instead of pulling determinedai's images from Docker Hub (which requires setting up proxy now), you can pull them from our Harbor registry.
-
-Make sure you have configured your `hosts` file with the following settings:
-
-```text
-10.0.1.68 cvgl.lab
-10.0.1.68 harbor.cvgl.lab
+```dockerfile
+FROM harbor.cvgl.lab/<project>/<base-image>:<version-tag>
+# Stronger reproducibility after the digest has been verified:
+# FROM harbor.cvgl.lab/<project>/<base-image>@sha256:<digest>
 ```
 
-Check out [here](https://harbor.cvgl.lab/harbor/projects) to see the available images.
+Avoid floating tags such as `latest`. A tag can be moved; a digest identifies
+the exact manifest that was reviewed.
 
-We have mirrored some of the determined ai's environments in `harbor`. [Here is the link](https://harbor.cvgl.lab/harbor/projects/3/repositories/environments).
+The historical RTX 4090 recipes here use CUDA 11.8-or-newer bases. Compatibility also depends on
+the framework, driver, compiler, and any CUDA extensions, so CUDA version alone
+is not a complete compatibility check.
 
-You can also ask the system admin to add or update the images.
+## 2. Trust the Harbor CA
 
-If you want to use the images from the docker hub, you will need to [use the proxy service](#proxy).
+Obtain the Harbor CA certificate and its SHA-256 fingerprint through a trusted,
+authenticated channel, such as directly from the system administrator. Do not
+bootstrap trust by downloading a certificate with TLS verification disabled and
+then trusting it without an out-of-band fingerprint check.
 
-To use our Harbor registry, you need to complete the following setup:
+Inspect the certificate before installation:
 
 ```bash
-sudo mkdir -p /etc/docker/certs.d/harbor.cvgl.lab
-cd /etc/docker/certs.d/harbor.cvgl.lab
-sudo wget https://cvgl.lab/cvgl.crt --no-check-certificate
+openssl x509 -in harbor-ca.crt -noout -subject -issuer -dates -fingerprint -sha256
+```
+
+Compare that fingerprint with the administrator-published value. On a Linux
+Docker Engine host that you administer, install the verified CA as a `.crt`
+file under the directory named exactly after the registry:
+
+```bash
+sudo install -d -m 0755 /etc/docker/certs.d/harbor.cvgl.lab
+sudo install -m 0644 harbor-ca.crt /etc/docker/certs.d/harbor.cvgl.lab/ca.crt
 sudo systemctl restart docker
 ```
 
-This configures the CA certificate for Docker.
+On a managed cluster host, do not overwrite an existing certificate or restart
+Docker yourself; ask the administrator to verify or repair the trust setup.
+Docker treats every `*.crt` file in that directory as a CA root. An existing
+administrator-provided name such as `server.crt` is also valid if the file is
+the verified CA certificate. Docker Desktop and rootless Docker use different
+certificate locations; follow the
+[Docker registry certificate documentation](https://docs.docker.com/engine/security/certificates/)
+for that installation.
 
-Then log in to our Harbor registry:
+An HTTP `401 Unauthorized` response from this read-only probe is expected when
+TLS trust works but no Harbor credentials were supplied:
 
 ```bash
-docker login -u <username> -p <password> harbor.cvgl.lab    # You only need to login once
+curl --silent --show-error --output /dev/null --write-out '%{http_code}\n' \
+  --cacert harbor-ca.crt https://harbor.cvgl.lab/v2/
 ```
 
-Now edit the first `FROM` line in the `Dockerfile`, and change the base image to some existing image in the Harbor registry, for example:
+## 3. Log in without exposing the password
+
+For interactive use, let Docker prompt for the password:
+
+```bash
+docker login harbor.cvgl.lab --username <username>
+```
+
+For controlled automation, pass a secret through standard input. Do not use
+`docker login -p ...`, because the password becomes a command-line argument:
+
+```bash
+printf '%s' "$HARBOR_PASSWORD" |
+  docker login harbor.cvgl.lab --username <username> --password-stdin
+```
+
+Docker may store the resulting credential in `~/.docker/config.json`; configure
+a Docker credential store where available. See
+[`docker login`](https://docs.docker.com/reference/cli/docker/login/) for the
+credential-store and `--password-stdin` behavior.
+
+## 4. Write the Dockerfile
+
+Keep the build context small and use a `.dockerignore`. A minimal extension of
+an approved base looks like this:
 
 ```dockerfile
-FROM harbor.cvgl.lab/determinedai/environments:cuda-11.8-pytorch-2.0-gpu-mpi-0.31.1
-```
+FROM harbor.cvgl.lab/<project>/<base-image>:<version-tag>
 
-## Example
-
-Here is an example: Suppose you have `environment.yaml` for creating the `conda` environment, `pip_requirements.txt` for `pip` requirements and some `apt` packages that need to be installed.
-
-> Before proceeding to build your custom Docker image, you need to [install Docker](https://docs.docker.com/engine/install/), or you can choose the *easier* way: build it on the **login-node**.
-
-Put these files in a folder, and create a `Dockerfile` with the following contents:
-
-```Dockerfile
-# Determined Image
-FROM harbor.cvgl.lab/determinedai/environments:cuda-11.8-pytorch-2.0-gpu-mpi-0.31.1
-# Some important environment variables in Dockerfile
 ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ=Asia/Shanghai LANG=C.UTF-8 LC_ALL=C.UTF-8 PIP_NO_CACHE_DIR=1
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 PIP_NO_CACHE_DIR=1
 
-# Custom Configuration
-RUN sed -i  "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list && \
-    sed -i  "s/security.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list && \
-    rm -f /etc/apt/sources.list.d/* && \
-    apt-get update && \
-    apt-get -y install tzdata && \
-    apt-get install -y unzip python-opencv graphviz
-COPY environment.yml /tmp/environment.yml
-COPY pip_requirements.txt /tmp/pip_requirements.txt
-RUN conda install -n base libarchive -c main --force-reinstall --yes
-RUN conda env update --name base --file /tmp/environment.yml
-RUN conda clean --all --force-pkgs-dirs --yes
-RUN eval "$(conda shell.bash hook)" && \
-    conda activate base && \
-    pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple &&\
-    pip install --requirement /tmp/pip_requirements.txt
+COPY requirements.txt /tmp/requirements.txt
+RUN python -m pip install --requirement /tmp/requirements.txt && \
+    rm -f /tmp/requirements.txt
 ```
 
-If you want to adapt your custom containerized environment for NVIDIA RTX 4090, `CUDA version >= 11.8` is required.
+Pin Python packages and source checkouts. Quote shell requirements that contain
+operators, for example `python -m pip install "nerfstudio>=1.0"`, so `>` is not
+interpreted as shell redirection. Do not pass tokens or passwords as build
+arguments: build arguments and layers are not a secret store.
 
-Here are some other examples:
+## 5. Build with the current compatible path
 
-[svox2](./Example_Envs/svox2/)
-
-[lietorch-opencv](./Example_Envs/lietorch-opencv/)
-
-Notice that we are using the `apt` mirror by `ustc.edu.cn` and the `pip` mirror by `bfsu.edu.cn`. They are currently fast and thus recommended by the system admin.
-
-To build the image, use the following command:
+For the current CVGL Harbor deployment with its self-signed CA, the supported
+compatibility path is the legacy Docker builder:
 
 ```bash
-DOCKER_BUILDKIT=0 docker build -t my_image:v1.0 .
+IMAGE=harbor.cvgl.lab/<project>/<image>:<version-tag>
+DOCKER_BUILDKIT=0 docker build -t "$IMAGE" .
 ```
 
-where `my_image` is your image name, and `v1.0` is the image tag that usually contains descriptions and version information. `DOCKER_BUILDKIT=0` is needed if you are using private Docker registry (i.e. our Harbor) [[Reference]](https://stackoverflow.com/questions/75766469/docker-build-cannot-pull-base-image-from-private-docker-registry-that-requires).
-
-Don't forget the dot "." at the end of the command (which represents *the current directory* that contains the Dockerfile)!
-
-# Upload the custom image
-
-Instead of pushing the image to Docker Hub (which has already been blocked), it is recommended to use the private Harbor registry: `harbor.cvgl.lab`.
-
-You need to ask the system admin to create your Harbor user account. Once you have logged in, you can check out the [public library](https://harbor.cvgl.lab/harbor/projects/1/repositories):
-
-<img src="./Custom_Containerized_Environment/harbor-library.png" alt="Harbor library" style="width:40vw;"/>
-
-Note that instead of using the default `library`, you can also create your own *project* in Harbor.
-
-Now you can create your custom Docker images on the login node or your PC following the instructions above, and then push the image to the Harbor registry. For instance:
+Keep `DOCKER_BUILDKIT=0` for this path. The trailing `.` is the build context.
+If the build itself needs the site proxy, use the administrator-provided proxy
+URL and pass only non-secret proxy addresses:
 
 ```bash
-docker login -u <username> -p <password> harbor.cvgl.lab    # You only need to login once
-docker tag my_image:v1.0  harbor.cvgl.lab/library/my_image:v1.0
-docker push harbor.cvgl.lab/library/my_image:v1.0
+DOCKER_BUILDKIT=0 docker build \
+  --build-arg http_proxy=<proxy-url> \
+  --build-arg https_proxy=<proxy-url> \
+  -t "$IMAGE" .
 ```
 
-In the first line, replace `<username>` with your username and `<password>` with your password.
+If the Docker daemon needs a proxy to pull the base image, ask the administrator
+to configure it. A build argument configures `RUN` steps in the temporary build
+container; it does not configure the Docker daemon.
 
-In the second line, add the prefix `harbor.cvgl.lab/library/` to your image. Don't worry, this process does not occupy additional storage.
+### Optional, unverified BuildKit migration
 
-In the third line, push your new tagged image.
+BuildKit has not been validated against this Harbor deployment. Do not replace
+the compatible command above yet. A future migration should use a separate
+`docker-container` builder with an explicit registry CA; do not apply a
+`--buildkitd-config` procedure to the existing default `docker` driver.
 
-# Use the custom image
+Example configuration for a dedicated test builder:
 
-In the Determined AI configuration `.yaml` file (as mentioned in [the previous tutorial](./Determined_AI_User_Guide.md#task-configuration-template)), use the newly tagged image (like `harbor.cvgl.lab/library/my_image:v1.0` above) to tell the system to use your new image as the task environment.
+```toml
+# /absolute/path/to/cvgl-buildkitd.toml
+[registry."harbor.cvgl.lab"]
+  ca = ["/absolute/path/to/verified-harbor-ca.crt"]
+```
 
-Also note that every time you update an image, you need to change the image name, otherwise the system will not be able to detect the image update (probably because it only uses the image name as detection, not its checksum).
-
-# Advanced: build an image from scratch
-
-To make our life easier, we will build our custom image FROM NVIDIA's base image. You can use the minimum template we provide: [determined-minimum](https://github.com/LingzheZhao/determinedai-container-scripts)
-
-Note that for RTX 4090, we need `CUDA` version >= `11.8`, thus you need to use the base image from [NGC/CUDA](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda) with tags >= 11.8, or [NGC/Pytorch](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch) with tags >= 22.09.
-
-Here are some examples tested on RTX 4090:
-
-1. nerf-env [[Dockerfile]](./Example_Envs/nerf-env/) [[Harbor]](https://harbor.cvgl.lab/harbor/projects/1/repositories/nerf_env_test/artifacts-tab/artifacts/sha256:fd1376632bd15ea92eb9791723e95fab833f4f30185a9a8c3f765d158713bc60)
-
-2. nerfstudio [[Dockerfile]](./Example_Envs/nerfstudio/) [[Harbor - nerfstudio]](https://harbor.cvgl.lab/harbor/projects/1/repositories/zlz-nerfstudio/artifacts-tab) 
-
-# Proxy
-
-## Set up proxy for the docker daemon
-
-You need to set up proxy for the docker daemon in order to pull images from the docker hub (i.e. `docker pull <image>` command or `FROM <image>` in the first line of your `Dockerfile`) since it has been blocked.
-
-The status of our public proxies can be monitored here: [Grafana - v2ray-dashboard](https://grafana.cvgl.lab/d/CCSvIIEZz/v2ray-dashboard)
-
-1) To proceed, recursively create the folder:
-
-    ```sh
-    sudo mkdir -p /etc/systemd/system/docker.service.d
-    ```
-
-2) Add environment variables to the configuration file `/etc/systemd/system/docker.service.d/proxy.conf`:
-
-    ```conf
-    [Service]
-    Environment="HTTP_PROXY=http://10.0.1.68:28889"
-    Environment="HTTPS_PROXY=http://10.0.1.68:28889"
-    Environment="NO_PROXY=localhost,127.0.0.1,nvcr.io,aliyuncs.com,edu.cn,cvgl.lab"
-    ```
-
-    You can change `10.0.1.68` and `8889` to the other proxy address and port respectively.
-
-    Note that the `http` is intentionally used in `HTTPS_PROXY` - this is how most HTTP proxies work.
-
-3) Update configuration and restart `Docker`:
-
-    ```sh
-    systemctl daemon-reload
-    systemctl restart docker
-    ```
-
-4) Check the proxy:
-
-    ```sh
-    docker info
-    ```
-
-## Set up proxy in the temporary building container
-
-If you also need international internet access during the Dockerfile building process, you can add build arguments to use the public proxy services:
+On a machine where you can run test builds, create and inspect the isolated
+builder, then run a non-pushing test build:
 
 ```bash
-DOCKER_BUILDKIT=0 docker build -t my_image:v1.0 --build-arg http_proxy=http://10.0.1.68:28889 --build-arg https_proxy=http://10.0.1.68:28889 .
+docker buildx create \
+  --name cvgl-harbor-test \
+  --driver docker-container \
+  --buildkitd-config /absolute/path/to/cvgl-buildkitd.toml \
+  --bootstrap
+
+docker buildx inspect cvgl-harbor-test
+docker buildx build --builder cvgl-harbor-test --load -t "$IMAGE" .
 ```
+
+Docker documents how the CA is copied into a `docker-container` builder in
+[Configure BuildKit](https://docs.docker.com/build/buildkit/configure/). Treat
+this as a migration experiment until pulling the base image and a complete
+non-pushing build have both been verified.
+
+## 6. Tag and push
+
+If the local build used a different tag, add the full Harbor reference and push
+it explicitly:
+
+```bash
+docker tag <local-image>:<local-tag> \
+  harbor.cvgl.lab/<project>/<image>:<version-tag>
+docker push harbor.cvgl.lab/<project>/<image>:<version-tag>
+```
+
+Use a new, meaningful version tag for changed content. Record the digest printed
+by `docker push` or shown by Harbor. Keep release tags stable rather than
+overwriting them; use the recorded digest for reproducible jobs.
+
+## 7. Use the image with Determined
+
+Reference the pushed tag or verified digest in the task configuration:
+
+```yaml
+environment:
+  image: harbor.cvgl.lab/<project>/<image>:<version-tag>
+```
+
+See the [Determined compute guide](./Determined_AI_User_Guide.md) and the
+[MCP workflow](./Agent_Workflow.md) for task planning and submission. Follow the
+[shared-storage guide](./Shared_Storage.md) for code, datasets, checkpoints, and
+outputs. The image should hold the runtime environment; changing datasets and
+run artifacts belong on shared storage.
+
+## Troubleshooting
+
+- `x509: certificate signed by unknown authority`: verify the CA fingerprint,
+  certificate filename extension, registry directory name, and the certificate
+  location for your Docker installation. Do not use an insecure-registry flag.
+- `unauthorized` or `denied`: log in again and confirm access to the Harbor
+  project. TLS trust and registry authorization are separate checks.
+- A BuildKit pull fails while the compatible build works: continue with
+  `DOCKER_BUILDKIT=0`; the isolated BuildKit CA path remains unverified.
+- A package constraint creates a file such as `=0.16.0`: quote the complete
+  requirement passed to the shell.
+- A job cannot see code or output: check the Determined bind mounts and place
+  the workload under an approved shared-storage root.

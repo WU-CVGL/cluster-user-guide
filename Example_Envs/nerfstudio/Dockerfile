@@ -1,6 +1,7 @@
 FROM nvcr.io/nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04 AS base
 
-ARG MAX_JOBS 32
+# Build-time parallelism for PyTorch C++/CUDA extensions.
+ARG MAX_JOBS=32
 ARG DEBIAN_FRONTEND=noninteractive
 ARG CUDA_ARCHITECTURES=89;86
 ENV TORCH_CUDA_ARCH_LIST="8.9;8.6" TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
@@ -207,7 +208,7 @@ RUN pip install torch-sparse torch-scatter &&\
     pip install git+https://github.com/cvg/Hierarchical-Localization@master &&\
     pip install git+https://github.com/cvg/pixel-perfect-sfm@main &&\
     pip install git+https://github.com/NVlabs/tiny-cuda-nn@master#subdirectory=bindings/torch &&\
-    pip install open3d>=0.16.0 --ignore-installed &&\
+    pip install "open3d>=0.16.0" --ignore-installed &&\
     rm -rf /tmp/*
 
 FROM base AS nerfstudio
@@ -217,7 +218,7 @@ RUN \
     # pip install "nerfstudio[dev,doc,gen]==${NS_VER}" -i https://pypi.org/simple/ &&\
     # Nightly version
     pip install git+https://github.com/nerfstudio-project/nerfstudio@main -i https://pypi.org/simple/ &&\
-    pip install coverage einops pypose torchtyping>=0.1.4 tyro>=0.8.1&&\
+    pip install coverage einops pypose "torchtyping>=0.1.4" "tyro>=0.8.1" &&\
     rm -rf /tmp/*
 
 CMD ns-install-cli --mode install && /bin/bash

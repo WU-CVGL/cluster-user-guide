@@ -1,0 +1,27 @@
+name: train-baseline
+description: Train the baseline and keep checkpoints and outputs on shared storage.
+resources:
+  slots_per_trial: 1
+  resource_pool: <resource-pool>
+bind_mounts:
+  - host_path: /workspace/<username>
+    container_path: /run/determined/workdir/home
+  - host_path: /datasets
+    container_path: /run/determined/workdir/data
+    read_only: true
+environment:
+  image: <container-image>
+checkpoint_storage:
+  type: shared_fs
+  host_path: /workspace/<username>/checkpoints/train-baseline
+entrypoint: >-
+  bash -lc 'mkdir -p /run/determined/workdir/home/results/train-baseline &&
+  cd /run/determined/workdir/home/project &&
+  python train.py --output /run/determined/workdir/home/results/train-baseline'
+searcher:
+  name: single
+  # Replace this with a metric name reported by the training code.
+  metric: validation_loss
+  smaller_is_better: true
+# The training code must load its own durable checkpoint after a restart.
+max_restarts: 3

@@ -1,0 +1,14 @@
+description: |-
+  debug-project-environment
+  Inspect the project image and reproduce the current issue interactively.
+resources:
+  slots: 1
+  resource_pool: <resource-pool>
+bind_mounts:
+  - host_path: /workspace/<username>
+    container_path: /run/determined/workdir/home
+  - host_path: /datasets
+    container_path: /run/determined/workdir/data
+    read_only: true
+environment:
+  image: <container-image>
