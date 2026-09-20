@@ -14,9 +14,12 @@ Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久�
 | --- | --- | --- |
 | **Command** | 短时、非交互式的评估、转换或预处理 | 数分钟到数小时 |
 | **Shell** | 交互式调试、IDE 访问和环境检查 | 主动调试期间 |
+| **Notebook**（可选，使用原生 CLI） | 数据探索、可视化分析和教学 | 主动分析期间 |
 | **Experiment** | 长时或跨夜训练、检查点恢复和试验跟踪 | 数小时到数天 |
 
 一次性工作默认使用 command，包括短时无人值守任务。需要人工与进程交互时使用 shell。跨夜训练，或需要检查点恢复和试验跟踪时，使用 experiment。
+
+[Jupyter](Jupyter_Notebooks.zh.md) 是交互式研究的可选入口。长时间空闲的原生 Notebook 任务目前由管理员手动停止，不由 shell watchdog 管理。当前 MCP 计算服务没有提供 Notebook 任务类型。
 
 为每个任务设置简短且有意义的名称，并用描述说明它运行什么。`evaluate-checkpoint-240k` 这类名称比 UUID 或 `test` 更便于操作。
 
@@ -25,12 +28,12 @@ Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久�
 <a id="install-and-authenticate"></a>
 ## 安装与认证
 
-2026-09-20 核验时，master 报告的 Determined 版本为 `0.38.1`。安装匹配的 CLI。如果部署 CA 不在客户端信任库中，请在登录前将 `DET_MASTER_CERT_FILE` 指向已核验的 CA 证书路径：
+2026-09-20 核验时，master 报告的 Determined 版本为 `0.38.1`。安装匹配的 CLI。登录节点已安装集群 CA；个人设备请先完成[证书配置](Getting_started.zh.md#3-enroll-the-cluster-ca-when-required)。仅当 CLI 仍需显式 CA 路径时，将 `DET_MASTER_CERT_FILE` 指向下载的 `cvgl.crt`：
 
 ```bash
 python -m pip install "determined==0.38.1"
 export DET_MASTER=https://gpu.cvgl.lab
-# If needed: export DET_MASTER_CERT_FILE=/absolute/path/to/verified-cvgl-ca.crt
+# If needed: export DET_MASTER_CERT_FILE=/absolute/path/to/cvgl.crt
 det user login <username>
 ```
 

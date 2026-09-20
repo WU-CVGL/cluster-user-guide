@@ -16,6 +16,7 @@ Run workloads on the GPU cluster and keep code, datasets, checkpoints and result
 | Ask an agent to prepare, run and follow a workload | [MCP workflow — recommended](Agent_Workflow.md) |
 | One-off scripts, evaluation and non-interactive debug runs | [Command tasks](Determined_AI_User_Guide.md#run-a-short-command) |
 | Interactive debugging, VS Code or PyCharm | [Interactive shells](Interactive_Shell.md) |
+| Data exploration, visual analysis and teaching | [Jupyter — optional](Jupyter_Notebooks.md) |
 | Overnight training, recovery or experiment tracking | [Experiment tasks](Determined_AI_User_Guide.md#run-a-durable-experiment) |
 | Build or reuse a container image | [Container environments](Custom_Containerized_Environment.md) |
 

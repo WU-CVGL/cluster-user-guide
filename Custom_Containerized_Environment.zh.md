@@ -4,8 +4,7 @@
 # 构建和使用自定义容器镜像
 
 本操作指南介绍当前 CVGL Harbor 工作流。它假定所选机器已经安装 Docker，
-并且你有权在该机器上构建镜像。在受管理的主机上，更改 Docker 信任配置或
-重启 Docker 服务之前，请联系管理员。
+并且你有权在该机器上构建镜像。登录节点已经配置好 Docker 信任。
 
 [`Example_Envs`](./Example_Envs/README.zh.md) 下的文件是历史参考。
 使用前应审查并固定所有依赖；示例存在并不表示对应镜像目前仍能成功构建或运行。
@@ -31,39 +30,24 @@ FROM harbor.cvgl.lab/<project>/<base-image>:<version-tag>
 <a id="2-trust-the-harbor-ca"></a>
 ## 2. 信任 Harbor CA
 
-通过可信、已认证的渠道获取 Harbor CA 证书及其 SHA-256 指纹，例如直接向
-系统管理员获取。不要在关闭 TLS 验证的情况下下载证书，再在没有通过其他渠道
-核对指纹的情况下直接信任它。
+登录节点已经安装 Harbor CA，因此在登录节点上跳过此步骤。在个人设备上，下载
+[`cvgl.crt`](https://cvgl.lab/cvgl.crt)，然后按照
+[集群入门](Getting_started.zh.md#3-enroll-the-cluster-ca-when-required)中的 CA
+安装步骤操作。
 
-安装前检查证书：
-
-```bash
-openssl x509 -in harbor-ca.crt -noout -subject -issuer -dates -fingerprint -sha256
-```
-
-将该指纹与管理员发布的值进行比较。在由你管理的 Linux Docker Engine 主机上，
-将验证过的 CA 以 `.crt` 文件形式安装到与 registry 名称完全一致的目录下：
+对于个人 Linux 机器上的 Docker Engine，还要把下载的 `cvgl.crt` 放进 Docker
+为该 registry 使用的证书目录：
 
 ```bash
 sudo install -d -m 0755 /etc/docker/certs.d/harbor.cvgl.lab
-sudo install -m 0644 harbor-ca.crt /etc/docker/certs.d/harbor.cvgl.lab/ca.crt
-sudo systemctl restart docker
+sudo install -m 0644 cvgl.crt /etc/docker/certs.d/harbor.cvgl.lab/cvgl.crt
 ```
 
-在受管理的集群主机上，不要自行覆盖已有证书或重启 Docker；请让管理员检查或
-修复信任配置。Docker 会把该目录中的每个 `*.crt` 文件作为 CA 根证书。
-如果已有管理员提供的 `server.crt`，且该文件确实是验证过的 CA 证书，那么这个
-文件名同样有效。Docker Desktop 和 rootless Docker 使用不同的证书位置；请根据
+仅当你自己的机器没有自动读取新证书时，才重启该机器上的 Docker daemon。
+不要重启共享登录节点上的 Docker。Docker Desktop 和 rootless Docker 使用
+不同的证书位置；请根据
 [Docker registry 证书文档](https://docs.docker.com/engine/security/certificates/)
 完成对应安装。
-
-当 TLS 信任正常、但没有提供 Harbor 凭据时，下面的只读探测预期返回 HTTP
-`401 Unauthorized`：
-
-```bash
-curl --silent --show-error --output /dev/null --write-out '%{http_code}\n' \
-  --cacert harbor-ca.crt https://harbor.cvgl.lab/v2/
-```
 
 <a id="3-log-in-without-exposing-the-password"></a>
 ## 3. 登录且不暴露密码
@@ -145,7 +129,7 @@ BuildKit 尚未在这个 Harbor 部署上通过验证。现在不要替换上面
 ```toml
 # /absolute/path/to/cvgl-buildkitd.toml
 [registry."harbor.cvgl.lab"]
-  ca = ["/absolute/path/to/verified-harbor-ca.crt"]
+  ca = ["/absolute/path/to/cvgl.crt"]
 ```
 
 在可以运行测试构建的机器上，创建并检查这个隔离 builder，然后运行一次不推送的
@@ -200,9 +184,9 @@ environment:
 <a id="troubleshooting"></a>
 ## 故障排查
 
-- `x509: certificate signed by unknown authority`：检查 CA 指纹、证书扩展名、
-  registry 目录名以及当前 Docker 安装所需的证书位置。不要启用
-  insecure-registry。
+- `x509: certificate signed by unknown authority`：确认 `cvgl.crt` 位于当前
+  Docker 安装使用的 registry 目录中。必要时重启你自己机器上的 Docker。
+  不要启用 insecure-registry。
 - `unauthorized` 或 `denied`：重新登录，并确认你有权访问对应 Harbor project。
   TLS 信任与 registry 授权是两个独立的检查。
 - BuildKit 拉取失败，但兼容构建可用：继续使用 `DOCKER_BUILDKIT=0`；隔离的

@@ -42,20 +42,37 @@ hosts 文件的位置和修改方式：
 <a id="3-enroll-the-cluster-ca-when-required"></a>
 ## 3. 按需登记集群 CA
 
-部分内部 HTTPS 服务使用私有证书颁发机构。请通过可信的管理员渠道获取 CA 证书及其 SHA-256 指纹，最好分别通过两个渠道获取。导入前先验证：
+登录节点已经安装好证书，可以跳过此步骤。在个人设备上下载 [cvgl.crt](https://cvgl.lab/cvgl.crt)，然后按下面的方式安装即可，无需找管理员核对指纹。
+
+如果设备因尚未信任该 CA 而无法下载，可用以下命令完成首次下载（Windows 使用 `curl.exe`）：
 
 ```bash
-openssl x509 -in cvgl-root-ca.crt -noout -fingerprint -sha256
+curl -k --fail --output cvgl.crt https://cvgl.lab/cvgl.crt
 ```
 
-不要为了绕过未知证书而关闭 TLS 验证。
+`-k` 只能用于这次初始 CA 下载。安装后应恢复正常 TLS 验证。
 
-- Windows：把已验证的 CA 导入**受信任的根证书颁发机构**。Git for Windows 可通过 `git config --global http.sslbackend schannel` 使用 Windows 信任存储。
-- Ubuntu/Debian：把证书复制到 `/usr/local/share/ca-certificates/cvgl-root-ca.crt`，然后运行 `sudo update-ca-certificates`。
-- macOS：使用“钥匙串访问”把证书导入系统钥匙串，并明确设为信任其 SSL 用途。
-- 浏览器和容器运行时可能使用各自的信任存储。请按照相应应用的文档添加同一份已验证 CA。
+- Windows，在提升权限的 PowerShell 中运行：
 
-详情请参阅[网络与远程访问](Network_and_Remote_Access.zh.md#internal-ca-certificates)。
+  ```powershell
+  Import-Certificate -FilePath .\cvgl.crt -CertStoreLocation Cert:\LocalMachine\Root
+  ```
+
+- macOS：
+
+  ```bash
+  sudo security add-trusted-cert -d -r trustRoot \
+    -k /Library/Keychains/System.keychain cvgl.crt
+  ```
+
+- Ubuntu/Debian：
+
+  ```bash
+  sudo cp cvgl.crt /usr/local/share/ca-certificates/cvgl.crt
+  sudo update-ca-certificates
+  ```
+
+只有应用在安装后仍报告证书错误时，才需要单独为它设置 CA 路径。
 
 <a id="4-create-a-per-device-ssh-key"></a>
 ## 4. 为每台设备创建独立 SSH 密钥
@@ -85,7 +102,7 @@ Host cvgl-login
 
 在 Windows OpenSSH 中，PowerShell 支持 `~/.ssh/config` 和使用正斜杠的路径。MobaXterm、PuTTY 等 GUI 客户端需要在会话设置中配置相同的主机、端口、用户名和密钥。
 
-接受新的主机密钥前，请与管理员提供的指纹进行比对。主机密钥发生变化时必须停止连接，直到原因得到确认。
+首次连接时，OpenSSH 会询问是否将主机密钥保存到 `known_hosts`。如果后续提示主机密钥变化，先查明原因再重新连接。SSH 主机密钥与上面安装的 HTTPS 证书是不同机制。
 
 <a id="6-install-the-public-key"></a>
 ## 6. 安装公钥

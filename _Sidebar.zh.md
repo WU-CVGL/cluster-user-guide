@@ -14,6 +14,8 @@
 
 [交互式 Shell](Interactive_Shell.zh)
 
+[Jupyter——可选](Jupyter_Notebooks.zh)
+
 [容器环境](Custom_Containerized_Environment.zh)
 
 [故障排查](Troubleshooting.zh)

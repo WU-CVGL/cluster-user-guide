@@ -12,9 +12,12 @@ Determined runs containerized work on the GPU cluster. Keep the durable parts of
 | --- | --- | --- |
 | **Command** | Short, non-interactive evaluation, conversion, or preprocessing | Minutes to hours |
 | **Shell** | Interactive debugging, IDE access, and environment inspection | While actively debugging |
+| **Notebook** (optional, native CLI) | Data exploration, visual analysis and teaching | While actively analyzing |
 | **Experiment** | Long or overnight training, checkpointing, restart, and trial tracking | Hours to days |
 
 Use a command by default for one-off work, including short unattended jobs. Use a shell when a person needs to interact with the process. Use an experiment for overnight training or when checkpoint recovery and trial tracking are needed.
+
+[Jupyter](Jupyter_Notebooks.md) is an optional interface for interactive research. Long-idle native Notebook tasks are currently stopped manually by the administrator; the shell watchdog does not manage them. The current MCP compute service does not provide a Notebook task kind.
 
 Give every task a short, meaningful name and a description that says what it runs. Names such as `evaluate-checkpoint-240k` are easier to operate than UUIDs or `test`.
 
@@ -22,12 +25,12 @@ Native command and shell configs expose one `description` field, so put the shor
 
 ## Install and authenticate
 
-The master reported Determined `0.38.1` when verified on 2026-09-20. Install the matching CLI. If the deployment CA is not in your client's trust store, set `DET_MASTER_CERT_FILE` to the verified CA certificate path before logging in:
+The master reported Determined `0.38.1` when verified on 2026-09-20. Install the matching CLI. The login node already has the cluster CA; on your own device, follow the [certificate setup](Getting_started.md#3-enroll-the-cluster-ca-when-required). Set `DET_MASTER_CERT_FILE` to the downloaded `cvgl.crt` only if the CLI still needs an explicit CA path:
 
 ```bash
 python -m pip install "determined==0.38.1"
 export DET_MASTER=https://gpu.cvgl.lab
-# If needed: export DET_MASTER_CERT_FILE=/absolute/path/to/verified-cvgl-ca.crt
+# If needed: export DET_MASTER_CERT_FILE=/absolute/path/to/cvgl.crt
 det user login <username>
 ```
 

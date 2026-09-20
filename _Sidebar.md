@@ -14,6 +14,8 @@
 
 [Interactive shells](Interactive_Shell)
 
+[Jupyter — optional](Jupyter_Notebooks)
+
 [Container environments](Custom_Containerized_Environment)
 
 [Troubleshooting](Troubleshooting)

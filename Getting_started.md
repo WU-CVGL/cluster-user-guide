@@ -38,20 +38,37 @@ For service URLs, see [Cluster reference](Cluster_Reference.md#services). More n
 
 ## 3. Enroll the cluster CA when required
 
-Some internal HTTPS services use a private certificate authority. Obtain the CA certificate and its SHA-256 fingerprint through trusted administrator channels, ideally through two separate channels. Verify it before importing:
+The login node already has the certificate installed, so skip this step there. On your own device, download [cvgl.crt](https://cvgl.lab/cvgl.crt) and install it using the instructions below. No administrator fingerprint check is required.
+
+If your device cannot download it because the CA is not trusted yet, use this command for the initial download (on Windows, use `curl.exe`):
 
 ```bash
-openssl x509 -in cvgl-root-ca.crt -noout -fingerprint -sha256
+curl -k --fail --output cvgl.crt https://cvgl.lab/cvgl.crt
 ```
 
-Never disable TLS verification to work around an unknown certificate.
+Use `-k` only for this initial CA download. After installation, use normal TLS verification.
 
-- Windows: import the verified CA into **Trusted Root Certification Authorities**. Git for Windows can use the Windows trust store with `git config --global http.sslbackend schannel`.
-- Ubuntu/Debian: copy it to `/usr/local/share/ca-certificates/cvgl-root-ca.crt`, then run `sudo update-ca-certificates`.
-- macOS: import it into the System keychain with Keychain Access and explicitly trust it for SSL.
-- Browsers and container runtimes may use their own trust stores. Add the same verified CA according to that application's documentation.
+- Windows, in an elevated PowerShell:
 
-See [Network and remote access](Network_and_Remote_Access.md#internal-ca-certificates) for details.
+  ```powershell
+  Import-Certificate -FilePath .\cvgl.crt -CertStoreLocation Cert:\LocalMachine\Root
+  ```
+
+- macOS:
+
+  ```bash
+  sudo security add-trusted-cert -d -r trustRoot \
+    -k /Library/Keychains/System.keychain cvgl.crt
+  ```
+
+- Ubuntu/Debian:
+
+  ```bash
+  sudo cp cvgl.crt /usr/local/share/ca-certificates/cvgl.crt
+  sudo update-ca-certificates
+  ```
+
+Configure an application-specific CA path only if that application still reports a certificate error after installation.
 
 ## 4. Create a per-device SSH key
 
@@ -79,7 +96,7 @@ Host cvgl-login
 
 On Windows OpenSSH, `~/.ssh/config` and forward-slash paths work in PowerShell. GUI clients such as MobaXterm or PuTTY need the same host, port, username, and key configured in their session settings.
 
-Before accepting a new host key, compare its fingerprint with a value from the administrator. A changed host key is a stop condition until it is explained.
+On first connection, OpenSSH asks to save the host key in `known_hosts`. If it later reports a changed host key, investigate the change before reconnecting. SSH host keys are separate from the HTTPS certificate installed above.
 
 ## 6. Install the public key
 

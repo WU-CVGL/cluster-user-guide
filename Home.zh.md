@@ -17,6 +17,7 @@
 | 让 agent 准备、运行并跟踪任务 | [MCP 工作流——推荐](Agent_Workflow.zh.md) |
 | 一次性脚本、评估和非交互式调试 | [Command 任务](Determined_AI_User_Guide.zh.md#run-a-short-command) |
 | 交互式调试、VS Code 或 PyCharm | [交互式 Shell](Interactive_Shell.zh.md) |
+| 数据探索、可视化分析与教学 | [Jupyter——可选](Jupyter_Notebooks.zh.md) |
 | 跨天训练、恢复或实验跟踪 | [Experiment 任务](Determined_AI_User_Guide.zh.md#run-a-durable-experiment) |
 | 构建或复用容器镜像 | [容器环境](Custom_Containerized_Environment.zh.md) |
 

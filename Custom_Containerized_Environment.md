@@ -4,8 +4,7 @@
 
 This HOWTO covers the current CVGL Harbor workflow. It assumes that Docker is
 already installed and that you are allowed to build images on the selected
-machine. On managed hosts, ask an administrator before changing Docker trust or
-restarting the Docker service.
+machine. Docker trust is already configured on the login node.
 
 The files under [`Example_Envs`](./Example_Envs/README.md) are historical
 references. Review and pin every dependency before using one; an example's
@@ -31,43 +30,24 @@ is not a complete compatibility check.
 
 ## 2. Trust the Harbor CA
 
-Obtain the Harbor CA certificate and its SHA-256 fingerprint through a trusted,
-authenticated channel, such as directly from the system administrator. Do not
-bootstrap trust by downloading a certificate with TLS verification disabled and
-then trusting it without an out-of-band fingerprint check.
+The login node already has the Harbor CA installed, so skip this step there. On
+a personal device, download [`cvgl.crt`](https://cvgl.lab/cvgl.crt) and follow
+the CA installation steps in
+[Getting started](Getting_started.md#3-enroll-the-cluster-ca-when-required).
 
-Inspect the certificate before installation:
-
-```bash
-openssl x509 -in harbor-ca.crt -noout -subject -issuer -dates -fingerprint -sha256
-```
-
-Compare that fingerprint with the administrator-published value. On a Linux
-Docker Engine host that you administer, install the verified CA as a `.crt`
-file under the directory named exactly after the registry:
+For Docker Engine on a personal Linux machine, also place the downloaded
+`cvgl.crt` in Docker's registry-specific certificate directory:
 
 ```bash
 sudo install -d -m 0755 /etc/docker/certs.d/harbor.cvgl.lab
-sudo install -m 0644 harbor-ca.crt /etc/docker/certs.d/harbor.cvgl.lab/ca.crt
-sudo systemctl restart docker
+sudo install -m 0644 cvgl.crt /etc/docker/certs.d/harbor.cvgl.lab/cvgl.crt
 ```
 
-On a managed cluster host, do not overwrite an existing certificate or restart
-Docker yourself; ask the administrator to verify or repair the trust setup.
-Docker treats every `*.crt` file in that directory as a CA root. An existing
-administrator-provided name such as `server.crt` is also valid if the file is
-the verified CA certificate. Docker Desktop and rootless Docker use different
-certificate locations; follow the
+Restart the Docker daemon on your own machine only if it does not pick up the
+new certificate. Do not restart Docker on the shared login node. Docker Desktop
+and rootless Docker use different certificate locations; follow the
 [Docker registry certificate documentation](https://docs.docker.com/engine/security/certificates/)
 for that installation.
-
-An HTTP `401 Unauthorized` response from this read-only probe is expected when
-TLS trust works but no Harbor credentials were supplied:
-
-```bash
-curl --silent --show-error --output /dev/null --write-out '%{http_code}\n' \
-  --cacert harbor-ca.crt https://harbor.cvgl.lab/v2/
-```
 
 ## 3. Log in without exposing the password
 
@@ -148,7 +128,7 @@ Example configuration for a dedicated test builder:
 ```toml
 # /absolute/path/to/cvgl-buildkitd.toml
 [registry."harbor.cvgl.lab"]
-  ca = ["/absolute/path/to/verified-harbor-ca.crt"]
+  ca = ["/absolute/path/to/cvgl.crt"]
 ```
 
 On a machine where you can run test builds, create and inspect the isolated
@@ -202,9 +182,9 @@ run artifacts belong on shared storage.
 
 ## Troubleshooting
 
-- `x509: certificate signed by unknown authority`: verify the CA fingerprint,
-  certificate filename extension, registry directory name, and the certificate
-  location for your Docker installation. Do not use an insecure-registry flag.
+- `x509: certificate signed by unknown authority`: confirm that `cvgl.crt` is in
+  the registry directory used by your Docker installation. Restart Docker on
+  your own machine if necessary. Do not use an insecure-registry flag.
 - `unauthorized` or `denied`: log in again and confirm access to the Harbor
   project. TLS trust and registry authorization are separate checks.
 - A BuildKit pull fails while the compatible build works: continue with

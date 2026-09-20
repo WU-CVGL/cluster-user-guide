@@ -8,6 +8,8 @@ We recommend connecting your agent to [Determined Cluster MCP](https://github.co
 
 Agents should read [AGENTS.md](AGENTS.md), then this workflow and the task-specific pages it links. The repository is named `determined_cluster_mcp`; its executables remain `determined-compute` and `determined-compute-mcp`.
 
+For human-led data exploration and visualization, [Jupyter](Jupyter_Notebooks.md) remains an optional native Determined workflow. The current MCP does not accept `kind: notebook`; do not route a Notebook launch through `compute_launch`.
+
 ## Give the agent a task
 
 Describe the goal and how to recognize success. Include the shared project path, code revision, input and output paths, preferred image, resource pool and GPU count when known. The agent can reuse an existing verified configuration and ask only for missing requirements. Provide credential-file or SSH-alias references, never secret values.

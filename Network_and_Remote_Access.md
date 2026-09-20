@@ -10,7 +10,7 @@ Use the client-side hosts entries and platform instructions in [Getting started]
 
 ## Internal CA certificates
 
-Follow the [CA enrollment steps](Getting_started.md#3-enroll-the-cluster-ca-when-required). Browser trust does not automatically configure every language runtime or builder. [Troubleshooting](Troubleshooting.md) covers Python and Determined; [container environments](Custom_Containerized_Environment.md) covers Docker and Harbor.
+The login node is already configured. On a personal computer, use the single [CA enrollment procedure](Getting_started.md#3-enroll-the-cluster-ca-when-required). Configure a separate CA store only for software that does not use the system trust store. SSH host keys are unrelated to the HTTPS CA.
 
 ## File-transfer clients
 

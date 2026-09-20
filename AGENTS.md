@@ -14,6 +14,7 @@ Here, an agent is an AI assistant. A **Determined agent** is a compute-node serv
 | Resolve paths or transfer files | [Shared storage](Shared_Storage.md) and the MCP storage-access reference linked there or in the agent workflow |
 | Configure login or credentials | [Getting started](Getting_started.md), then [troubleshooting](Troubleshooting.md) |
 | Debug interactively or connect an IDE | [Interactive shells](Interactive_Shell.md), including the verified cleanup policy |
+| Explore data or present results in a notebook | [Jupyter](Jupyter_Notebooks.md); native Notebook tasks are outside the current MCP task kinds |
 | Build an image | [Container environments](Custom_Containerized_Environment.md); retain the Harbor compatibility path |
 | Find service URLs or evidence sources | [Cluster reference](Cluster_Reference.md) |
 | Edit this documentation | [Contributing](CONTRIBUTING.md) |
@@ -24,6 +25,7 @@ Every documentation page has a `.zh.md` counterpart. Use the reader's preferred 
 
 - Reuse verified project configuration when available. Resolve required image, pool, slot count, paths and success criteria before launch; ask for missing requirements rather than inventing them.
 - Use `command` for short non-interactive work, `shell` for interactive debugging, and `experiment` for overnight training or experiment lifecycle features. Choose a meaningful name and description.
+- Jupyter is optional for human-led exploration and visualization. The current MCP has no `notebook` task kind; use the documented native workflow when appropriate. Long-idle native Notebook tasks are managed manually by the administrator, not by the shell watchdog.
 - Keep code, data and outputs on mapped shared storage. Do not upload project contexts or code/data bundles through Determined. Distinguish cluster host, container and MCP-server-local paths; the user's computer need not mount shared storage.
 - Check live schedulable capacity and keep `allow_queue: false` unless the user intends to queue. Low GPU utilization is not proof of free slots. A capacity snapshot does not reserve resources.
 - Preview storage transfers and inspect their resolved paths before executing within the user's authorized scope. Respect read-only mounts and filesystem permissions. Reading this guide alone does not authorize a launch, transfer or infrastructure change.

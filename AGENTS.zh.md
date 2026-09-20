@@ -16,6 +16,7 @@
 | 解析路径或传输文件 | [共享存储](Shared_Storage.zh.md)，以及存储页或 agent 工作流链接的 MCP 存储访问参考 |
 | 配置登录或凭据 | [入门指南](Getting_started.zh.md)，然后阅读[故障排查](Troubleshooting.zh.md) |
 | 交互调试或连接 IDE | [交互式 Shell](Interactive_Shell.zh.md)，包括已核验的回收策略 |
+| 在 Notebook 中探索数据或展示结果 | [Jupyter](Jupyter_Notebooks.zh.md)；原生 Notebook 不属于当前 MCP 支持的任务类型 |
 | 构建镜像 | [容器环境](Custom_Containerized_Environment.zh.md)，保留 Harbor 的兼容构建方式 |
 | 查找服务地址或配置依据 | [集群参考](Cluster_Reference.zh.md) |
 | 修改本文档 | [文档贡献](CONTRIBUTING.zh.md) |
@@ -27,6 +28,7 @@
 
 - 优先复用项目中已经验证的配置。提交前明确所需镜像、资源池、槽位数、路径和成功判据；缺少必要信息时询问用户，不要编造。
 - 短时非交互任务使用 `command`，交互调试使用 `shell`，跨天训练或需要实验生命周期管理时使用 `experiment`。提供有意义的名称和描述。
+- Jupyter 是供人交互探索和可视化的可选入口。当前 MCP 没有 `notebook` 任务类型，适用时使用文档中的原生工作流。长时间空闲的原生 Notebook 任务由管理员手动管理，不由 shell watchdog 回收。
 - 代码、数据和输出放在已映射的共享存储中。不要通过 Determined 上传项目上下文或代码、数据包。区分集群宿主机路径、容器路径和 MCP 服务所在机器的本地路径；用户电脑不必挂载共享存储。
 - 检查实时可调度容量，除非用户明确希望排队，否则保持 `allow_queue: false`。GPU 利用率低不能证明槽位空闲；容量快照也不等于资源预留。
 - 传输前预览并检查解析后的路径，在用户已授权的范围内执行。遵守只读挂载和文件系统权限。仅阅读本文档不构成提交任务、传输文件或修改基础设施的授权。

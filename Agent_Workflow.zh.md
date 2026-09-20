@@ -9,6 +9,8 @@
 
 Agent 应先阅读 [AGENTS.zh.md](AGENTS.zh.md)，再阅读本工作流及相关任务页面。仓库名为 `determined_cluster_mcp`，可执行程序仍为 `determined-compute` 和 `determined-compute-mcp`。
 
+人工交互式数据探索和可视化也可以使用原生 Determined 的 [Jupyter 工作流](Jupyter_Notebooks.zh.md)。当前 MCP 不接受 `kind: notebook`，不要通过 `compute_launch` 提交 Notebook 任务。
+
 <a id="give-the-agent-a-task"></a>
 ## 向 agent 描述任务
 

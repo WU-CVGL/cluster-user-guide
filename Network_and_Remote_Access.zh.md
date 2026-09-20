@@ -13,7 +13,7 @@
 <a id="internal-ca-certificates"></a>
 ## 内部 CA 证书
 
-请遵循 [CA 登记步骤](Getting_started.zh.md#3-enroll-the-cluster-ca-when-required)。浏览器信任 CA 并不会自动配置所有语言运行时或构建工具。[故障排查](Troubleshooting.zh.md)介绍 Python 和 Determined，[容器环境](Custom_Containerized_Environment.zh.md)介绍 Docker 和 Harbor。
+登录节点已经配置完成。在个人计算机上，请使用唯一的 [CA 登记流程](Getting_started.zh.md#3-enroll-the-cluster-ca-when-required)。只有不使用系统信任存储的软件才需要单独配置 CA 存储。SSH 主机密钥与 HTTPS CA 无关。
 
 <a id="file-transfer-clients"></a>
 ## 文件传输客户端
