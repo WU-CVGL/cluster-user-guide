@@ -1,3 +1,5 @@
+[English](README.md) | [简体中文](README.zh.md)
+
 # Historical Nerfstudio Dockerfile
 
 This recipe is a historical reference with unverified current compatibility.
@@ -21,7 +23,7 @@ Nerfstudio stage:
 make build_nerf
 ```
 
-### Build & push the image to Harbor
+### Build and push the image to Harbor
 
 ``` bash
 make push_nerf

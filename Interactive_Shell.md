@@ -1,4 +1,8 @@
+[English](Interactive_Shell.md) | [简体中文](Interactive_Shell.zh.md)
+
 # Interactive shells, IDEs, and ports
+
+Use the [agent workflow](Agent_Workflow.md) with [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp) to plan and manage a shell. This page covers interactive access, IDE connections and the shell lifecycle; native CLI commands are included for manual operation.
 
 A Determined shell is a temporary interactive development environment. Use it to inspect an image, reproduce an issue, or attach an IDE. Put edits, caches worth keeping, and debug outputs on shared storage.
 

@@ -1,5 +1,7 @@
 # Network and remote access
 
+[English](Network_and_Remote_Access.md) | [简体中文](Network_and_Remote_Access.zh.md)
+
 This page collects optional transfer, download, proxy, GUI, and remote-desktop workflows. Start with [Getting started](Getting_started.md) for the network, certificates and SSH setup. See [Cluster reference](Cluster_Reference.md#services) for service URLs.
 
 ## VPN, DNS, and hosts files

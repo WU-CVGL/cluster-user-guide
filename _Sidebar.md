@@ -1,4 +1,10 @@
+[English](_Sidebar.md) | [简体中文](_Sidebar.zh.md)
+
 [Home](Home)
+
+[MCP workflow — recommended](Agent_Workflow)
+
+[Agent reading guide](AGENTS)
 
 [Getting started](Getting_started)
 
@@ -7,8 +13,6 @@
 [Running tasks](Determined_AI_User_Guide)
 
 [Interactive shells](Interactive_Shell)
-
-[MCP workflow](Agent_Workflow)
 
 [Container environments](Custom_Containerized_Environment)
 

@@ -1,5 +1,7 @@
 # Shared storage
 
+[English](Shared_Storage.md) | [简体中文](Shared_Storage.zh.md)
+
 Cluster jobs should keep code, data, packages, checkpoints, logs, and results on approved shared storage. A personal computer does not need to mount those filesystems: files can be staged through the login node over SSH.
 
 ![Storage model](Getting_started/storage_model.svg)

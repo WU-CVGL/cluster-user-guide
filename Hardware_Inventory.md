@@ -1,5 +1,7 @@
 # Hardware inventory
 
+[English](Hardware_Inventory.md) | [简体中文](Hardware_Inventory.zh.md)
+
 [Home](Home.md) · [Cluster reference](Cluster_Reference.md)
 
 This hardware record was migrated from the original guide. It is a reference for installed equipment, not a live count of healthy or available resources. Query Determined before choosing a pool or launching a task.

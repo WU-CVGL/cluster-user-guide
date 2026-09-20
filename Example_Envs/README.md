@@ -1,3 +1,5 @@
+[English](README.md) | [简体中文](README.zh.md)
+
 # Container environment examples
 
 These directories preserve environment recipes used by earlier projects. They

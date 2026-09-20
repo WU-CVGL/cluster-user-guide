@@ -1,14 +1,33 @@
 # Use the cluster through MCP
 
+[English](Agent_Workflow.md) | [简体中文](Agent_Workflow.zh.md)
+
 [Home](Home.md) · [Task selection](Determined_AI_User_Guide.md)
 
-The [determined-compute service](https://github.com/WU-CVGL/determined_batch_submit) exposes storage and compute tools through MCP over stdio. Use it with a client that supports stdio MCP servers. Native CLI workflows remain available without an agent.
+We recommend connecting your agent to [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp) for routine cluster work. The service exposes storage and compute tools through MCP over stdio. Use a client that can start a stdio MCP server; native CLI workflows remain available for manual operation.
+
+Agents should read [AGENTS.md](AGENTS.md), then this workflow and the task-specific pages it links. The repository is named `determined_cluster_mcp`; its executables remain `determined-compute` and `determined-compute-mcp`.
+
+## Give the agent a task
+
+Describe the goal and how to recognize success. Include the shared project path, code revision, input and output paths, preferred image, resource pool and GPU count when known. The agent can reuse an existing verified configuration and ask only for missing requirements. Provide credential-file or SSH-alias references, never secret values.
+
+For example:
+
+> Read the cluster user guide and use the connected Determined Cluster MCP to evaluate the checkpoint in my shared project. Reuse the project's verified image and pool, request one GPU, and avoid queuing. Check the files and capacity, plan a command task with a meaningful name, then launch it and follow its logs. Write results to the shared output directory and report the task ID, exit status and whether the expected metrics file exists. Ask if any required path or setting is missing.
 
 ## Connect the service
 
-Follow the service's [installation HOWTO](https://github.com/WU-CVGL/determined_batch_submit#readme). Configure the executable, absolute profile and database paths, owner namespace and secrets-file path in your MCP client. Keep credentials in the secrets file or supported credential backend; do not include their values in prompts, task names or tool arguments.
+Use the current repository URL:
 
-The compute profile describes paths on cluster agents and their container mappings. An optional storage-access configuration describes how the MCP server reaches those paths, locally or through the login node. Client storage access does not require a local NFS mount. See the maintained [storage-access reference](https://github.com/WU-CVGL/determined_batch_submit/blob/main/docs/shared-storage-access.md) for SSH agents, macOS Keychain, password/keyring access and ControlMaster reuse.
+```bash
+git clone https://github.com/WU-CVGL/determined_cluster_mcp.git
+cd determined_cluster_mcp
+```
+
+Follow the service's [installation HOWTO](https://github.com/WU-CVGL/determined_cluster_mcp#readme). Configure the executable, absolute profile and database paths, owner namespace and secrets-file path in your MCP client. Keep credentials in the secrets file or supported credential backend; do not include their values in prompts, task names or tool arguments.
+
+The compute profile describes paths on cluster agents and their container mappings. An optional storage-access configuration describes how the MCP server reaches those paths, locally or through the login node. Client storage access does not require a local NFS mount. See the maintained [storage-access reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/shared-storage-access.md) for SSH agents, macOS Keychain, password/keyring access and ControlMaster reuse.
 
 The MCP process must inherit a usable `SSH_AUTH_SOCK` when relying on an SSH agent. A ControlMaster socket must be reachable by that process on the same machine. A read-only consultation worker cannot perform credentialed storage transfers or launch tasks. Installing a skill globally is not required to call MCP tools.
 
@@ -31,4 +50,4 @@ Keep code, data and outputs on shared storage. Do not pass source directories or
 
 The local SQLite database tracks ownership, task identity and retry/reconciliation state. Shared outputs are separate from that database. Clients using the same database and owner can see the same local task records; an owner name is a namespace, not an authentication boundary.
 
-For supported parameters and error handling, use the [service reference](https://github.com/WU-CVGL/determined_batch_submit/blob/main/docs/compute-service.md). This guide does not duplicate the service's API schema.
+For supported parameters and error handling, use the [service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) and the tools exposed by the connected server. Report what was actually verified; a successful submission alone does not prove that the workload succeeded.

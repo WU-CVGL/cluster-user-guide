@@ -1,4 +1,8 @@
+[English](Determined_AI_User_Guide.md) | [简体中文](Determined_AI_User_Guide.zh.md)
+
 # Determined AI: practical user guide
+
+For routine work, use the [agent workflow](Agent_Workflow.md) with [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp). This page explains task selection and provides native CLI commands for manual operation.
 
 Determined runs containerized work on the GPU cluster. Keep the durable parts of every job—source code, datasets, checkpoints, and outputs—on shared storage. Treat the task container as temporary.
 

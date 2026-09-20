@@ -1,4 +1,8 @@
+[English](Troubleshooting.md) | [简体中文](Troubleshooting.zh.md)
+
 # Troubleshooting
+
+An agent connected to [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp) can help inspect task status, logs and storage. Share the failing step and sanitized error; follow the [agent workflow](Agent_Workflow.md) for service setup and task handling.
 
 [Home](Home.md)
 
@@ -8,7 +12,7 @@ Start with the failing layer. Record the task ID, relevant command and sanitized
 | --- | --- |
 | Internal hostname cannot be resolved or reached | Campus/VPN connectivity and the [hosts entries](Getting_started.md). Test the specific service from the machine running the client. |
 | SSH fails or a ControlMaster socket refuses connections | Test the configured SSH alias interactively. A socket file may outlive its connection; check the master with `ssh -O check ALIAS`. Verify the host key and authentication before starting automation. |
-| SSH works in a terminal but not through MCP | Confirm the MCP process can see the same SSH config, known hosts, identity or ControlMaster socket. If using an agent, check its inherited `SSH_AUTH_SOCK`. |
+| SSH works in a terminal but not through MCP | Confirm the MCP process can see the same SSH config, known hosts, identity or ControlMaster socket. If using an SSH authentication agent, check the MCP process's inherited `SSH_AUTH_SOCK`. |
 | HTTPS reports an unknown certificate authority | Obtain and verify the cluster CA through the administrator, then configure trust for the actual client. Browser, Python, Docker daemon and independent BuildKit builders may need separate setup. |
 | `docker pull` works but a build reports an `x509` error | Identify the builder with `docker buildx ls`; follow the [Harbor compatibility procedure](Custom_Containerized_Environment.md). Keep the documented `DOCKER_BUILDKIT=0` path until the alternative has been validated. |
 | A task stays queued despite low GPU utilization | Check enabled, non-draining agents and unallocated slots in the selected pool. Utilization is not allocation. Reassess the request or stop it if queuing was unintended. |

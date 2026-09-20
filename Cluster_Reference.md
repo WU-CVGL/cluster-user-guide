@@ -1,5 +1,7 @@
 # Cluster reference
 
+[English](Cluster_Reference.md) | [简体中文](Cluster_Reference.zh.md)
+
 [Home](Home.md)
 
 ## Services
@@ -35,7 +37,7 @@ See [shared storage](Shared_Storage.md) for the configured storage families, and
 The deployed Determined master reported version **0.38.1** when checked on **2026-09-20**. Use the matching CLI version in the task guide, and recheck compatibility when the master is upgraded.
 
 - [cluster-setup](https://github.com/WU-CVGL/cluster-setup) contains infrastructure definitions, including mounts, Determined configuration and watchdog code. The deployed checkout may contain changes that have not reached the repository.
-- [determined-compute](https://github.com/WU-CVGL/determined_batch_submit) maintains the compute CLI, MCP service and their configuration reference.
+- [determined-compute](https://github.com/WU-CVGL/determined_cluster_mcp) maintains the compute CLI, MCP service and their configuration reference.
 - This guide maintains user workflows. Record the verification date beside deployment-specific policies and recheck them when the corresponding service changes.
 
 The shell policy is documented in [interactive shells](Interactive_Shell.md). The Docker/Harbor compatibility procedure is documented in [container environments](Custom_Containerized_Environment.md).
