@@ -34,6 +34,8 @@ cd determined_cluster_mcp
 
 按照服务的[安装指南](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/README.zh.md)配置。在 MCP 客户端中设置可执行程序、配置文件和数据库的绝对路径、owner 命名空间及凭据文件路径。凭据保存在凭据文件或受支持的凭据后端中，不要将值写入提示词、任务名称或工具参数。
 
+升级服务后，请重启所有共享同一 SQLite 数据库的 MCP 进程，使其加载新工具和增量数据库结构。
+
 计算配置描述集群计算节点上的路径及其容器映射。可选的存储访问配置描述 MCP 服务如何通过本地路径或登录节点访问这些目录。客户端不需要本地 NFS 挂载。SSH 认证代理、macOS Keychain、密码、系统 keyring 和 ControlMaster 复用的配置见[存储访问参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/shared-storage-access.zh.md)。
 
 依赖 SSH 认证代理时，MCP 进程必须继承可用的 `SSH_AUTH_SOCK`。使用 ControlMaster 时，其 socket 必须位于同一机器且对 MCP 进程可访问。调用 MCP 工具不需要全局安装 skill。
@@ -51,6 +53,19 @@ cd determined_cluster_mcp
 6. 使用 `compute_status` 和 `compute_logs` 跟踪任务。报告成功前检查退出信息，以及预期的共享文件或指标。需要本地副本时，先预览再执行 `storage_fetch`；使用 `compute_cancel` 停止不再需要的运行中任务。
 
 服务会在新任务提交前再次检查容量。检查结果是快照，不是资源预留，仍可能遇到调度竞争。被拒绝后，不要擅自切换资源池或允许排队。
+
+<a id="manage-an-existing-remote-task"></a>
+## 管理现有远端任务
+
+通过 Determined WebUI、原生 CLI 或另一台设备创建的任务，只要属于同一个 Determined 账户，就可以纳入本地工作流：
+
+1. 调用 `compute_discover(kind, limit=50, offset=0)`，将 `kind` 设为 `command`、`shell` 或 `experiment`。发现操作只读，既不登记也不提交任务。
+2. 对目标结果调用 `compute_adopt(kind, remote_id)`。服务会核对实际集群、当前账户和远端任务 owner，然后创建幂等的本地记录。
+3. 保存返回的本地 `task_id`，再使用现有的 `compute_status`、`compute_logs` 和 `compute_cancel` 工具。
+
+本地登记操作绝不会重新启动任务，也不使用旧 `request_id`。它以 `origin: "adopted"` 保存安全的身份和状态元数据；未知的工作目录、输出目录和代码版本保持为空，不进行猜测。本地登记不会授予共享存储访问权，也不会增加已配置 Determined 账户之外的任何权限。
+
+`compute_reconcile` 只用于修复远端接受状态不确定的现有本地提交，不能代替本地登记。如果该未决本地记录已经存在，应使用它的本地任务 ID 执行 reconcile，而不是再次收编远端任务。每个本地 SQLite 数据库都会独立登记这些任务，因此数据库应保存在本地磁盘，而不是共享 NFS。
 
 <a id="paths-and-persistence"></a>
 ## 路径与持久化

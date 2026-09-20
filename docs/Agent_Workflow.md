@@ -31,6 +31,8 @@ cd determined_cluster_mcp
 
 Follow the service's [installation HOWTO](https://github.com/WU-CVGL/determined_cluster_mcp#readme). Configure the executable, absolute profile and database paths, owner namespace and secrets-file path in your MCP client. Keep credentials in the secrets file or supported credential backend; do not include their values in prompts, task names or tool arguments.
 
+After upgrading the service, restart every MCP process that shares the SQLite database so it loads the new tools and additive database schema.
+
 The compute profile describes paths on cluster agents and their container mappings. An optional storage-access configuration describes how the MCP server reaches those paths, locally or through the login node. Client storage access does not require a local NFS mount. See the maintained [storage-access reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/shared-storage-access.md) for SSH agents, macOS Keychain, password/keyring access and ControlMaster reuse.
 
 The MCP process must inherit a usable `SSH_AUTH_SOCK` when relying on an SSH agent. A ControlMaster socket must be reachable by that process on the same machine. Installing a skill globally is not required to call MCP tools.
@@ -47,6 +49,18 @@ The client agent can plan directly and call the deterministic tools below; `comp
 6. Follow `compute_status` and `compute_logs`. Check exit information and the expected shared files or metrics before reporting success. Preview and execute `storage_fetch` when local copies are needed; cancel unused running tasks with `compute_cancel`.
 
 The service checks capacity again before new launches. That check is a snapshot, not a reservation; scheduling races remain possible. Do not silently change the resource pool or enable queuing after a refusal.
+
+## Manage an existing remote task
+
+Tasks created through the Determined WebUI, native CLI, or another device can be brought into the local workflow when they belong to the same Determined account:
+
+1. Call `compute_discover(kind, limit=50, offset=0)` with `kind` set to `command`, `shell`, or `experiment`. Discovery is read-only; it neither registers nor submits a task.
+2. Call `compute_adopt(kind, remote_id)` for the intended result. The service verifies the actual cluster, current account, and remote task owner before creating an idempotent local record.
+3. Keep the returned local `task_id`, then use the existing `compute_status`, `compute_logs`, and `compute_cancel` tools.
+
+Adoption never relaunches the task and does not use an old `request_id`. It stores safe identity and status metadata with `origin: "adopted"`; unknown work/output paths and code revision remain empty rather than being inferred. Adoption does not grant shared-storage access or any permission beyond the configured Determined account.
+
+Use `compute_reconcile` only to repair an existing local submission whose remote acceptance is uncertain; it is not a substitute for adoption. If that uncertain local record already exists, reconcile its local task ID instead of adopting the remote task again. Each local SQLite database registers adopted tasks independently, so keep the database on local disk rather than shared NFS.
 
 ## Paths and persistence
 
