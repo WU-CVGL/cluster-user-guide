@@ -12,7 +12,7 @@ Prefer an administrator-approved image mirrored in `harbor.cvgl.lab`. Use a vers
 
 ```dockerfile
 FROM harbor.cvgl.lab/<project>/<base-image>:<version-tag>
-# Stronger reproducibility after the digest has been verified:
+# Stronger reproducibility with a pinned digest:
 # FROM harbor.cvgl.lab/<project>/<base-image>@sha256:<digest>
 ```
 
@@ -65,9 +65,9 @@ RUN python -m pip install --requirement /tmp/requirements.txt && \
 
 Pin packages and source checkouts. Quote requirements containing shell operators, for example `python -m pip install "nerfstudio>=1.0"`. Do not pass tokens or passwords as build arguments: build arguments and image layers are not secret stores.
 
-## 5. Build on the login node with the verified Buildx path
+## 5. Build on the login node with Buildx
 
-The verified login-node path uses the default Buildx builder and adds the Harbor CA directory to the Buildx client process:
+On the login node, use the default Buildx builder and add the Harbor CA directory to the Buildx client process:
 
 ```bash
 IMAGE=harbor.cvgl.lab/<project>/<image>:<version-tag>
@@ -77,7 +77,7 @@ SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab \
 
 `--load` places the result in the local Docker image store. This command needs no `sudo`, Docker restart, or TLS bypass.
 
-This path was verified on `cvglloginnode` on 2026-09-20 with Docker `28.1.1`, Buildx `0.23.0`, the default `docker` driver, and bundled BuildKit `0.21.0`. See [Buildx and Harbor](Buildx_and_Harbor.md) for the cause, validation boundary, and advanced builder setup.
+See [Buildx and Harbor](Buildx_and_Harbor.md) for the CA/DNS root cause and advanced builder setup.
 
 If Dockerfile `RUN` steps need the site proxy, use the current approved URL as a non-secret build argument:
 
@@ -93,7 +93,7 @@ Build arguments configure `RUN` steps; they do not configure Docker Engine or th
 
 ### Legacy fallback
 
-If the verified Buildx command fails unexpectedly, the legacy builder remains a compatibility fallback:
+If the Buildx command fails, the legacy builder remains a compatibility fallback:
 
 ```bash
 DOCKER_BUILDKIT=0 docker build -t "$IMAGE" .
@@ -111,11 +111,11 @@ docker tag <local-image>:<local-tag> \
 docker push harbor.cvgl.lab/<project>/<image>:<version-tag>
 ```
 
-Use a new, meaningful version tag for changed content and record the resulting digest. Push was not part of the 2026-09-20 verification; confirm project authorization and review the push result before relying on it.
+Use a new, meaningful version tag for changed content, confirm project authorization, and record the resulting digest.
 
 ## 7. Use the image with Determined
 
-Reference the pushed tag or verified digest in the task configuration:
+Reference the pushed tag or pinned digest in the task configuration:
 
 ```yaml
 environment:

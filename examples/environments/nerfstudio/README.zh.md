@@ -1,16 +1,16 @@
 [English](README.md) | [简体中文](README.zh.md)
 
-<a id="historical-nerfstudio-dockerfile"></a>
-# 历史 Nerfstudio Dockerfile
+<a id="nerfstudio-dockerfile"></a>
+# Nerfstudio Dockerfile
 
-这个配方是当前兼容性尚未验证的历史参考。使用前请审查其中固定和可变的上游
-依赖。顶层 [`examples/environments` 索引](../README.zh.md)说明了所有示例的状态。
+这个较早的配方包含固定和可变的上游依赖。使用前请审查并更新这些依赖。顶层
+[`examples/environments` 索引](../README.zh.md)说明了所有示例共有的假设。
 
 <a id="build-with-makefile"></a>
 ## 使用 Makefile 构建
 
 Makefile 包含目标 image、tag、proxy build argument，并保留
-`DOCKER_BUILDKIT=0` 作为回退。直接使用 Buildx 时，请按照[已验证的登录节点配置](../../../docs/Buildx_and_Harbor.zh.md)。`MAX_JOBS` 是 PyTorch C++/CUDA extension build
+`DOCKER_BUILDKIT=0` 作为回退。直接使用 Buildx 时，请按照[当前登录节点配置](../../../docs/Buildx_and_Harbor.zh.md)。`MAX_JOBS` 是 PyTorch C++/CUDA extension build
 使用的 build argument；它不会保留在最终 runtime image 中。例如可用
 `make build_nerf MAX_JOBS=8` 覆盖默认值。
 

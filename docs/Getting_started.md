@@ -2,7 +2,7 @@
 
 [English](Getting_started.md) | [简体中文](Getting_started.zh.md)
 
-This page covers the shortest path from a new account to a verified SSH login. For storage, Determined, containers, or less common access methods, follow the linked guides at the end.
+This page covers the shortest path from a new account to an SSH login. For storage, Determined, containers, or less common access methods, follow the linked guides at the end.
 
 For agent-assisted cluster work and the Determined MCP service, see [Agent workflow](Agent_Workflow.md) and [`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp).
 
@@ -19,7 +19,7 @@ Do not send passwords or private keys in tickets, chat, source repositories, or 
 
 ## 2. Connect to the campus network
 
-Connect through the campus network or the university VPN. Use the current VPN instructions supplied by the university. If internal names do not resolve, add these client-side hosts entries (checked against the deployment access configuration on 2026-09-20):
+Connect through the campus network or the university VPN. Use the current VPN instructions supplied by the university. If internal names do not resolve, add these client-side hosts entries:
 
 ```text
 10.0.1.67 login.cvgl.lab

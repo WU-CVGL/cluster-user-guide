@@ -37,7 +37,7 @@ Existing GUI examples:
 Prefer authoritative dataset sources and verify checksums when provided. Download into an assigned shared directory rather than the login node's system disk. Tools such as `curl`, `wget`, aria2, cloud-provider CLIs, and provider-specific clients may be useful; availability is not guaranteed.
 
 <details>
-<summary>Historical provider-client example</summary>
+<summary>Provider-client screenshot</summary>
 
 ![Provider download client](assets/Getting_started/QQ%E6%88%AA%E5%9B%BE20220317001515.png)
 
@@ -97,7 +97,7 @@ Do not use the login node for GPU-heavy or long-running GUI workloads. Prefer a 
 
 ## Remote desktop through SSH
 
-Remote desktop availability, internal port, and desktop environment are deployment-specific. Confirm them before connecting. When an RDP service is enabled only on the login node's loopback interface, create an SSH tunnel using the verified port supplied by the administrator:
+Remote desktop availability, internal port, and desktop environment are deployment-specific. Confirm them before connecting. When an RDP service is enabled only on the login node's loopback interface, create an SSH tunnel using the current port supplied by the administrator:
 
 ```bash
 ssh -N -L LOCAL_PORT:localhost:REMOTE_RDP_PORT cvgl-login
@@ -106,7 +106,7 @@ ssh -N -L LOCAL_PORT:localhost:REMOTE_RDP_PORT cvgl-login
 Then point the RDP client at `localhost:LOCAL_PORT`. Windows includes an RDP client; Linux clients include Remmina; macOS clients include Windows App or another maintained RDP client.
 
 <details>
-<summary>Historical Windows RDP client example</summary>
+<summary>Windows RDP client screenshots</summary>
 
 ![Windows RDP settings](assets/Getting_started/QQ%E6%88%AA%E5%9B%BE20220316211436.png)
 

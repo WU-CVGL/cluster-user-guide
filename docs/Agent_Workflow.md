@@ -12,11 +12,11 @@ For human-led data exploration and visualization, [Jupyter](Jupyter_Notebooks.md
 
 ## Give the agent a task
 
-Describe the goal and how to recognize success. Include the shared project path, code revision, input and output paths, preferred image, resource pool and GPU count when known. The agent can reuse an existing verified configuration and ask only for missing requirements. Provide credential-file or SSH-alias references, never secret values.
+Describe the goal and how to recognize success. Include the shared project path, code revision, input and output paths, preferred image, resource pool and GPU count when known. The agent can reuse existing project configuration and ask only for missing requirements. Provide credential-file or SSH-alias references, never secret values.
 
 For example:
 
-> Read the cluster user guide and use the connected Determined Cluster MCP to evaluate the checkpoint in my shared project. Reuse the project's verified image and pool, request one GPU, and avoid queuing. Check the files and capacity, plan a command task with a meaningful name, then launch it and follow its logs. Write results to the shared output directory and report the task ID, exit status and whether the expected metrics file exists. Ask if any required path or setting is missing.
+> Read the cluster user guide and use the connected Determined Cluster MCP to evaluate the checkpoint in my shared project. Reuse the project's configured image and pool, request one GPU, and avoid queuing. Check the files and capacity, plan a command task with a meaningful name, then launch it and follow its logs. Write results to the shared output directory and report the task ID, exit status and whether the expected metrics file exists. Ask if any required path or setting is missing.
 
 ## Connect the service
 
@@ -38,9 +38,9 @@ The MCP process must inherit a usable `SSH_AUTH_SOCK` when relying on an SSH age
 1. Choose a meaningful `name` and `description`, an appropriate task kind and a project directory on [shared storage](Shared_Storage.md). Confirm the image and resource requirements.
 2. If files need staging, call `storage_check`, then preview `storage_sync` with `dry_run: true`. Review paths and exclusions before executing with `dry_run: false`. Existing prepared files need no transfer.
 3. Call `compute_resources` for the requested pool and slot count. Leave `allow_queue: false` unless queuing is explicitly intended. Zero-slot commands use auxiliary-container capacity and still need a capacity check.
-4. Call `compute_plan` and inspect the resolved mounts, working directory, image and task configuration. Planning is offline; it does not verify live capacity, remote file existence or permissions.
+4. Call `compute_plan` and inspect the resolved mounts, working directory, image and task configuration. Planning is offline; it does not query live capacity, remote file existence or permissions.
 5. Call `compute_launch` with a stable `request_id`. Keep both the returned local `task_id` and remote ID. Retry the identical request with the same request ID; investigate uncertain acceptance before creating another task.
-6. Follow `compute_status` and `compute_logs`. Verify exit information and the expected shared files or metrics before reporting success. Preview and execute `storage_fetch` when local copies are needed; cancel unused running tasks with `compute_cancel`.
+6. Follow `compute_status` and `compute_logs`. Check exit information and the expected shared files or metrics before reporting success. Preview and execute `storage_fetch` when local copies are needed; cancel unused running tasks with `compute_cancel`.
 
 The service checks capacity again before new launches. That check is a snapshot, not a reservation; scheduling races remain possible. Do not silently change the resource pool or enable queuing after a refusal.
 
@@ -52,4 +52,4 @@ Keep code, data and outputs on shared storage. Do not pass source directories or
 
 The local SQLite database tracks ownership, task identity and retry/reconciliation state. Shared outputs are separate from that database. Clients using the same database and owner can see the same local task records; an owner name is a namespace, not an authentication boundary.
 
-For supported parameters and error handling, use the [service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) and the tools exposed by the connected server. Report what was actually verified; a successful submission alone does not prove that the workload succeeded.
+For supported parameters and error handling, use the [service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) and the tools exposed by the connected server. Report the observed outcome; a successful submission alone does not prove that the workload succeeded.

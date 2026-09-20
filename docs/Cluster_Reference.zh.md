@@ -34,15 +34,15 @@
 
 调度决策应以 Determined 的实时资源池和 agent 清单为准。资源池名称、健康 agent、已分配 slot 和辅助容器容量都可能独立变化。[任务提交](Determined_AI_User_Guide.zh.md)说明了相关检查。
 
-有关已配置的存储系列，请参阅[共享存储](Shared_Storage.zh.md)；有关原始设备记录，请参阅[硬件清单](Hardware_Inventory.zh.md)。这两个页面都不保证当前挂载健康状况、可用容量或备份覆盖范围。
+有关已配置的存储系列，请参阅[共享存储](Shared_Storage.zh.md)；有关静态设备参考，请参阅[硬件清单](Hardware_Inventory.zh.md)。这两个页面都不保证当前挂载健康状况、可用容量或备份覆盖范围。
 
 <a id="configuration-sources"></a>
 ## 配置来源
 
-在 **2026-09-20** 检查时，已部署的 Determined master 报告版本为 **0.38.1**。请使用任务指南中与之匹配的 CLI 版本，并在 master 升级后重新检查兼容性。
+集群运行 Determined **0.38.1**。请使用任务指南中与之匹配的 CLI 版本，并在 master 升级后更新配置的版本。
 
 - [cluster-setup](https://github.com/WU-CVGL/cluster-setup) 包含基础设施定义，其中包括挂载、Determined 配置和看门狗代码。已部署的检出版本可能包含尚未推送到该仓库的更改。
 - [determined-compute](https://github.com/WU-CVGL/determined_cluster_mcp) 维护计算 CLI、MCP 服务及其配置参考。
-- 本指南维护用户工作流程。请在部署特定策略旁记录验证日期，并在相应服务发生变化时重新检查。
+- 本指南维护用户工作流程。部署相关说明应与对应的服务配置保持一致。
 
 Shell 策略记录在[交互式 shell](Interactive_Shell.zh.md)中。Docker/Harbor 兼容流程记录在[容器环境](Custom_Containerized_Environment.zh.md)中。

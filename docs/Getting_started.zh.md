@@ -3,7 +3,7 @@
 
 [English](Getting_started.md) | [简体中文](Getting_started.zh.md)
 
-本页介绍从获得新账户到完成经过验证的 SSH 登录的最短流程。共享存储、Determined、容器以及不常用的访问方式，请参阅文末链接。
+本页介绍从获得新账户到完成 SSH 登录的最短流程。共享存储、Determined、容器以及不常用的访问方式，请参阅文末链接。
 
 如需使用智能体辅助完成集群工作或使用 Determined MCP 服务，请参阅[智能体工作流](Agent_Workflow.zh.md)和 [`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp)。
 
@@ -22,7 +22,7 @@
 <a id="2-connect-to-the-campus-network"></a>
 ## 2. 连接校园网络
 
-请通过校园网络或学校 VPN 连接，并使用学校提供的最新 VPN 说明。如果内部域名无法解析，请在客户端添加以下 hosts 条目（已于 2026-09-20 根据部署访问配置核对）：
+请通过校园网络或学校 VPN 连接，并使用学校提供的最新 VPN 说明。如果内部域名无法解析，请在客户端添加以下 hosts 条目：
 
 ```text
 10.0.1.67 login.cvgl.lab

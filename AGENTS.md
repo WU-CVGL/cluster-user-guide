@@ -13,10 +13,10 @@ Here, an agent is an AI assistant. A **Determined agent** is a compute-node serv
 | Run or monitor a workload | [Agent workflow](docs/Agent_Workflow.md), then [task selection](docs/Determined_AI_User_Guide.md) |
 | Resolve paths or transfer files | [Shared storage](docs/Shared_Storage.md) and the MCP storage-access reference linked there or in the agent workflow |
 | Configure login or credentials | [Getting started](docs/Getting_started.md), then [troubleshooting](docs/Troubleshooting.md) |
-| Debug interactively or connect an IDE | [Interactive shells](docs/Interactive_Shell.md), including the verified cleanup policy |
+| Debug interactively or connect an IDE | [Interactive shells](docs/Interactive_Shell.md), including the cleanup policy |
 | Explore data or present results in a notebook | [Jupyter](docs/Jupyter_Notebooks.md); native Notebook tasks are outside the current MCP task kinds |
 | Configure experiment tracking | [Self-hosted W&B](docs/Weights_and_Biases.md); cluster tasks use the 100G LAN endpoint |
-| Build an image | [Container environments](docs/Custom_Containerized_Environment.md), with the verified [Buildx and Harbor setup](docs/Buildx_and_Harbor.md) |
+| Build an image | [Container environments](docs/Custom_Containerized_Environment.md), with the current [Buildx and Harbor setup](docs/Buildx_and_Harbor.md) |
 | Find service URLs or evidence sources | [Cluster reference](docs/Cluster_Reference.md) |
 | Edit this documentation | [Contributing](CONTRIBUTING.md) |
 
@@ -24,7 +24,7 @@ Every documentation page has a `.zh.md` counterpart. Use the reader's preferred 
 
 ## Operational defaults
 
-- Reuse verified project configuration when available. Resolve required image, pool, slot count, paths and success criteria before launch; ask for missing requirements rather than inventing them.
+- Reuse project configuration when available. Resolve required image, pool, slot count, paths and success criteria before launch; ask for missing requirements rather than inventing them.
 - Use `command` for short non-interactive work, `shell` for interactive debugging, and `experiment` for overnight training or experiment lifecycle features. Choose a meaningful name and description.
 - Jupyter is optional for human-led exploration and visualization. The current MCP has no `notebook` task kind; use the documented native workflow when appropriate. Long-idle native Notebook tasks are managed manually by the administrator, not by the shell watchdog.
 - Keep code, data and outputs on mapped shared storage. Do not upload project contexts or code/data bundles through Determined. Distinguish cluster host, container and MCP-server-local paths; the user's computer need not mount shared storage.
@@ -33,8 +33,8 @@ Every documentation page has a `.zh.md` counterpart. Use the reader's preferred 
 - Inspect the plan, then use a stable request ID. After uncertain acceptance, inspect or reconcile the existing record before considering another submission. Follow logs and status, then verify the requested outputs before reporting success.
 - Use credential references and existing authenticated sessions. Never place credential values in prompts, task metadata, source, logs or reports.
 
-## Evidence and maintenance
+## Documentation maintenance
 
-Distinguish live observations, verified configuration and historical examples. Record the date for deployment-specific statements. Do not turn the shell's GPU-based cleanup policy into a keyboard-inactivity timeout, or present historical images as currently tested.
+Use live observations for current capacity and status, repository configuration for policy, and older environment recipes only as starting points. Do not turn the shell's GPU-based cleanup policy into a keyboard-inactivity timeout. Review an older recipe's dependencies before recommending it as a default.
 
 When editing docs, update English and Chinese together, preserve language links and stable section anchors, and run `python scripts/check_docs.py`. Keep example commands and resource requirements consistent across languages. Keep the API reference in the MCP repository rather than duplicating its schema here. No live launch or image build is required merely to translate or check documentation.

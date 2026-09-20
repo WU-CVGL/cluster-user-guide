@@ -104,10 +104,10 @@ det shell start --config-file examples/compute/shell.yaml -- -L7007:localhost:70
 - 记录复现会话所需的镜像 tag 和代码修订版。
 - 将长时训练或跨夜工作迁移到带共享检查点的 experiment。
 
-<a id="verified-shell-cleanup-policy"></a>
-## 已核验的 Shell 清理策略
+<a id="shell-cleanup-policy"></a>
+## Shell 清理策略
 
-以下策略于 2026-09-20 核验，仅适用于 **shell**，衡量容器 GPU 利用率，而不是键盘或 SSH 活动。
+以下清理规则仅适用于 **shell**，衡量容器 GPU 利用率，而不是键盘或 SSH 活动。
 
 - Grafana 每 60 秒评估一次规则。
 - 当 shell 映射到的 GPU 最大利用率持续 15 分钟低于 10% 时，进入 alerting 状态。
@@ -119,4 +119,4 @@ det shell start --config-file examples/compute/shell.yaml -- -L7007:localhost:70
 
 被停止的 shell 无法重连。请将工作保存在共享存储上，并及时处理警告。无人值守的一次性脚本使用 command；长时训练和跨夜工作使用 experiment。
 
-部署源码由[集群参考](Cluster_Reference.zh.md)链接；watchdog 或 Grafana 发生变化后，应重新核验这一带日期的策略。
+部署源码由[集群参考](Cluster_Reference.zh.md)链接。应使本说明与 watchdog 和 Grafana 配置保持一致。

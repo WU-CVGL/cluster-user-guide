@@ -30,14 +30,14 @@ The login node, your computer and a task container have separate filesystems and
 
 Use the live Determined resource-pool and agent inventory for scheduling decisions. Pool names, healthy agents, allocated slots and auxiliary-container capacity can change independently. [Task submission](Determined_AI_User_Guide.md) explains the checks.
 
-See [shared storage](Shared_Storage.md) for the configured storage families, and [hardware inventory](Hardware_Inventory.md) for the original equipment record. Neither page guarantees current mount health, free capacity or backup coverage.
+See [shared storage](Shared_Storage.md) for the configured storage families, and [hardware inventory](Hardware_Inventory.md) for a static equipment reference. Neither page guarantees current mount health, free capacity or backup coverage.
 
 ## Configuration sources
 
-The deployed Determined master reported version **0.38.1** when checked on **2026-09-20**. Use the matching CLI version in the task guide, and recheck compatibility when the master is upgraded.
+The cluster runs Determined **0.38.1**. Use the matching CLI version in the task guide and update the configured version when the master is upgraded.
 
 - [cluster-setup](https://github.com/WU-CVGL/cluster-setup) contains infrastructure definitions, including mounts, Determined configuration and watchdog code. The deployed checkout may contain changes that have not reached the repository.
 - [determined-compute](https://github.com/WU-CVGL/determined_cluster_mcp) maintains the compute CLI, MCP service and their configuration reference.
-- This guide maintains user workflows. Record the verification date beside deployment-specific policies and recheck them when the corresponding service changes.
+- This guide maintains user workflows. Keep deployment-specific instructions aligned with the corresponding service configuration.
 
 The shell policy is documented in [interactive shells](Interactive_Shell.md). The Docker/Harbor compatibility procedure is documented in [container environments](Custom_Containerized_Environment.md).

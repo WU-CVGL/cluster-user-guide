@@ -14,7 +14,7 @@
 
 ```dockerfile
 FROM harbor.cvgl.lab/<project>/<base-image>:<version-tag>
-# Stronger reproducibility after the digest has been verified:
+# Stronger reproducibility with a pinned digest:
 # FROM harbor.cvgl.lab/<project>/<base-image>@sha256:<digest>
 ```
 
@@ -70,10 +70,10 @@ RUN python -m pip install --requirement /tmp/requirements.txt && \
 
 固定软件包和源码 checkout。包含 shell 运算符的 requirement 必须加引号，例如 `python -m pip install "nerfstudio>=1.0"`。不要通过 build argument 传递 token 或密码：build argument 和镜像层都不是 secret store。
 
-<a id="5-build-on-the-login-node-with-the-verified-buildx-path"></a>
-## 5. 在登录节点上使用已验证的 Buildx 路径构建
+<a id="5-build-on-the-login-node-with-buildx"></a>
+## 5. 在登录节点上使用 Buildx 构建
 
-已验证的登录节点路径使用默认 Buildx builder，并向 Buildx 客户端进程添加 Harbor CA 目录：
+在登录节点上，使用默认 Buildx builder，并向 Buildx 客户端进程添加 Harbor CA 目录：
 
 ```bash
 IMAGE=harbor.cvgl.lab/<project>/<image>:<version-tag>
@@ -83,7 +83,7 @@ SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab \
 
 `--load` 会把结果放入本地 Docker 镜像存储。该命令不需要 `sudo`、重启 Docker 或绕过 TLS。
 
-该路径已于 2026-09-20 在 `cvglloginnode` 上通过 Docker `28.1.1`、Buildx `0.23.0`、默认 `docker` driver 和内置 BuildKit `0.21.0` 验证。原因、验证边界和高级 builder 设置请参阅 [Buildx 与 Harbor](Buildx_and_Harbor.zh.md)。
+CA/DNS 根因和高级 builder 设置请参阅 [Buildx 与 Harbor](Buildx_and_Harbor.zh.md)。
 
 如果 Dockerfile `RUN` 步骤需要站点代理，请把当前获准使用的 URL 作为非 secret build argument 传入：
 
@@ -100,7 +100,7 @@ Build argument 只配置 `RUN` 步骤；它不会配置 Docker Engine，也不�
 <a id="legacy-fallback"></a>
 ### Legacy fallback
 
-如果已验证的 Buildx 命令意外失败，legacy builder 仍可作为兼容 fallback：
+如果 Buildx 命令失败，legacy builder 仍可作为兼容 fallback：
 
 ```bash
 DOCKER_BUILDKIT=0 docker build -t "$IMAGE" .
@@ -119,12 +119,12 @@ docker tag <local-image>:<local-tag> \
 docker push harbor.cvgl.lab/<project>/<image>:<version-tag>
 ```
 
-镜像内容变化时使用新的、有意义的版本标签，并记录得到的 digest。2026-09-20 的验证不包括 push；依赖推送结果前，请确认项目权限并审核 push 结果。
+镜像内容变化时使用新的、有意义的版本标签，确认项目权限，并记录得到的 digest。
 
 <a id="7-use-the-image-with-determined"></a>
 ## 7. 在 Determined 中使用镜像
 
-在任务配置中引用已推送的标签或已验证的 digest：
+在任务配置中引用已推送的标签或固定的 digest：
 
 ```yaml
 environment:

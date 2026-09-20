@@ -15,7 +15,7 @@
 | SSH 失败，或 ControlMaster socket 拒绝连接 | 交互式测试已配置的 SSH alias。Socket 文件可能比连接存活更久；用 `ssh -O check ALIAS` 检查 master。启动自动化前核验 host key 和认证。 |
 | 终端里的 SSH 正常，但 MCP 中失败 | 确认 MCP 进程能访问相同的 SSH 配置、已知主机记录、密钥或 ControlMaster socket。若使用 SSH 认证代理，检查 MCP 进程继承的 `SSH_AUTH_SOCK`。 |
 | HTTPS 报告未知证书颁发机构 | 登录节点已安装证书。个人设备从[集群证书地址](https://cvgl.lab/cvgl.crt)下载 `cvgl.crt`，按照[安装步骤](Getting_started.zh.md#3-enroll-the-cluster-ca-when-required)配置。如果只有某个应用仍然失败，再为该应用设置 CA 路径。 |
-| `docker pull` 正常，但 Buildx 在 `/service/token` 报告 `x509` 错误 | 除 Docker daemon 外，Buildx 客户端也需要 CA。登录节点上，在构建命令前加 `SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab`；参阅[已验证的 Buildx 配置](Buildx_and_Harbor.zh.md)。 |
+| `docker pull` 正常，但 Buildx 在 `/service/token` 报告 `x509` 错误 | 除 Docker daemon 外，Buildx 客户端也需要 CA。登录节点上，在构建命令前加 `SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab`；参阅 [Buildx 配置](Buildx_and_Harbor.zh.md)。 |
 | 独立 builder 无法解析 `harbor.cvgl.lab` | builder 的 registry 解析器需要集群主机名映射。按[独立 builder 配置](Buildx_and_Harbor.zh.md)处理；构建命令的 `--add-host` 或 `--network` 只影响构建步骤，不影响该解析器。 |
 | GPU 利用率很低，但任务一直排队 | 检查所选资源池中已启用、非 draining 的 agent 和未分配 slot。利用率不等于分配状态。重新评估请求；若不希望排队，则停止任务。 |
 | MCP 报告容量不足或未知 | 检查 `compute_resources`；稍后重试，或在审查需求后显式选择另一个合适资源池。不要反复创建新请求，也不要静默启用排队。 |

@@ -2,18 +2,17 @@
 
 # Container environment examples
 
-These directories preserve environment recipes used by earlier projects. They
-are starting points for review, not a catalog of currently supported images.
-Base images, OS repositories, source branches, package indexes, and upstream
-projects may have changed since each recipe was written. Current build and
-runtime compatibility must be verified before use.
+These directories contain older environment recipes. They are starting points,
+not a catalog of supported images. Review and update their base images, OS
+repositories, source branches, package indexes, and upstream dependencies
+before use.
 
 | Example | Intended use | Important assumptions |
 | --- | --- | --- |
-| [`determined-tmux`](determined-tmux/) | Adds `tmux` to an older Determined environment | Historical CUDA 11.3 / PyTorch 1.10 / Determined 0.19.4 base |
-| [`dreambooth`](dreambooth/) | DreamBooth and Stable Diffusion research environment | Historical NGC 22.12 base; several source repositories are cloned during the build |
+| [`determined-tmux`](determined-tmux/) | Adds `tmux` to an older Determined environment | CUDA 11.3 / PyTorch 1.10 / Determined 0.19.4 base |
+| [`dreambooth`](dreambooth/) | DreamBooth and Stable Diffusion research environment | NGC 22.12 base; several source repositories are cloned during the build |
 | [`lietorch-opencv`](lietorch-opencv/) | OpenCV 4.6 and a patched lietorch build for SM 8.6 | The included [`.condarc`](lietorch-opencv/.condarc) is copied into the image; the recipe targets an older Python/CUDA stack |
-| [`nerf-env`](nerf-env/) | General NeRF/BAD-NeRF environment | Historical NGC PyTorch 23.01 base; its README records the original RTX 4090 intent |
+| [`nerf-env`](nerf-env/) | General NeRF/BAD-NeRF environment | NGC PyTorch 23.01 base; targets RTX 4090 |
 | [`nerfstudio`](nerfstudio/) | Multi-stage Nerfstudio/COLMAP/OpenCV environment | CUDA 11.8 and PyTorch 2.1.2-era recipe; mutable upstream branches remain and require review |
 
 Before using an example:
@@ -24,7 +23,7 @@ Before using an example:
 3. Confirm the CUDA architecture, framework ABI, Python version, and target GPU.
 4. Check every external URL and package name without assuming an old mirror or
    repository still exists.
-5. On the login node, use the verified Buildx path described in the
+5. On the login node, use the current Buildx path described in the
    [custom-container HOWTO](../../docs/Custom_Containerized_Environment.md):
 
    ```bash
@@ -32,11 +31,12 @@ Before using an example:
      docker buildx build --builder default --load -t <local-image>:<test-tag> .
    ```
 
-6. Test locally without pushing, then use a new release tag and record the
-   Harbor digest if the image is approved.
+6. Build and run locally without pushing. After review, use a new release tag
+   and record the Harbor digest.
 
-Historical build helpers may still use `DOCKER_BUILDKIT=0` as a fallback. The
-verified Buildx transport does not establish that every old recipe still builds.
+Some build helpers use `DOCKER_BUILDKIT=0` as a compatibility fallback. A
+working Buildx transport does not guarantee that an older recipe's dependencies
+still resolve.
 The Nerfstudio Makefile has explicit push targets. Review its registry,
 project, tag, proxy, and build arguments before invoking any `push_*` target.
 For task planning and shared data placement, see the

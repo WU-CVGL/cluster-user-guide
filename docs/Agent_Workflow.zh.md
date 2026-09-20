@@ -14,11 +14,11 @@ Agent 应先阅读 [AGENTS.zh.md](../AGENTS.zh.md)，再阅读本工作流及相
 <a id="give-the-agent-a-task"></a>
 ## 向 agent 描述任务
 
-说明目标和成功判据。如果已经明确，也请提供共享项目路径、代码版本、输入和输出路径、偏好的镜像、资源池及 GPU 数量。Agent 可以复用已有且经过验证的配置，仅询问缺失的必要信息。提供凭据文件路径或 SSH 别名，不要提供凭据值。
+说明目标和成功判据。如果已经明确，也请提供共享项目路径、代码版本、输入和输出路径、偏好的镜像、资源池及 GPU 数量。Agent 可以复用已有项目配置，仅询问缺失的必要信息。提供凭据文件路径或 SSH 别名，不要提供凭据值。
 
 例如：
 
-> 阅读集群用户指南，使用已连接的 Determined Cluster MCP 评估共享项目中的检查点。复用项目中已经验证的镜像和资源池，申请一张 GPU，避免排队。先检查文件和容量，规划一个名称有意义的 command 任务，然后提交并跟踪日志。将结果写入共享输出目录，报告任务 ID、退出状态和预期指标文件是否存在。缺少必要路径或设置时再询问我。
+> 阅读集群用户指南，使用已连接的 Determined Cluster MCP 评估共享项目中的检查点。复用项目中配置的镜像和资源池，申请一张 GPU，避免排队。先检查文件和容量，规划一个名称有意义的 command 任务，然后提交并跟踪日志。将结果写入共享输出目录，报告任务 ID、退出状态和预期指标文件是否存在。缺少必要路径或设置时再询问我。
 
 <a id="connect-the-service"></a>
 ## 连接服务
@@ -42,7 +42,7 @@ cd determined_cluster_mcp
 1. 选择有意义的 `name` 和 `description`、合适的任务类型以及[共享存储](Shared_Storage.zh.md)中的项目目录。确认镜像和资源需求。
 2. 需要准备文件时，先调用 `storage_check`，再用 `dry_run: true` 预览 `storage_sync`。检查路径和排除规则后，以 `dry_run: false` 执行。已有文件就绪时无需传输。
 3. 针对目标资源池和槽位数调用 `compute_resources`。除非明确希望排队，否则保持 `allow_queue: false`。零槽位 command 使用辅助容器容量，同样需要检查。
-4. 调用 `compute_plan`，检查解析后的挂载、工作目录、镜像和任务配置。规划是离线操作，不会验证实时容量、远程文件是否存在或访问权限。
+4. 调用 `compute_plan`，检查解析后的挂载、工作目录、镜像和任务配置。规划是离线操作，不会查询实时容量、远程文件是否存在或访问权限。
 5. 使用稳定的 `request_id` 调用 `compute_launch`。保存返回的本地 `task_id` 和远端 ID。重试相同请求时使用同一个请求 ID；接受状态不确定时，先调查已有记录，再考虑创建另一任务。
 6. 使用 `compute_status` 和 `compute_logs` 跟踪任务。报告成功前检查退出信息，以及预期的共享文件或指标。需要本地副本时，先预览再执行 `storage_fetch`；使用 `compute_cancel` 停止不再需要的运行中任务。
 
@@ -57,4 +57,4 @@ cd determined_cluster_mcp
 
 本地 SQLite 数据库记录 owner、任务身份和重试、核对状态；共享输出独立于该数据库。使用相同数据库和 owner 的客户端可以看到相同的本地任务记录。Owner 名称是命名空间，不是身份认证边界。
 
-工具参数和错误处理以[服务参考（英文）](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md)及已连接服务实际提供的工具为准。只报告实际验证过的结果；提交成功本身不能证明任务已成功完成。
+工具参数和错误处理以[服务参考（英文）](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md)及已连接服务实际提供的工具为准。只报告观察到的结果；提交成功本身不能证明任务已成功完成。

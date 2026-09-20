@@ -2,33 +2,19 @@
 
 # Buildx and Harbor on the CVGL login node
 
-This page explains the verified Buildx paths for the CVGL Harbor deployment. Start with the shorter [custom container image HOWTO](Custom_Containerized_Environment.md); use this page when diagnosing TLS/DNS stages or creating an isolated builder.
-
-## Verified scope
-
-The following was verified on `cvglloginnode` on 2026-09-20:
-
-| Component | Verified value |
-| --- | --- |
-| Docker Engine | `28.1.1` |
-| Buildx | `0.23.0` |
-| Default builder | `docker` driver, bundled BuildKit `0.21.0` |
-| Independent builder | `docker-container` driver, BuildKit `0.32.2` image pinned below |
-| Harbor CA file | `/etc/docker/certs.d/harbor.cvgl.lab/cvgl.crt` |
-
-Both builder paths successfully resolved a Harbor base image, executed a Dockerfile `RUN` step, loaded the result with `--load`, and ran the image with `docker run`. `--pull` refreshed base-image metadata and `--no-cache` reran build steps; neither option guarantees that existing content layers are downloaded again. The independent builder downloaded new layers during verification, while the default builder reused layers already present from the legacy build. Push, multi-platform output, other builders, and other operating systems were not tested.
+This page explains the Buildx paths for Harbor on the CVGL Linux login node. Start with the shorter [custom container image HOWTO](Custom_Containerized_Environment.md); use this page when diagnosing TLS/DNS stages or creating an isolated builder. Other operating systems and Docker installations can use different certificate and network behavior.
 
 ## Why the default builder needs a client CA
 
 The registry-specific CA file exists on the login node, so Docker Engine operations can trust Harbor. It is not part of the login node's default system root set, however.
 
-With Buildx `0.23.0`, the Buildx client creates the session auth provider from Docker's credential `ConfigFile`. BuildKit `0.21.0` performs the Harbor token request through that auth provider. Therefore a build can fail on `POST https://harbor.cvgl.lab/service/token` in the **Buildx client process** even when Docker Engine already trusts the registry.
+The Buildx client creates the session auth provider from Docker's credential `ConfigFile`, and the BuildKit auth provider performs the Harbor token request. Therefore a build can fail on `POST https://harbor.cvgl.lab/service/token` in the **Buildx client process** even when Docker Engine already trusts the registry.
 
-On the verified Linux login node, setting `SSL_CERT_FILE` to the Harbor CA worked. The preferred form is `SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab`: it adds the registry certificate directory while retaining the normal system CA file lookup in this tested Go/Linux environment. Treat this as deployment-specific; Go documents different platform behavior for certificate environment overrides.
+For this Linux login-node workflow, use `SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab`. It adds the registry certificate directory while retaining the normal system CA file lookup for this Go/Linux environment. Go documents different behavior for certificate environment overrides on other platforms.
 
 Keep TLS verification enabled.
 
-## Use the verified default builder
+## Use the default builder
 
 For a normal build:
 
@@ -38,7 +24,7 @@ SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab \
   docker buildx build --builder default --load -t "$IMAGE" .
 ```
 
-For a deliberate validation that refreshes base-image resolution and reruns build steps:
+To refresh base-image resolution and rerun build steps:
 
 ```bash
 SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab \
@@ -52,7 +38,7 @@ docker run --rm "$IMAGE" <smoke-command>
 
 ## Keep the legacy fallback
 
-The legacy builder remains available if the verified Buildx path regresses:
+The legacy builder remains available if the default Buildx path fails:
 
 ```bash
 DOCKER_BUILDKIT=0 docker build -t "$IMAGE" .
@@ -81,7 +67,7 @@ Docker's BuildKit documentation states that registry CA files referenced by `--b
 
 ### 2. Builder network and pinned image
 
-The default bridge-network builder could not resolve `harbor.cvgl.lab` because this deployment supplies the name through the login node's `/etc/hosts`. With Docker `28.1.1` on this Linux host, `--driver-opt network=host` gave the builder the verified host resolution.
+This deployment supplies `harbor.cvgl.lab` through the Linux login node's `/etc/hosts`. Create the builder with `--driver-opt network=host` so its daemon uses the login node's host-network resolution instead of an isolated bridge resolver.
 
 Create the builder without `--use`, so the default builder remains unchanged:
 
@@ -99,7 +85,7 @@ docker buildx create \
 docker buildx inspect cvgl-harbor
 ```
 
-The pinned image resolved to BuildKit `0.32.2` during verification. Keep the digest intact; a tag alone can move.
+The pinned digest identifies the BuildKit `0.32.2` image used by this procedure. Keep the digest intact; a tag alone can move.
 
 ### 3. Build explicitly
 
@@ -117,7 +103,7 @@ The `docker-container` driver does not load results into the Docker image store 
 
 ## Network options are not interchangeable
 
-`--driver-opt network=host` on `docker buildx create` configures the long-lived **builder container** network. It fixed builder-daemon DNS in the verified login-node environment.
+`--driver-opt network=host` on `docker buildx create` configures the long-lived **builder container** network and supplies the required host resolution in this Linux login-node setup.
 
 `docker buildx build --network=host` configures networking for Dockerfile `RUN` instructions. It does not configure the builder daemon's own DNS and is not a substitute for the driver option. Docker documents these as separate controls.
 
@@ -127,7 +113,7 @@ The `docker-container` driver does not load results into the Docker image store 
 | --- | --- | --- |
 | `POST https://harbor.cvgl.lab/service/token` reports unknown CA | Buildx client auth provider | Set `SSL_CERT_DIR` on the `docker buildx build` process |
 | Manifest or layer request reports unknown CA in builder logs | BuildKit daemon to registry | Check `[registry."harbor.cvgl.lab"].ca` and recreate the isolated builder if its config changed |
-| `lookup harbor.cvgl.lab` fails in an isolated builder | Builder-container DNS | On this verified Linux host, recreate it with `--driver-opt network=host` |
+| `lookup harbor.cvgl.lab` fails in an isolated builder | Builder-container DNS | For this Linux login-node setup, recreate it with `--driver-opt network=host` |
 | `unauthorized` or `denied` | Harbor credentials or project authorization | Run `docker login` and verify project access |
 | Build succeeds but `docker run` cannot find the image | Export step | Add `--load` |
 

@@ -55,4 +55,4 @@ det notebook kill <notebook-id>
 
 **Long-idle native Jupyter/Notebook tasks are currently stopped manually by the administrator.** There is no fixed automatic idle timeout promised for these tasks, and the shell watchdog policy must not be applied to them.
 
-If you start Jupyter inside a Determined **shell**, the underlying task is still a shell and remains subject to the [shell cleanup policy](Interactive_Shell.md#verified-shell-cleanup-policy). The notebook interface does not change the task's lifecycle.
+If you start Jupyter inside a Determined **shell**, the underlying task is still a shell and remains subject to the [shell cleanup policy](Interactive_Shell.md#shell-cleanup-policy). The notebook interface does not change the task's lifecycle.

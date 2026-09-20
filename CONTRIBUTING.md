@@ -26,17 +26,17 @@ do not add links to its retired repository name.
   English heading changes, update inbound links and its Chinese anchor.
 - Translate the complete meaning of each page. Keep commands, file paths,
   configuration keys, API/tool names, field names, numeric thresholds, and
-  code blocks technically identical unless a verified platform difference is
+  code blocks technically identical unless a documented platform difference is
   being documented. Update both languages in one change.
 
 - Treat resource availability, service status, network routes, and other live
-  facts as dynamic. Verify them read-only with the responsible administrator,
-  record when they were checked, and do not infer them from old examples.
-- Verify replacements in the deployed environment and document their scope.
-  For builders, distinguish client CA, daemon CA and registry DNS requirements;
-  retain a documented legacy fallback where it is still needed.
-- Mark historical or unverified container examples clearly. Do not present an
-  image, package set, proxy, or resource pool as a default until it is tested.
+  facts as dynamic. Query the responsible source when they are needed; do not
+  infer current state from older examples.
+- Keep compatibility paths required by the current deployment. For builders,
+  distinguish client CA, daemon CA and registry DNS requirements.
+- Treat older container recipes as starting points. Review their base images,
+  package sets, proxies and resource assumptions before recommending them as
+  defaults.
 - Never commit credentials, private keys, access tokens, or credential-bearing
   URLs. Use placeholders in commands and examples.
 

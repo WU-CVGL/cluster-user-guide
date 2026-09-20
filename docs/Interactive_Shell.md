@@ -97,9 +97,9 @@ Choose an unused local port if `7007` is already occupied. Expose only the ports
 - Record the image tag and code revision needed to reproduce the session.
 - Move long training or overnight work into an experiment with shared checkpoints.
 
-## Verified shell cleanup policy
+## Shell cleanup policy
 
-Verified on 2026-09-20, the cleanup rule applies to **shells** and measures container GPU utilization. It does not measure keyboard or SSH activity.
+The cleanup rule applies to **shells** and measures container GPU utilization. It does not measure keyboard or SSH activity.
 
 - Grafana evaluates the rule every 60 seconds.
 - A shell becomes alerting after its maximum mapped GPU utilization remains below 10% for 15 minutes.
@@ -111,4 +111,4 @@ With continuously low GPU utilization, warning and cleanup phases imply a theore
 
 A stopped shell cannot be reconnected. Keep work on shared storage and respond to warnings promptly. Use a command for an unattended one-off script, or an experiment for long training and overnight work.
 
-The deployment source is linked from [Cluster Reference](Cluster_Reference.md); recheck this dated policy after watchdog or Grafana changes.
+The deployment source is linked from [Cluster Reference](Cluster_Reference.md). Keep this description aligned with the watchdog and Grafana configuration.

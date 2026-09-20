@@ -59,4 +59,4 @@ det notebook kill <notebook-id>
 
 **目前，长时间空闲的原生 Jupyter/Notebook 任务由管理员手动停止（kill）。** 这些任务没有约定固定的自动空闲超时，不能套用 shell 的 watchdog 回收策略。
 
-如果在 Determined **shell** 内启动 Jupyter，底层任务仍然是 shell，依然受 [shell 回收策略](Interactive_Shell.zh.md#verified-shell-cleanup-policy)管理。Notebook 界面不会改变任务的生命周期。
+如果在 Determined **shell** 内启动 Jupyter，底层任务仍然是 shell，依然受 [shell 回收策略](Interactive_Shell.zh.md#shell-cleanup-policy)管理。Notebook 界面不会改变任务的生命周期。

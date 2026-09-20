@@ -15,10 +15,10 @@
 | 运行或监控任务 | [Agent 工作流](docs/Agent_Workflow.zh.md)，然后阅读[任务类型选择](docs/Determined_AI_User_Guide.zh.md) |
 | 解析路径或传输文件 | [共享存储](docs/Shared_Storage.zh.md)，以及存储页或 agent 工作流链接的 MCP 存储访问参考 |
 | 配置登录或凭据 | [入门指南](docs/Getting_started.zh.md)，然后阅读[故障排查](docs/Troubleshooting.zh.md) |
-| 交互调试或连接 IDE | [交互式 Shell](docs/Interactive_Shell.zh.md)，包括已核验的回收策略 |
+| 交互调试或连接 IDE | [交互式 Shell](docs/Interactive_Shell.zh.md)，包括回收策略 |
 | 在 Notebook 中探索数据或展示结果 | [Jupyter](docs/Jupyter_Notebooks.zh.md)；原生 Notebook 不属于当前 MCP 支持的任务类型 |
 | 配置实验跟踪 | [自托管 W&B](docs/Weights_and_Biases.zh.md)；集群任务使用 100G LAN 地址 |
-| 构建镜像 | [容器环境](docs/Custom_Containerized_Environment.zh.md)，以及已验证的 [Buildx 与 Harbor 配置](docs/Buildx_and_Harbor.zh.md) |
+| 构建镜像 | [容器环境](docs/Custom_Containerized_Environment.zh.md)，以及当前的 [Buildx 与 Harbor 配置](docs/Buildx_and_Harbor.zh.md) |
 | 查找服务地址或配置依据 | [集群参考](docs/Cluster_Reference.zh.md) |
 | 修改本文档 | [文档贡献](CONTRIBUTING.zh.md) |
 
@@ -27,7 +27,7 @@
 <a id="operational-defaults"></a>
 ## 默认操作规则
 
-- 优先复用项目中已经验证的配置。提交前明确所需镜像、资源池、槽位数、路径和成功判据；缺少必要信息时询问用户，不要编造。
+- 优先复用项目配置。提交前明确所需镜像、资源池、槽位数、路径和成功判据；缺少必要信息时询问用户，不要编造。
 - 短时非交互任务使用 `command`，交互调试使用 `shell`，跨天训练或需要实验生命周期管理时使用 `experiment`。提供有意义的名称和描述。
 - Jupyter 是供人交互探索和可视化的可选入口。当前 MCP 没有 `notebook` 任务类型，适用时使用文档中的原生工作流。长时间空闲的原生 Notebook 任务由管理员手动管理，不由 shell watchdog 回收。
 - 代码、数据和输出放在已映射的共享存储中。不要通过 Determined 上传项目上下文或代码、数据包。区分集群宿主机路径、容器路径和 MCP 服务所在机器的本地路径；用户电脑不必挂载共享存储。
@@ -36,9 +36,9 @@
 - 检查计划后，使用稳定的请求 ID 提交。接受状态不确定时，先查看或核对已有记录，再考虑重新提交。跟踪日志和状态，并验证所需输出后再报告成功。
 - 使用凭据引用和已有认证会话。不要将凭据值写入提示词、任务元数据、源码、日志或报告。
 
-<a id="evidence-and-maintenance"></a>
-## 证据与维护
+<a id="documentation-maintenance"></a>
+## 文档维护
 
-区分实时观测、已核验配置和历史示例。部署相关说明应标注核验日期。不要把基于 GPU 利用率的 shell 回收策略写成键盘无操作超时，也不要把历史镜像描述为当前已验证可用。
+当前容量和状态以实时观测为准，策略以仓库配置为准，旧环境配方仅作为起点。不要把基于 GPU 利用率的 shell 回收策略写成键盘无操作超时。将旧配方推荐为默认方案前，应审查其中的依赖。
 
 修改文档时同时更新中英文，保留语言切换和稳定章节锚点，并运行 `python scripts/check_docs.py`。两种语言中的示例命令和资源要求应保持一致。API 参考由 MCP 仓库维护，不在此重复定义 schema。仅翻译或检查文档不需要提交真实任务或构建镜像。

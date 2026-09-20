@@ -3,36 +3,21 @@
 <a id="buildx-and-harbor-on-the-cvgl-login-node"></a>
 # CVGL 登录节点上的 Buildx 与 Harbor
 
-本页说明 CVGL Harbor 部署中已验证的 Buildx 路径。请先阅读较短的[自定义容器镜像操作指南](Custom_Containerized_Environment.zh.md)；需要诊断 TLS/DNS 阶段或创建独立 builder 时再使用本页。
-
-<a id="verified-scope"></a>
-## 验证范围
-
-以下内容已于 2026-09-20 在 `cvglloginnode` 上验证：
-
-| 组件 | 已验证值 |
-| --- | --- |
-| Docker Engine | `28.1.1` |
-| Buildx | `0.23.0` |
-| 默认 builder | `docker` driver，内置 BuildKit `0.21.0` |
-| 独立 builder | `docker-container` driver，下文固定的 BuildKit `0.32.2` 镜像 |
-| Harbor CA 文件 | `/etc/docker/certs.d/harbor.cvgl.lab/cvgl.crt` |
-
-两条 builder 路径都成功解析了 Harbor 基础镜像，执行了 Dockerfile `RUN` 步骤，用 `--load` 载入结果，并通过 `docker run` 运行镜像。`--pull` 刷新基础镜像 metadata，`--no-cache` 重新运行构建步骤；两者都不保证重新下载已有的内容层。验证时，独立 builder 下载了新层，而默认 builder 复用了 legacy 构建已经拉取的层。未测试 push、多平台输出、其他 builder 和其他操作系统。
+本页说明 CVGL Linux 登录节点访问 Harbor 的 Buildx 路径。请先阅读较短的[自定义容器镜像操作指南](Custom_Containerized_Environment.zh.md)；需要诊断 TLS/DNS 阶段或创建独立 builder 时再使用本页。其他操作系统和 Docker 安装可能使用不同的证书和网络行为。
 
 <a id="why-the-default-builder-needs-a-client-ca"></a>
 ## 默认 builder 为什么需要客户端 CA
 
 登录节点上存在 registry 专用 CA 文件，因此 Docker Engine 操作可以信任 Harbor。但该证书不在登录节点默认系统根证书集合中。
 
-在 Buildx `0.23.0` 中，Buildx 客户端通过 Docker 凭据 `ConfigFile` 创建 session auth provider。BuildKit `0.21.0` 通过这个 auth provider 发起 Harbor token 请求。因此，即使 Docker Engine 已经信任 registry，构建仍可能在 **Buildx 客户端进程**请求 `POST https://harbor.cvgl.lab/service/token` 时失败。
+Buildx 客户端通过 Docker 凭据 `ConfigFile` 创建 session auth provider，BuildKit auth provider 会发起 Harbor token 请求。因此，即使 Docker Engine 已经信任 registry，构建仍可能在 **Buildx 客户端进程**请求 `POST https://harbor.cvgl.lab/service/token` 时失败。
 
-在已验证的 Linux 登录节点上，把 `SSL_CERT_FILE` 指向 Harbor CA 可以成功。推荐形式为 `SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab`：在这套已测试的 Go/Linux 环境中，它会加入 registry 证书目录，同时保留正常的系统 CA 文件查找。该行为只适用于当前部署；Go 文档说明证书环境覆盖在不同平台上可能有不同表现。
+在这套 Linux 登录节点工作流中，使用 `SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab`。它会加入 registry 证书目录，同时保留这套 Go/Linux 环境正常的系统 CA 文件查找。Go 文档说明证书环境覆盖在其他平台上可能有不同表现。
 
 保持 TLS 验证开启。
 
-<a id="use-the-verified-default-builder"></a>
-## 使用已验证的默认 builder
+<a id="use-the-default-builder"></a>
+## 使用默认 builder
 
 常规构建：
 
@@ -42,7 +27,7 @@ SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab \
   docker buildx build --builder default --load -t "$IMAGE" .
 ```
 
-需要刷新基础镜像解析并重新运行构建步骤时：
+如需刷新基础镜像解析并重新运行构建步骤：
 
 ```bash
 SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab \
@@ -57,7 +42,7 @@ docker run --rm "$IMAGE" <smoke-command>
 <a id="keep-the-legacy-fallback"></a>
 ## 保留 legacy fallback
 
-如果已验证的 Buildx 路径出现回归，可以继续使用 legacy builder：
+如果默认 Buildx 路径失败，可以继续使用 legacy builder：
 
 ```bash
 DOCKER_BUILDKIT=0 docker build -t "$IMAGE" .
@@ -89,7 +74,7 @@ Docker 的 BuildKit 文档说明，`--buildkitd-config` 引用的 registry CA �
 <a id="2-builder-network-and-pinned-image"></a>
 ### 2. Builder network 与固定镜像
 
-默认 bridge 网络 builder 无法解析 `harbor.cvgl.lab`，因为该部署通过登录节点的 `/etc/hosts` 提供这个名称。在这台 Linux 主机的 Docker `28.1.1` 上，`--driver-opt network=host` 为 builder 提供了已经验证的主机解析。
+该部署通过 Linux 登录节点的 `/etc/hosts` 提供 `harbor.cvgl.lab`。创建 builder 时使用 `--driver-opt network=host`，让其 daemon 使用登录节点的 host-network 解析，而不是隔离的 bridge resolver。
 
 创建 builder 时不要使用 `--use`，这样不会改变默认 builder：
 
@@ -107,7 +92,7 @@ docker buildx create \
 docker buildx inspect cvgl-harbor
 ```
 
-验证时，该固定镜像解析为 BuildKit `0.32.2`。请保留完整 digest；单独的 tag 可以移动。
+固定的 digest 标识此流程使用的 BuildKit `0.32.2` 镜像。请保留完整 digest；单独的 tag 可以移动。
 
 <a id="3-build-explicitly"></a>
 ### 3. 显式构建
@@ -127,7 +112,7 @@ docker run --rm "$IMAGE" <smoke-command>
 <a id="network-options-are-not-interchangeable"></a>
 ## 网络选项不能互换
 
-`docker buildx create` 上的 `--driver-opt network=host` 配置长期运行的 **builder 容器**网络。在已验证的登录节点环境中，它修复了 builder daemon DNS。
+`docker buildx create` 上的 `--driver-opt network=host` 配置长期运行的 **builder 容器**网络，并在这套 Linux 登录节点配置中提供所需的主机解析。
 
 `docker buildx build --network=host` 配置 Dockerfile `RUN` 指令的网络。它不会配置 builder daemon 自身的 DNS，不能替代 driver option。Docker 文档把它们定义为不同的控制项。
 
@@ -138,7 +123,7 @@ docker run --rm "$IMAGE" <smoke-command>
 | --- | --- | --- |
 | `POST https://harbor.cvgl.lab/service/token` 报告未知 CA | Buildx 客户端 auth provider | 在 `docker buildx build` 进程上设置 `SSL_CERT_DIR` |
 | builder 日志中的 manifest 或 layer 请求报告未知 CA | BuildKit daemon 到 registry | 检查 `[registry."harbor.cvgl.lab"].ca`；如果独立 builder 配置已变化，重新创建它 |
-| 独立 builder 中 `lookup harbor.cvgl.lab` 失败 | builder 容器 DNS | 在这台已验证的 Linux 主机上，用 `--driver-opt network=host` 重新创建 |
+| 独立 builder 中 `lookup harbor.cvgl.lab` 失败 | builder 容器 DNS | 对这套 Linux 登录节点配置，用 `--driver-opt network=host` 重新创建 |
 | `unauthorized` 或 `denied` | Harbor 凭据或 project 授权 | 运行 `docker login` 并验证 project 访问权限 |
 | 构建成功，但 `docker run` 找不到镜像 | 导出阶段 | 加上 `--load` |
 

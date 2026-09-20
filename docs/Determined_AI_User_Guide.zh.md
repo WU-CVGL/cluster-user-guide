@@ -28,7 +28,7 @@ Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久�
 <a id="install-and-authenticate"></a>
 ## 安装与认证
 
-2026-09-20 核验时，master 报告的 Determined 版本为 `0.38.1`。安装匹配的 CLI。登录节点已安装集群 CA；个人设备请先完成[证书配置](Getting_started.zh.md#3-enroll-the-cluster-ca-when-required)。仅当 CLI 仍需显式 CA 路径时，将 `DET_MASTER_CERT_FILE` 指向下载的 `cvgl.crt`：
+集群运行 Determined `0.38.1`；请安装匹配的 CLI。登录节点已安装集群 CA；个人设备请先完成[证书配置](Getting_started.zh.md#3-enroll-the-cluster-ca-when-required)。仅当 CLI 仍需显式 CA 路径时，将 `DET_MASTER_CERT_FILE` 指向下载的 `cvgl.crt`：
 
 ```bash
 python -m pip install "determined==0.38.1"
@@ -164,7 +164,7 @@ det experiment cancel <experiment-id>
 <a id="shell-cleanup-policy"></a>
 ## Shell 清理策略
 
-当前 shell watchdog 依据持续 GPU 利用率，而不是键盘活动。持续低于阈值的 shell 可能先收到警告，随后被停止；时间是近似值，不是截止时间。已核验策略见[交互式 Shell](Interactive_Shell.zh.md#verified-shell-cleanup-policy)。请持续将工作保存到共享存储，无人值守的长时工作应使用 experiment。
+当前 shell watchdog 依据持续 GPU 利用率，而不是键盘活动。持续低于阈值的 shell 可能先收到警告，随后被停止；时间是近似值，不是截止时间。详见[交互式 Shell 清理策略](Interactive_Shell.zh.md#shell-cleanup-policy)。请持续将工作保存到共享存储，无人值守的长时工作应使用 experiment。
 
 <a id="related-pages"></a>
 ## 相关页面

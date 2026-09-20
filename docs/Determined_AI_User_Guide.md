@@ -25,7 +25,7 @@ Native command and shell configs expose one `description` field, so put the shor
 
 ## Install and authenticate
 
-The master reported Determined `0.38.1` when verified on 2026-09-20. Install the matching CLI. The login node already has the cluster CA; on your own device, follow the [certificate setup](Getting_started.md#3-enroll-the-cluster-ca-when-required). Set `DET_MASTER_CERT_FILE` to the downloaded `cvgl.crt` only if the CLI still needs an explicit CA path:
+The cluster runs Determined `0.38.1`; install the matching CLI. The login node already has the cluster CA; on your own device, follow the [certificate setup](Getting_started.md#3-enroll-the-cluster-ca-when-required). Set `DET_MASTER_CERT_FILE` to the downloaded `cvgl.crt` only if the CLI still needs an explicit CA path:
 
 ```bash
 python -m pip install "determined==0.38.1"
@@ -154,7 +154,7 @@ For the agent workflow and MCP setup, see [Agent Workflow](Agent_Workflow.md). T
 
 ## Shell cleanup policy
 
-The current shell watchdog is based on sustained GPU utilization, not keyboard activity. A shell that stays below the configured threshold can be warned and later stopped; timing is approximate rather than a deadline. See [Interactive Shell](Interactive_Shell.md#verified-shell-cleanup-policy) for the verified policy. Save work continuously to shared storage and use an experiment for long unattended work.
+The current shell watchdog is based on sustained GPU utilization, not keyboard activity. A shell that stays below the configured threshold can be warned and later stopped; timing is approximate rather than a deadline. See the [Interactive Shell cleanup policy](Interactive_Shell.md#shell-cleanup-policy). Save work continuously to shared storage and use an experiment for long unattended work.
 
 ## Related pages
 

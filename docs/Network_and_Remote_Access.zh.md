@@ -42,7 +42,7 @@
 优先使用权威数据源，并在提供校验和时进行验证。请下载到分配的共享目录，不要占用登录节点的系统盘。`curl`、`wget`、aria2、云服务商 CLI 和特定服务商客户端可能有用，但不保证已经安装。
 
 <details>
-<summary>历史服务商客户端示例</summary>
+<summary>服务商客户端截图</summary>
 
 ![服务商下载客户端](assets/Getting_started/QQ%E6%88%AA%E5%9B%BE20220317001515.png)
 
@@ -105,7 +105,7 @@ ssh -X cvgl-login
 <a id="remote-desktop-through-ssh"></a>
 ## 通过 SSH 使用远程桌面
 
-远程桌面的可用性、内部端口和桌面环境取决于部署。连接前请先确认。如果 RDP 服务只在登录节点的 loopback 接口上启用，请使用管理员提供并验证的端口建立 SSH 隧道：
+远程桌面的可用性、内部端口和桌面环境取决于部署。连接前请先确认。如果 RDP 服务只在登录节点的 loopback 接口上启用，请使用管理员提供的当前端口建立 SSH 隧道：
 
 ```bash
 ssh -N -L LOCAL_PORT:localhost:REMOTE_RDP_PORT cvgl-login
@@ -114,7 +114,7 @@ ssh -N -L LOCAL_PORT:localhost:REMOTE_RDP_PORT cvgl-login
 然后让 RDP 客户端连接 `localhost:LOCAL_PORT`。Windows 自带 RDP 客户端；Linux 客户端包括 Remmina；macOS 可使用 Windows App 或其他仍在维护的 RDP 客户端。
 
 <details>
-<summary>历史 Windows RDP 客户端示例</summary>
+<summary>Windows RDP 客户端截图</summary>
 
 ![Windows RDP 设置](assets/Getting_started/QQ%E6%88%AA%E5%9B%BE20220316211436.png)
 

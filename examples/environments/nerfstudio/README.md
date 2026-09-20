@@ -1,16 +1,16 @@
 [English](README.md) | [简体中文](README.zh.md)
 
-# Historical Nerfstudio Dockerfile
+# Nerfstudio Dockerfile
 
-This recipe is a historical reference with unverified current compatibility.
-Review its pinned and mutable upstream dependencies before use. The top-level
-[`examples/environments` index](../README.md) explains the status of all examples.
+This older recipe contains pinned and mutable upstream dependencies. Review and
+update them before use. The top-level [`examples/environments` index](../README.md)
+explains the assumptions shared by all examples.
 
 ## Build with Makefile
 
 The Makefile contains the target image, tag, proxy build arguments, and a
 retained `DOCKER_BUILDKIT=0` fallback. For direct Buildx builds, use the
-[verified login-node setup](../../../docs/Buildx_and_Harbor.md). `MAX_JOBS` is a build
+[current login-node setup](../../../docs/Buildx_and_Harbor.md). `MAX_JOBS` is a build
 argument used by PyTorch C++/CUDA extension builds; it does not persist in the
 final runtime image. Override its default with, for example,
 `make build_nerf MAX_JOBS=8`.
