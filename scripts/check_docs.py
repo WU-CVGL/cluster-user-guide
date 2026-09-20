@@ -29,6 +29,14 @@ ROOT = Path(__file__).resolve().parents[1]
 MARKDOWN_SUFFIXES = {".md", ".markdown"}
 YAML_SUFFIXES = {".yaml", ".yml"}
 LANGUAGE_SWITCH_LINES = 8
+ROOT_MARKDOWN_FILES = {
+    "README.md",
+    "README.zh.md",
+    "AGENTS.md",
+    "AGENTS.zh.md",
+    "CONTRIBUTING.md",
+    "CONTRIBUTING.zh.md",
+}
 OLD_MCP_REPOSITORY = re.compile(
     r"(?:https?://github\.com/)?(?:WU-CVGL|LingzheZhao)/determined_batch_submit\b", re.IGNORECASE
 )
@@ -299,17 +307,24 @@ def check_language_pairs(files: Iterable[Path]) -> list[str]:
     return errors
 
 
-def check_readme_aliases() -> list[str]:
+def check_root_layout(files: Iterable[Path]) -> list[str]:
     errors: list[str] = []
-    expected = {
-        ROOT / "README.md": ROOT / "Home.md",
-        ROOT / "README.zh.md": ROOT / "Home.zh.md",
+    for name in ("README.md", "README.zh.md"):
+        readme = ROOT / name
+        if not readme.is_file() or readme.is_symlink():
+            errors.append(f"{name}: must be a regular canonical Markdown file, not a symlink")
+
+    root_markdown = {
+        path.name
+        for path in markdown_paths(files)
+        if path.parent == ROOT
     }
-    for alias, target in expected.items():
-        if not alias.is_symlink():
-            errors.append(f"{alias.relative_to(ROOT)}: must be a symbolic link to {target.name}")
-        elif not alias.exists() or alias.resolve() != target.resolve():
-            errors.append(f"{alias.relative_to(ROOT)}: must resolve to {target.name}")
+    for name in sorted(root_markdown - ROOT_MARKDOWN_FILES):
+        errors.append(
+            f"{name}: chapter is scattered at repository root; move it under docs/"
+        )
+    for name in sorted(ROOT_MARKDOWN_FILES - root_markdown):
+        errors.append(f"{name}: required root documentation file is missing")
     return errors
 
 
@@ -470,7 +485,7 @@ def main(argv: list[str] | None = None) -> int:
     errors = check_symlinks(files)
     errors.extend(check_markdown(markdown))
     errors.extend(check_language_pairs(files))
-    errors.extend(check_readme_aliases())
+    errors.extend(check_root_layout(files))
     errors.extend(check_language_switches(files))
     errors.extend(check_stable_section_anchors(files))
     errors.extend(check_chinese_internal_links(files))

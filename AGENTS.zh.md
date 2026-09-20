@@ -12,13 +12,13 @@
 
 | 任务 | 接下来阅读 |
 | --- | --- |
-| 运行或监控任务 | [Agent 工作流](Agent_Workflow.zh.md)，然后阅读[任务类型选择](Determined_AI_User_Guide.zh.md) |
-| 解析路径或传输文件 | [共享存储](Shared_Storage.zh.md)，以及存储页或 agent 工作流链接的 MCP 存储访问参考 |
-| 配置登录或凭据 | [入门指南](Getting_started.zh.md)，然后阅读[故障排查](Troubleshooting.zh.md) |
-| 交互调试或连接 IDE | [交互式 Shell](Interactive_Shell.zh.md)，包括已核验的回收策略 |
-| 在 Notebook 中探索数据或展示结果 | [Jupyter](Jupyter_Notebooks.zh.md)；原生 Notebook 不属于当前 MCP 支持的任务类型 |
-| 构建镜像 | [容器环境](Custom_Containerized_Environment.zh.md)，保留 Harbor 的兼容构建方式 |
-| 查找服务地址或配置依据 | [集群参考](Cluster_Reference.zh.md) |
+| 运行或监控任务 | [Agent 工作流](docs/Agent_Workflow.zh.md)，然后阅读[任务类型选择](docs/Determined_AI_User_Guide.zh.md) |
+| 解析路径或传输文件 | [共享存储](docs/Shared_Storage.zh.md)，以及存储页或 agent 工作流链接的 MCP 存储访问参考 |
+| 配置登录或凭据 | [入门指南](docs/Getting_started.zh.md)，然后阅读[故障排查](docs/Troubleshooting.zh.md) |
+| 交互调试或连接 IDE | [交互式 Shell](docs/Interactive_Shell.zh.md)，包括已核验的回收策略 |
+| 在 Notebook 中探索数据或展示结果 | [Jupyter](docs/Jupyter_Notebooks.zh.md)；原生 Notebook 不属于当前 MCP 支持的任务类型 |
+| 构建镜像 | [容器环境](docs/Custom_Containerized_Environment.zh.md)，保留 Harbor 的兼容构建方式 |
+| 查找服务地址或配置依据 | [集群参考](docs/Cluster_Reference.zh.md) |
 | 修改本文档 | [文档贡献](CONTRIBUTING.zh.md) |
 
 每个文档页面都有 `.zh.md` 中文版。使用读者偏好的语言。两种语言中的命令、配置键和路径含义相同。

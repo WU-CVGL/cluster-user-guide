@@ -10,13 +10,13 @@ Here, an agent is an AI assistant. A **Determined agent** is a compute-node serv
 
 | Task | Read next |
 | --- | --- |
-| Run or monitor a workload | [Agent workflow](Agent_Workflow.md), then [task selection](Determined_AI_User_Guide.md) |
-| Resolve paths or transfer files | [Shared storage](Shared_Storage.md) and the MCP storage-access reference linked there or in the agent workflow |
-| Configure login or credentials | [Getting started](Getting_started.md), then [troubleshooting](Troubleshooting.md) |
-| Debug interactively or connect an IDE | [Interactive shells](Interactive_Shell.md), including the verified cleanup policy |
-| Explore data or present results in a notebook | [Jupyter](Jupyter_Notebooks.md); native Notebook tasks are outside the current MCP task kinds |
-| Build an image | [Container environments](Custom_Containerized_Environment.md); retain the Harbor compatibility path |
-| Find service URLs or evidence sources | [Cluster reference](Cluster_Reference.md) |
+| Run or monitor a workload | [Agent workflow](docs/Agent_Workflow.md), then [task selection](docs/Determined_AI_User_Guide.md) |
+| Resolve paths or transfer files | [Shared storage](docs/Shared_Storage.md) and the MCP storage-access reference linked there or in the agent workflow |
+| Configure login or credentials | [Getting started](docs/Getting_started.md), then [troubleshooting](docs/Troubleshooting.md) |
+| Debug interactively or connect an IDE | [Interactive shells](docs/Interactive_Shell.md), including the verified cleanup policy |
+| Explore data or present results in a notebook | [Jupyter](docs/Jupyter_Notebooks.md); native Notebook tasks are outside the current MCP task kinds |
+| Build an image | [Container environments](docs/Custom_Containerized_Environment.md); retain the Harbor compatibility path |
+| Find service URLs or evidence sources | [Cluster reference](docs/Cluster_Reference.md) |
 | Edit this documentation | [Contributing](CONTRIBUTING.md) |
 
 Every documentation page has a `.zh.md` counterpart. Use the reader's preferred language. Commands, configuration keys and paths have the same meaning in both versions.

@@ -2,18 +2,23 @@
 
 # Contributing documentation
 
-This repository is the source for the cluster user guide. Preserve compatible
-GitHub Wiki page names and extensionless `_Sidebar.md` links when moving pages;
-`README.md` is a symbolic link to the canonical `Home.md`, and `README.zh.md`
-links to `Home.zh.md`; keep these aliases rather than maintaining duplicate pages.
+This repository is the source for the cluster user guide. `README.md` and
+`README.zh.md` are regular files and the canonical English and Chinese home
+pages; do not recreate the former `Home.md` aliases. Keep the repository root
+limited to the README, AGENTS, and CONTRIBUTING English/Chinese pairs.
 The canonical compute and MCP implementation is
 [`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp);
 do not add links to its retired repository name.
 
-- Add or rename Markdown pages as an English/Chinese pair: `Page.md` and
-  `Page.zh.md`. Both pages need a language switch linking both versions within
-  the first eight lines. Chinese pages should link Chinese internal pages when
-  a translation exists.
+- Put guide chapters and the sidebars under `docs/`. Preserve page basenames
+  and stable section anchors, and use real relative Markdown paths in
+  `docs/_Sidebar.md` and `docs/_Sidebar.zh.md`. Put page images in
+  `docs/assets/<page-name>/`, environment examples in `examples/environments/`,
+  and other structured examples under the appropriate `examples/` subfolder.
+- Add or rename chapters as an English/Chinese pair: `docs/Page.md` and
+  `docs/Page.zh.md`. Both pages need a language switch linking both versions
+  within the first eight lines. Chinese pages should link Chinese internal
+  pages when a translation exists. Keep all relative links correct after moves.
 - The GitHub automatic slug of each English level-two or deeper heading is its
   canonical stable fragment. Do not duplicate that ID with an English HTML
   anchor. Immediately before the corresponding Chinese section, add the
@@ -42,7 +47,8 @@ python -m pip install "PyYAML>=6,<7"
 python scripts/check_docs.py
 ```
 
-The checker is offline: it validates local Markdown links and anchors, Wiki
-extensionless links (including dotted names such as `Home.zh`), directory
-links, bilingual pairing and navigation, stable section anchors, retired
-repository references, and JSON/YAML syntax without requesting external URLs.
+The checker is offline: it validates the root/docs layout, local Markdown links
+and anchors, Wiki extensionless links (including dotted names such as
+`Page.zh`), directory links, bilingual pairing and navigation, stable section
+anchors, retired repository references, and JSON/YAML syntax without requesting
+external URLs.
