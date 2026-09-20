@@ -18,6 +18,7 @@ Run workloads on the GPU cluster and keep code, datasets, checkpoints and result
 | Interactive debugging, VS Code or PyCharm | [Interactive shells](docs/Interactive_Shell.md) |
 | Data exploration, visual analysis and teaching | [Jupyter — optional](docs/Jupyter_Notebooks.md) |
 | Overnight training, recovery or experiment tracking | [Experiment tasks](docs/Determined_AI_User_Guide.md#run-a-durable-experiment) |
+| Track metrics and compare runs | [Self-hosted W&B](docs/Weights_and_Biases.md) |
 | Build or reuse a container image | [Container environments](docs/Custom_Containerized_Environment.md) |
 
 Check schedulable capacity before submitting; avoid queuing by default. Low GPU utilization does not mean a GPU is unallocated. Shells are subject to the cluster's external idle-reclamation policy; save work to shared storage throughout the session.

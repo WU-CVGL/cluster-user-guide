@@ -16,6 +16,8 @@
 
 [Jupyter——可选](Jupyter_Notebooks.zh.md)
 
+[自托管 W&B](Weights_and_Biases.zh.md)
+
 [容器环境](Custom_Containerized_Environment.zh.md)
 
 [故障排查](Troubleshooting.zh.md)

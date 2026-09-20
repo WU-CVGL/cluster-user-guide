@@ -15,7 +15,7 @@ Complete the [network and certificate setup](Getting_started.md) before opening 
 | [Harbor](https://harbor.cvgl.lab/) | Container images |
 | [Grafana](https://grafana.cvgl.lab/) | Utilization, monitoring and alerts |
 | [Nextcloud](https://pan.cvgl.lab/) | File sharing |
-| [Weights & Biases](https://wandb.cvgl.lab/) | Experiment tracking |
+| [Weights & Biases](https://wandb.cvgl.lab/) | Experiment tracking; [campus and 100G LAN access](Weights_and_Biases.md) |
 | [FRP](https://frp.cvgl.lab/) | Administrator-managed forwarding |
 
 Use your own account and request only the services needed for your work. Obtain share links and credentials from the administrator, not from public examples.

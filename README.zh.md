@@ -19,6 +19,7 @@
 | 交互式调试、VS Code 或 PyCharm | [交互式 Shell](docs/Interactive_Shell.zh.md) |
 | 数据探索、可视化分析与教学 | [Jupyter——可选](docs/Jupyter_Notebooks.zh.md) |
 | 跨天训练、恢复或实验跟踪 | [Experiment 任务](docs/Determined_AI_User_Guide.zh.md#run-a-durable-experiment) |
+| 记录指标并对比运行结果 | [自托管 W&B](docs/Weights_and_Biases.zh.md) |
 | 构建或复用容器镜像 | [容器环境](docs/Custom_Containerized_Environment.zh.md) |
 
 提交前检查可调度容量，默认避免排队。GPU 利用率低不代表 GPU 尚未分配。Shell 受集群外部空闲回收策略管理，应在整个会话期间持续将工作保存到共享存储。

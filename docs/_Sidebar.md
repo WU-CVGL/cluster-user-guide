@@ -16,6 +16,8 @@
 
 [Jupyter — optional](Jupyter_Notebooks.md)
 
+[Self-hosted W&B](Weights_and_Biases.md)
+
 [Container environments](Custom_Containerized_Environment.md)
 
 [Troubleshooting](Troubleshooting.md)

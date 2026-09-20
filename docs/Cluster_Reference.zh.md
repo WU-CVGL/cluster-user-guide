@@ -17,7 +17,7 @@
 | [Harbor](https://harbor.cvgl.lab/) | 容器镜像 |
 | [Grafana](https://grafana.cvgl.lab/) | 利用率、监控和告警 |
 | [Nextcloud](https://pan.cvgl.lab/) | 文件共享 |
-| [Weights & Biases](https://wandb.cvgl.lab/) | 实验跟踪 |
+| [Weights & Biases](https://wandb.cvgl.lab/) | 实验跟踪；[校园网和 100G LAN 接入](Weights_and_Biases.zh.md) |
 | [FRP](https://frp.cvgl.lab/) | 由管理员管理的端口转发 |
 
 请使用自己的账号，并且只申请工作所需的服务。共享链接和凭据应向管理员获取，不要从公开示例中取用。
