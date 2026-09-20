@@ -20,6 +20,8 @@
 
 [容器环境](Custom_Containerized_Environment.zh.md)
 
+[Buildx 与 Harbor](Buildx_and_Harbor.zh.md)
+
 [故障排查](Troubleshooting.zh.md)
 
 [网络与远程访问](Network_and_Remote_Access.zh.md)

@@ -9,8 +9,8 @@
 <a id="build-with-makefile"></a>
 ## 使用 Makefile 构建
 
-Makefile 包含目标 image、tag、proxy build argument，以及当前
-`DOCKER_BUILDKIT=0` 兼容设置。`MAX_JOBS` 是 PyTorch C++/CUDA extension build
+Makefile 包含目标 image、tag、proxy build argument，并保留
+`DOCKER_BUILDKIT=0` 作为回退。直接使用 Buildx 时，请按照[已验证的登录节点配置](../../../docs/Buildx_and_Harbor.zh.md)。`MAX_JOBS` 是 PyTorch C++/CUDA extension build
 使用的 build argument；它不会保留在最终 runtime image 中。例如可用
 `make build_nerf MAX_JOBS=8` 覆盖默认值。
 

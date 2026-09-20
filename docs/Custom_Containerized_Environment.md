@@ -2,18 +2,13 @@
 
 # Build and use a custom container image
 
-This HOWTO covers the current CVGL Harbor workflow. It assumes that Docker is
-already installed and that you are allowed to build images on the selected
-machine. Docker trust is already configured on the login node.
+This HOWTO covers the normal CVGL Harbor workflow. It assumes Docker is installed and you are allowed to build images on the selected machine.
 
-The files under [`examples/environments`](../examples/environments/README.md) are historical
-references. Review and pin every dependency before using one; an example's
-presence does not mean that its image currently builds or runs.
+The files under [`examples/environments`](../examples/environments/README.md) are historical references. Review and pin every dependency before using one; an example's presence does not mean its image currently builds or runs.
 
 ## 1. Choose and pin a base image
 
-Prefer an administrator-approved image mirrored in `harbor.cvgl.lab`. Use a
-versioned tag, and use a digest when reproducibility matters:
+Prefer an administrator-approved image mirrored in `harbor.cvgl.lab`. Use a versioned tag, and use a digest when reproducibility matters:
 
 ```dockerfile
 FROM harbor.cvgl.lab/<project>/<base-image>:<version-tag>
@@ -21,33 +16,20 @@ FROM harbor.cvgl.lab/<project>/<base-image>:<version-tag>
 # FROM harbor.cvgl.lab/<project>/<base-image>@sha256:<digest>
 ```
 
-Avoid floating tags such as `latest`. A tag can be moved; a digest identifies
-the exact manifest that was reviewed.
-
-The historical RTX 4090 recipes here use CUDA 11.8-or-newer bases. Compatibility also depends on
-the framework, driver, compiler, and any CUDA extensions, so CUDA version alone
-is not a complete compatibility check.
+Avoid floating tags such as `latest`. Compatibility depends on the framework, driver, compiler, CUDA version, and any compiled extensions.
 
 ## 2. Trust the Harbor CA
 
-The login node already has the Harbor CA installed, so skip this step there. On
-a personal device, download [`cvgl.crt`](https://cvgl.lab/cvgl.crt) and follow
-the CA installation steps in
-[Getting started](Getting_started.md#3-enroll-the-cluster-ca-when-required).
+The login node already has the Harbor certificate at `/etc/docker/certs.d/harbor.cvgl.lab/cvgl.crt`; do not reinstall it or restart the shared Docker daemon. On a personal device, download [`cvgl.crt`](https://cvgl.lab/cvgl.crt) and follow [Getting started](Getting_started.md#3-enroll-the-cluster-ca-when-required).
 
-For Docker Engine on a personal Linux machine, also place the downloaded
-`cvgl.crt` in Docker's registry-specific certificate directory:
+For Docker Engine on a personal Linux machine, also place the certificate in Docker's registry-specific directory:
 
 ```bash
 sudo install -d -m 0755 /etc/docker/certs.d/harbor.cvgl.lab
 sudo install -m 0644 cvgl.crt /etc/docker/certs.d/harbor.cvgl.lab/cvgl.crt
 ```
 
-Restart the Docker daemon on your own machine only if it does not pick up the
-new certificate. Do not restart Docker on the shared login node. Docker Desktop
-and rootless Docker use different certificate locations; follow the
-[Docker registry certificate documentation](https://docs.docker.com/engine/security/certificates/)
-for that installation.
+Docker Desktop and rootless Docker use different locations; follow the [Docker registry certificate documentation](https://docs.docker.com/engine/security/certificates/) for that installation.
 
 ## 3. Log in without exposing the password
 
@@ -57,23 +39,18 @@ For interactive use, let Docker prompt for the password:
 docker login harbor.cvgl.lab --username <username>
 ```
 
-For controlled automation, pass a secret through standard input. Do not use
-`docker login -p ...`, because the password becomes a command-line argument:
+For controlled automation, pass a secret through standard input rather than a command-line argument:
 
 ```bash
 printf '%s' "$HARBOR_PASSWORD" |
   docker login harbor.cvgl.lab --username <username> --password-stdin
 ```
 
-Docker may store the resulting credential in `~/.docker/config.json`; configure
-a Docker credential store where available. See
-[`docker login`](https://docs.docker.com/reference/cli/docker/login/) for the
-credential-store and `--password-stdin` behavior.
+Docker may store the credential in `~/.docker/config.json`; configure a credential store where available. TLS trust and Harbor authorization are separate checks.
 
 ## 4. Write the Dockerfile
 
-Keep the build context small and use a `.dockerignore`. A minimal extension of
-an approved base looks like this:
+Keep the build context small and use a `.dockerignore`. A minimal extension of an approved base looks like this:
 
 ```dockerfile
 FROM harbor.cvgl.lab/<project>/<base-image>:<version-tag>
@@ -86,74 +63,47 @@ RUN python -m pip install --requirement /tmp/requirements.txt && \
     rm -f /tmp/requirements.txt
 ```
 
-Pin Python packages and source checkouts. Quote shell requirements that contain
-operators, for example `python -m pip install "nerfstudio>=1.0"`, so `>` is not
-interpreted as shell redirection. Do not pass tokens or passwords as build
-arguments: build arguments and layers are not a secret store.
+Pin packages and source checkouts. Quote requirements containing shell operators, for example `python -m pip install "nerfstudio>=1.0"`. Do not pass tokens or passwords as build arguments: build arguments and image layers are not secret stores.
 
-## 5. Build with the current compatible path
+## 5. Build on the login node with the verified Buildx path
 
-For the current CVGL Harbor deployment with its self-signed CA, the supported
-compatibility path is the legacy Docker builder:
+The verified login-node path uses the default Buildx builder and adds the Harbor CA directory to the Buildx client process:
 
 ```bash
 IMAGE=harbor.cvgl.lab/<project>/<image>:<version-tag>
-DOCKER_BUILDKIT=0 docker build -t "$IMAGE" .
+SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab \
+  docker buildx build --builder default --load -t "$IMAGE" .
 ```
 
-Keep `DOCKER_BUILDKIT=0` for this path. The trailing `.` is the build context.
-If the build itself needs the site proxy, use the administrator-provided proxy
-URL and pass only non-secret proxy addresses:
+`--load` places the result in the local Docker image store. This command needs no `sudo`, Docker restart, or TLS bypass.
+
+This path was verified on `cvglloginnode` on 2026-09-20 with Docker `28.1.1`, Buildx `0.23.0`, the default `docker` driver, and bundled BuildKit `0.21.0`. See [Buildx and Harbor](Buildx_and_Harbor.md) for the cause, validation boundary, and advanced builder setup.
+
+If Dockerfile `RUN` steps need the site proxy, use the current approved URL as a non-secret build argument:
 
 ```bash
-DOCKER_BUILDKIT=0 docker build \
+SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab \
+  docker buildx build --builder default --load \
   --build-arg http_proxy=<proxy-url> \
   --build-arg https_proxy=<proxy-url> \
   -t "$IMAGE" .
 ```
 
-If the Docker daemon needs a proxy to pull the base image, ask the administrator
-to configure it. A build argument configures `RUN` steps in the temporary build
-container; it does not configure the Docker daemon.
+Build arguments configure `RUN` steps; they do not configure Docker Engine or the Buildx client's base-image/token traffic. See [Network and remote access](Network_and_Remote_Access.md#proxies-and-mirrors).
 
-### Optional, unverified BuildKit migration
+### Legacy fallback
 
-BuildKit has not been validated against this Harbor deployment. Do not replace
-the compatible command above yet. A future migration should use a separate
-`docker-container` builder with an explicit registry CA; do not apply a
-`--buildkitd-config` procedure to the existing default `docker` driver.
-
-Example configuration for a dedicated test builder:
-
-```toml
-# /absolute/path/to/cvgl-buildkitd.toml
-[registry."harbor.cvgl.lab"]
-  ca = ["/absolute/path/to/cvgl.crt"]
-```
-
-On a machine where you can run test builds, create and inspect the isolated
-builder, then run a non-pushing test build:
+If the verified Buildx command fails unexpectedly, the legacy builder remains a compatibility fallback:
 
 ```bash
-docker buildx create \
-  --name cvgl-harbor-test \
-  --driver docker-container \
-  --buildkitd-config /absolute/path/to/cvgl-buildkitd.toml \
-  --bootstrap
-
-docker buildx inspect cvgl-harbor-test
-docker buildx build --builder cvgl-harbor-test --load -t "$IMAGE" .
+DOCKER_BUILDKIT=0 docker build -t "$IMAGE" .
 ```
 
-Docker documents how the CA is copied into a `docker-container` builder in
-[Configure BuildKit](https://docs.docker.com/build/buildkit/configure/). Treat
-this as a migration experiment until pulling the base image and a complete
-non-pushing build have both been verified.
+Diagnose the failing Buildx stage rather than changing TLS or authentication semantics.
 
 ## 6. Tag and push
 
-If the local build used a different tag, add the full Harbor reference and push
-it explicitly:
+If the local build used a different tag, add the full Harbor reference and push it explicitly:
 
 ```bash
 docker tag <local-image>:<local-tag> \
@@ -161,9 +111,7 @@ docker tag <local-image>:<local-tag> \
 docker push harbor.cvgl.lab/<project>/<image>:<version-tag>
 ```
 
-Use a new, meaningful version tag for changed content. Record the digest printed
-by `docker push` or shown by Harbor. Keep release tags stable rather than
-overwriting them; use the recorded digest for reproducible jobs.
+Use a new, meaningful version tag for changed content and record the resulting digest. Push was not part of the 2026-09-20 verification; confirm project authorization and review the push result before relying on it.
 
 ## 7. Use the image with Determined
 
@@ -174,22 +122,12 @@ environment:
   image: harbor.cvgl.lab/<project>/<image>:<version-tag>
 ```
 
-See the [Determined compute guide](Determined_AI_User_Guide.md) and the
-[MCP workflow](Agent_Workflow.md) for task planning and submission. Follow the
-[shared-storage guide](Shared_Storage.md) for code, datasets, checkpoints, and
-outputs. The image should hold the runtime environment; changing datasets and
-run artifacts belong on shared storage.
+See the [Determined compute guide](Determined_AI_User_Guide.md) and [MCP workflow](Agent_Workflow.md) for planning and submission. Follow [Shared storage](Shared_Storage.md) for code, datasets, checkpoints, and outputs. The image should contain the runtime environment; changing data and run artifacts belong on shared storage.
 
 ## Troubleshooting
 
-- `x509: certificate signed by unknown authority`: confirm that `cvgl.crt` is in
-  the registry directory used by your Docker installation. Restart Docker on
-  your own machine if necessary. Do not use an insecure-registry flag.
-- `unauthorized` or `denied`: log in again and confirm access to the Harbor
-  project. TLS trust and registry authorization are separate checks.
-- A BuildKit pull fails while the compatible build works: continue with
-  `DOCKER_BUILDKIT=0`; the isolated BuildKit CA path remains unverified.
-- A package constraint creates a file such as `=0.16.0`: quote the complete
-  requirement passed to the shell.
-- A job cannot see code or output: check the Determined bind mounts and place
-  the workload under an approved shared-storage root.
+- A default Buildx build reports `x509: certificate signed by unknown authority` while requesting `https://harbor.cvgl.lab/service/token`: run that Buildx command with the documented `SSL_CERT_DIR`.
+- `unauthorized` or `denied`: run `docker login` again and confirm access to the Harbor project. This is an authorization failure, not a CA failure.
+- A builder reports DNS lookup failure or an isolated BuildKit registry error: use the three-layer diagnosis in [Buildx and Harbor](Buildx_and_Harbor.md#failure-stages).
+- A package constraint creates a file such as `=0.16.0`: quote the complete requirement passed to the shell.
+- A Determined task cannot see code or output: check its bind mounts and use an approved shared-storage root.

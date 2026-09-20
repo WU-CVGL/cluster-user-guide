@@ -24,16 +24,19 @@ Before using an example:
 3. Confirm the CUDA architecture, framework ABI, Python version, and target GPU.
 4. Check every external URL and package name without assuming an old mirror or
    repository still exists.
-5. Build with the current Harbor-compatible path described in the
+5. On the login node, use the verified Buildx path described in the
    [custom-container HOWTO](../../docs/Custom_Containerized_Environment.md):
 
    ```bash
-   DOCKER_BUILDKIT=0 docker build -t <local-image>:<test-tag> .
+   SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab \
+     docker buildx build --builder default --load -t <local-image>:<test-tag> .
    ```
 
 6. Test locally without pushing, then use a new release tag and record the
    Harbor digest if the image is approved.
 
+Historical build helpers may still use `DOCKER_BUILDKIT=0` as a fallback. The
+verified Buildx transport does not establish that every old recipe still builds.
 The Nerfstudio Makefile has explicit push targets. Review its registry,
 project, tag, proxy, and build arguments before invoking any `push_*` target.
 For task planning and shared data placement, see the

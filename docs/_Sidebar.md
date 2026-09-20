@@ -20,6 +20,8 @@
 
 [Container environments](Custom_Containerized_Environment.md)
 
+[Buildx and Harbor](Buildx_and_Harbor.md)
+
 [Troubleshooting](Troubleshooting.md)
 
 [Network and remote access](Network_and_Remote_Access.md)

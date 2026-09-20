@@ -8,8 +8,9 @@ Review its pinned and mutable upstream dependencies before use. The top-level
 
 ## Build with Makefile
 
-The Makefile contains the target image, tag, proxy build arguments, and the
-current `DOCKER_BUILDKIT=0` compatibility setting. `MAX_JOBS` is a build
+The Makefile contains the target image, tag, proxy build arguments, and a
+retained `DOCKER_BUILDKIT=0` fallback. For direct Buildx builds, use the
+[verified login-node setup](../../../docs/Buildx_and_Harbor.md). `MAX_JOBS` is a build
 argument used by PyTorch C++/CUDA extension builds; it does not persist in the
 final runtime image. Override its default with, for example,
 `make build_nerf MAX_JOBS=8`.

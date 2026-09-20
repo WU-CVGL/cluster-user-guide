@@ -32,9 +32,9 @@ do not add links to its retired repository name.
 - Treat resource availability, service status, network routes, and other live
   facts as dynamic. Verify them read-only with the responsible administrator,
   record when they were checked, and do not infer them from old examples.
-- Keep a working compatibility path until its replacement is verified in the
-  deployed environment. For example, retain the current Harbor BuildKit route
-  until a builder using the explicit CA trust is proven.
+- Verify replacements in the deployed environment and document their scope.
+  For builders, distinguish client CA, daemon CA and registry DNS requirements;
+  retain a documented legacy fallback where it is still needed.
 - Mark historical or unverified container examples clearly. Do not present an
   image, package set, proxy, or resource pool as a default until it is tested.
 - Never commit credentials, private keys, access tokens, or credential-bearing

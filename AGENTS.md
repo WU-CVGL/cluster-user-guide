@@ -16,7 +16,7 @@ Here, an agent is an AI assistant. A **Determined agent** is a compute-node serv
 | Debug interactively or connect an IDE | [Interactive shells](docs/Interactive_Shell.md), including the verified cleanup policy |
 | Explore data or present results in a notebook | [Jupyter](docs/Jupyter_Notebooks.md); native Notebook tasks are outside the current MCP task kinds |
 | Configure experiment tracking | [Self-hosted W&B](docs/Weights_and_Biases.md); cluster tasks use the 100G LAN endpoint |
-| Build an image | [Container environments](docs/Custom_Containerized_Environment.md); retain the Harbor compatibility path |
+| Build an image | [Container environments](docs/Custom_Containerized_Environment.md), with the verified [Buildx and Harbor setup](docs/Buildx_and_Harbor.md) |
 | Find service URLs or evidence sources | [Cluster reference](docs/Cluster_Reference.md) |
 | Edit this documentation | [Contributing](CONTRIBUTING.md) |
 

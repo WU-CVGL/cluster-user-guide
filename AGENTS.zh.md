@@ -18,7 +18,7 @@
 | 交互调试或连接 IDE | [交互式 Shell](docs/Interactive_Shell.zh.md)，包括已核验的回收策略 |
 | 在 Notebook 中探索数据或展示结果 | [Jupyter](docs/Jupyter_Notebooks.zh.md)；原生 Notebook 不属于当前 MCP 支持的任务类型 |
 | 配置实验跟踪 | [自托管 W&B](docs/Weights_and_Biases.zh.md)；集群任务使用 100G LAN 地址 |
-| 构建镜像 | [容器环境](docs/Custom_Containerized_Environment.zh.md)，保留 Harbor 的兼容构建方式 |
+| 构建镜像 | [容器环境](docs/Custom_Containerized_Environment.zh.md)，以及已验证的 [Buildx 与 Harbor 配置](docs/Buildx_and_Harbor.zh.md) |
 | 查找服务地址或配置依据 | [集群参考](docs/Cluster_Reference.zh.md) |
 | 修改本文档 | [文档贡献](CONTRIBUTING.zh.md) |
 

@@ -21,16 +21,19 @@
 2. 用审查过的 commit、版本和 image digest 替换可变分支及浮动依赖。
 3. 确认 CUDA architecture、framework ABI、Python 版本和目标 GPU。
 4. 检查每个外部 URL 和 package name，不要假定旧 mirror 或 repository 仍然存在。
-5. 使用[自定义容器操作指南](../../docs/Custom_Containerized_Environment.zh.md)中当前与
-   Harbor 兼容的路径构建：
+5. 在登录节点上，使用[自定义容器操作指南](../../docs/Custom_Containerized_Environment.zh.md)中
+   已验证的 Buildx 方式构建：
 
    ```bash
-   DOCKER_BUILDKIT=0 docker build -t <local-image>:<test-tag> .
+   SSL_CERT_DIR=/etc/docker/certs.d/harbor.cvgl.lab \
+     docker buildx build --builder default --load -t <local-image>:<test-tag> .
    ```
 
 6. 先在本地测试且不要推送；镜像通过审查后，再使用新的 release tag，并记录
    Harbor digest。
 
+历史构建脚本可能仍使用 `DOCKER_BUILDKIT=0` 作为回退。Buildx 访问链路经过验证，
+不代表每个旧构建示例目前都能成功构建。
 Nerfstudio Makefile 包含显式 push target。调用任何 `push_*` target 之前，请检查
 registry、project、tag、proxy 和 build argument。任务规划和共享数据放置请参阅
 [Determined compute 指南](../../docs/Determined_AI_User_Guide.zh.md)、
