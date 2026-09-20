@@ -2,7 +2,7 @@
 
 [Home](../README.md)
 
-[MCP workflow — recommended](Agent_Workflow.md)
+[MCP workflow — recommended](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md)
 
 [Agent reading guide](../AGENTS.md)
 

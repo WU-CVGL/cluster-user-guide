@@ -2,7 +2,7 @@
 
 # Interactive shells, IDEs, and ports
 
-Use the [agent workflow](Agent_Workflow.md) with [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp) to plan and manage a shell. This page covers interactive access, IDE connections and the shell lifecycle; native CLI commands are included for manual operation.
+For agent-assisted shell management, use the canonical [Determined Cluster MCP workflow](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md). This page covers CVGL interactive access, IDE connections and the shell lifecycle; native CLI commands are included for manual operation.
 
 A Determined shell is a temporary interactive development environment. Use it to inspect an image, reproduce an issue, or attach an IDE. Put edits, caches worth keeping, and debug outputs on shared storage.
 
@@ -28,7 +28,7 @@ The command connects through SSH when the shell is ready. To detach immediately 
 det shell start --detach --config-file examples/compute/shell.yaml
 ```
 
-Native `det shell start` can queue if no slot is available. The maintained MCP/`determined-compute` workflow checks current capacity and defaults to `allow_queue: false`; see [Agent Workflow](Agent_Workflow.md).
+Native `det shell start` can queue if no slot is available. See the canonical [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) for MCP capacity and admission behavior.
 
 ## Reconnect and stop
 

@@ -41,5 +41,5 @@ The Nerfstudio Makefile has explicit push targets. Review its registry,
 project, tag, proxy, and build arguments before invoking any `push_*` target.
 For task planning and shared data placement, see the
 [Determined compute guide](../../docs/Determined_AI_User_Guide.md),
-[MCP workflow](../../docs/Agent_Workflow.md), and
+[canonical MCP workflow](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md), and
 [shared-storage guide](../../docs/Shared_Storage.md).

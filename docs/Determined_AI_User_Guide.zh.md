@@ -3,7 +3,7 @@
 <a id="determined-ai-practical-user-guide"></a>
 # Determined AI：实用用户指南
 
-日常操作推荐通过 [agent 工作流](Agent_Workflow.zh.md)使用 [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp)。本页说明任务类型选择，并提供手动操作所需的原生 CLI 命令。
+Agent 辅助操作请使用规范的 [Determined Cluster MCP 工作流](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.zh.md)。本页说明集群任务类型选择，并提供手动操作所需的原生 CLI 命令。
 
 Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久保存的内容——源代码、数据集、检查点和输出——都应放在共享存储上。任务容器应视为临时环境。
 
@@ -19,7 +19,7 @@ Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久�
 
 一次性工作默认使用 command，包括短时无人值守任务。需要人工与进程交互时使用 shell。跨夜训练，或需要检查点恢复和试验跟踪时，使用 experiment。
 
-[Jupyter](Jupyter_Notebooks.zh.md) 是交互式研究的可选入口。长时间空闲的原生 Notebook 任务目前由管理员手动停止，不由 shell watchdog 管理。当前 MCP 计算服务没有提供 Notebook 任务类型。
+[Jupyter](Jupyter_Notebooks.zh.md) 是交互式研究的可选原生入口。长时间空闲的原生 Notebook 任务目前由管理员手动停止，不由 shell watchdog 管理。MCP 支持的任务类型以规范的[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)为准。
 
 为每个任务设置简短且有意义的名称，并用描述说明它运行什么。`evaluate-checkpoint-240k` 这类名称比 UUID 或 `test` 更便于操作。
 
@@ -64,7 +64,7 @@ det user whoami
 
 [`examples/compute/`](../examples/compute/) 中的示例采用这一布局。使用前替换所有占位符。
 
-此工作流不要传递 `--context`、`--include` 或模型目录参数。原生 `det experiment create CONFIG` 允许省略模型定义参数，因此会发送空上下文。受维护的 `determined-compute` 服务也会拒绝上传上下文。
+此工作流不要传递 `--context`、`--include` 或模型目录参数。原生 `det experiment create CONFIG` 允许省略模型定义参数，因此会发送空上下文。
 
 <a id="check-scheduler-capacity"></a>
 ## 检查调度容量
@@ -80,18 +80,7 @@ det slot list --json
 
 只统计目标资源池中已启用、未处于排空（draining）状态且空闲的槽位。单机多 GPU 任务需要同一计算节点的 Determined agent 上有足够的空闲槽位。
 
-完成其[独立安装和凭据配置](Agent_Workflow.zh.md#connect-the-service)后，受维护的计算服务可提供保守的容量视图。它不会复用原生 `det` 登录会话：
-
-```bash
-determined-compute \
-  --api-url "$DET_MASTER" \
-  --verify-ssl --secrets-file /absolute/path/to/credentials.env \
-  resources --slots 1 --pool <resource-pool>
-```
-
-其 MCP 和 CLI 启动路径默认 `allow_queue: false`，因此容量忙碌或未知时会拒绝新任务。这是某一时刻的检查，并非资源预留。
-
-原生 `det` 启动命令**没有**同等的禁止排队保护。容量可能在检查与提交之间变化，原生提交可能进入队列。
+原生 `det` 启动命令可能进入队列。容量可能在检查与提交之间变化，因此提交后应检查任务；如果本无意排队，则取消任务。MCP 的容量和准入行为以规范的[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)为准。
 
 <a id="run-a-short-command"></a>
 ## 运行短时 command
@@ -148,19 +137,6 @@ det experiment cancel <experiment-id>
 
 训练程序应能够从共享检查点恢复。容器重启后，不得依赖只存在于前一个容器中的文件。
 
-<a id="use-the-maintained-compute-service-and-mcp"></a>
-## 使用受维护的计算服务和 MCP
-
-受维护的 `determined-compute` 层提供：
-
-- 持久化本地任务记录和幂等 request ID；
-- 仅允许共享存储路径的校验；
-- 有意义的名称和描述；
-- 默认 `allow_queue: false` 的容量准入；
-- 按 owner 命名空间管理状态、日志、取消操作和谨慎的提交状态核对。
-
-智能体工作流和 MCP 设置见[智能体工作流](Agent_Workflow.zh.md)。请求字段和安装细节以服务自身文档为准。
-
 <a id="shell-cleanup-policy"></a>
 ## Shell 清理策略
 
@@ -170,7 +146,7 @@ det experiment cancel <experiment-id>
 ## 相关页面
 
 - [交互式 Shell](Interactive_Shell.zh.md)
-- [智能体工作流](Agent_Workflow.zh.md)
+- [规范 MCP agent 工作流](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.zh.md)
 - [自定义容器环境](Custom_Containerized_Environment.zh.md)
 - [集群入门](Getting_started.zh.md)
 - [集群参考](Cluster_Reference.zh.md)

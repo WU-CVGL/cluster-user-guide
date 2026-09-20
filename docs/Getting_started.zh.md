@@ -5,7 +5,7 @@
 
 本页介绍从获得新账户到完成 SSH 登录的最短流程。共享存储、Determined、容器以及不常用的访问方式，请参阅文末链接。
 
-如需使用智能体辅助完成集群工作或使用 Determined MCP 服务，请参阅[智能体工作流](Agent_Workflow.zh.md)和 [`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp)。
+如需使用 agent 辅助完成集群工作或使用 Determined MCP 服务，请参阅规范的 [agent 工作流](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.zh.md)和[安装指南](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/README.zh.md)。
 
 <a id="1-request-the-accounts-you-need"></a>
 ## 1. 申请所需账户

@@ -2,7 +2,7 @@
 
 # Determined AI: practical user guide
 
-For routine work, use the [agent workflow](Agent_Workflow.md) with [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp). This page explains task selection and provides native CLI commands for manual operation.
+For agent-assisted work, use the canonical [Determined Cluster MCP workflow](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md). This page explains cluster task selection and provides native CLI commands for manual operation.
 
 Determined runs containerized work on the GPU cluster. Keep the durable parts of every job—source code, datasets, checkpoints, and outputs—on shared storage. Treat the task container as temporary.
 
@@ -17,7 +17,7 @@ Determined runs containerized work on the GPU cluster. Keep the durable parts of
 
 Use a command by default for one-off work, including short unattended jobs. Use a shell when a person needs to interact with the process. Use an experiment for overnight training or when checkpoint recovery and trial tracking are needed.
 
-[Jupyter](Jupyter_Notebooks.md) is an optional interface for interactive research. Long-idle native Notebook tasks are currently stopped manually by the administrator; the shell watchdog does not manage them. The current MCP compute service does not provide a Notebook task kind.
+[Jupyter](Jupyter_Notebooks.md) is an optional native interface for interactive research. Long-idle native Notebook tasks are currently stopped manually by the administrator; the shell watchdog does not manage them. See the canonical [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) for MCP-supported task kinds.
 
 Give every task a short, meaningful name and a description that says what it runs. Names such as `evaluate-checkpoint-240k` are easier to operate than UUIDs or `test`.
 
@@ -60,7 +60,7 @@ Before launch:
 
 The examples in [`examples/compute/`](../examples/compute/) use this layout. Replace every placeholder before use.
 
-Do not pass `--context`, `--include`, or a model-directory argument for this workflow. Native `det experiment create CONFIG` accepts an omitted model-definition argument and therefore sends an empty context. The maintained `determined-compute` service also rejects upload contexts.
+Do not pass `--context`, `--include`, or a model-directory argument for this workflow. Native `det experiment create CONFIG` accepts an omitted model-definition argument and therefore sends an empty context.
 
 ## Check scheduler capacity
 
@@ -75,18 +75,7 @@ det slot list --json
 
 Count only enabled, non-draining, free slots in the requested pool. Multi-GPU single-node work requires enough free slots on one agent.
 
-The maintained compute service provides a conservative capacity view after its [separate installation and credential setup](Agent_Workflow.md#connect-the-service). It does not reuse a native `det` login session:
-
-```bash
-determined-compute \
-  --api-url "$DET_MASTER" \
-  --verify-ssl --secrets-file /absolute/path/to/credentials.env \
-  resources --slots 1 --pool <resource-pool>
-```
-
-Its MCP and CLI launch path defaults to `allow_queue: false`, so a new launch is rejected when capacity is busy or unknown. This is a point-in-time check, not a reservation.
-
-The native `det` launch commands do **not** provide the same no-queue guard. Capacity can change between inspection and submission, and a native submission may queue.
+The native `det` launch commands can queue. Capacity can change between inspection and submission, so recheck the submitted task and cancel it if queuing was unintended. MCP capacity and admission behavior is documented in the canonical [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md).
 
 ## Run a short command
 
@@ -140,18 +129,6 @@ det experiment cancel <experiment-id>
 
 Design training to resume from shared checkpoints. A container restart must not require files that existed only inside the previous container.
 
-## Use the maintained compute service and MCP
-
-The maintained `determined-compute` layer adds:
-
-- persistent local task records and idempotent request IDs;
-- shared-storage-only path validation;
-- meaningful names and descriptions;
-- capacity admission with `allow_queue: false` by default;
-- owner-scoped status, logs, cancellation, and conservative reconciliation.
-
-For the agent workflow and MCP setup, see [Agent Workflow](Agent_Workflow.md). The service's own documentation is the source of truth for request fields and installation details.
-
 ## Shell cleanup policy
 
 The current shell watchdog is based on sustained GPU utilization, not keyboard activity. A shell that stays below the configured threshold can be warned and later stopped; timing is approximate rather than a deadline. See the [Interactive Shell cleanup policy](Interactive_Shell.md#shell-cleanup-policy). Save work continuously to shared storage and use an experiment for long unattended work.
@@ -159,7 +136,7 @@ The current shell watchdog is based on sustained GPU utilization, not keyboard a
 ## Related pages
 
 - [Interactive Shell](Interactive_Shell.md)
-- [Agent Workflow](Agent_Workflow.md)
+- [Canonical MCP agent workflow](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md)
 - [Custom Containerized Environment](Custom_Containerized_Environment.md)
 - [Cluster Getting Started](Getting_started.md)
 - [Cluster Reference](Cluster_Reference.md)

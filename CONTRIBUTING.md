@@ -7,7 +7,7 @@ This repository is the source for the cluster user guide. `README.md` and
 pages; do not recreate the former `Home.md` aliases. Keep the repository root
 limited to the README, AGENTS, and CONTRIBUTING English/Chinese pairs.
 The canonical compute and MCP implementation is
-[`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp);
+[`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/README.md);
 do not add links to its retired repository name.
 
 - Put guide chapters and the sidebars under `docs/`. Preserve page basenames

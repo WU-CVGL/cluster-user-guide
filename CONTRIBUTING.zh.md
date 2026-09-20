@@ -5,7 +5,7 @@
 本仓库是集群用户指南的源仓库。`README.md` 和 `README.zh.md` 是普通文件，
 分别作为规范的英中首页；不要恢复旧的 `Home.md` 别名。仓库根目录只保留
 README、AGENTS 和 CONTRIBUTING 三组英中文件。计算与 MCP 功能由以下仓库维护：
-[`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp)，
+[`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/README.zh.md)，
 不要再引用已经停用的旧仓库名。
 
 - 指南章节和侧栏统一放在 `docs/`。保留页面 basename 和稳定章节锚点，并在

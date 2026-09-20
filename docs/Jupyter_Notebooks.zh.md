@@ -23,7 +23,7 @@ Jupyter 是一个可选入口，适合需要反复查看中间结果的研究工
 <a id="start-a-native-notebook-task"></a>
 ## 启动原生 Notebook 任务
 
-当前 MCP 计算服务支持 `command`、`shell` 和 `experiment`，尚未提供 `notebook` 任务类型。这个可选工作流使用原生 Determined CLI。请先完成 [CLI 配置](Determined_AI_User_Guide.zh.md#install-and-authenticate)。
+这个可选 Notebook 工作流使用原生 Determined CLI。请先完成 [CLI 配置](Determined_AI_User_Guide.zh.md#install-and-authenticate)；MCP 可用的任务类型以规范的[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)为准。
 
 复制共享挂载模板：
 
@@ -31,7 +31,7 @@ Jupyter 是一个可选入口，适合需要反复查看中间结果的研究工
 cp examples/compute/shell.yaml notebook.yaml
 ```
 
-编辑 `notebook.yaml`：替换用户、资源池和镜像占位符，选择支持 Determined Notebook 的镜像，并设置有意义的 `description`。仅做 CPU 分析时使用 `resources.slots: 0`；确实需要 GPU 时再申请。根据任务需求检查目标资源池的可调度槽位或辅助容器容量。原生 Notebook 提交可能排队，不具备 MCP 提交时的容量准入检查。
+编辑 `notebook.yaml`：替换用户、资源池和镜像占位符，选择支持 Determined Notebook 的镜像，并设置有意义的 `description`。仅做 CPU 分析时使用 `resources.slots: 0`；确实需要 GPU 时再申请。根据任务需求检查目标资源池的可调度槽位或辅助容器容量。原生 Notebook 提交可能排队。
 
 启动时不附带文件上下文：
 

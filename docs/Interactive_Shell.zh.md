@@ -3,7 +3,7 @@
 <a id="interactive-shells-ides-and-ports"></a>
 # 交互式 Shell、IDE 与端口
 
-可通过 [agent 工作流](Agent_Workflow.zh.md)使用 [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp) 规划和管理 shell。本页介绍交互式访问、IDE 连接和 shell 生命周期，也提供手动操作所需的原生 CLI 命令。
+Agent 辅助的 shell 管理请使用规范的 [Determined Cluster MCP 工作流](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.zh.md)。本页介绍 CVGL 交互式访问、IDE 连接和 shell 生命周期，也提供手动操作所需的原生 CLI 命令。
 
 Determined shell 是临时的交互式开发环境。它适合检查镜像、复现问题或连接 IDE。需要保留的编辑内容、缓存和调试输出应放在共享存储上。
 
@@ -30,7 +30,7 @@ Shell 就绪后，该命令会通过 SSH 连接。若要立即分离并打印 ID
 det shell start --detach --config-file examples/compute/shell.yaml
 ```
 
-没有可用 slot 时，原生 `det shell start` 可能进入队列。受维护的 MCP/`determined-compute` 工作流会检查当前容量，默认 `allow_queue: false`；见[智能体工作流](Agent_Workflow.zh.md)。
+没有可用 slot 时，原生 `det shell start` 可能进入队列。MCP 的容量和准入行为以规范的[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)为准。
 
 <a id="reconnect-and-stop"></a>
 ## 重连与停止

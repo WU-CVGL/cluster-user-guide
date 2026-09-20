@@ -5,6 +5,8 @@
 
 集群任务应把代码、数据、软件包、检查点、日志和结果保存在获准使用的共享存储上。个人计算机无需挂载这些文件系统：可以通过 SSH 经登录节点传输文件。
 
+本页记录集群的物理存储布局以及原生 SSH/rsync 工作流。MCP 存储后端、路径转换和配置统一由规范的[共享存储访问参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/shared-storage-access.zh.md)维护。
+
 ![存储模型](assets/Getting_started/storage_model.svg)
 
 <a id="storage-roots"></a>

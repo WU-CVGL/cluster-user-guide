@@ -36,5 +36,5 @@
 Nerfstudio Makefile 包含显式 push target。调用任何 `push_*` target 之前，请检查
 registry、project、tag、proxy 和 build argument。任务规划和共享数据放置请参阅
 [Determined compute 指南](../../docs/Determined_AI_User_Guide.zh.md)、
-[MCP 工作流](../../docs/Agent_Workflow.zh.md)和
+[规范 MCP 工作流](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.zh.md)和
 [共享存储指南](../../docs/Shared_Storage.zh.md)。

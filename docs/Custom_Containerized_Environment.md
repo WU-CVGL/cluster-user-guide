@@ -122,7 +122,7 @@ environment:
   image: harbor.cvgl.lab/<project>/<image>:<version-tag>
 ```
 
-See the [Determined compute guide](Determined_AI_User_Guide.md) and [MCP workflow](Agent_Workflow.md) for planning and submission. Follow [Shared storage](Shared_Storage.md) for code, datasets, checkpoints, and outputs. The image should contain the runtime environment; changing data and run artifacts belong on shared storage.
+See the [Determined compute guide](Determined_AI_User_Guide.md) for native planning and submission, or the canonical [MCP workflow](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md) for agent-assisted operation. Follow [Shared storage](Shared_Storage.md) for code, datasets, checkpoints, and outputs. The image should contain the runtime environment; changing data and run artifacts belong on shared storage.
 
 ## Troubleshooting
 

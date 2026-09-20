@@ -20,7 +20,7 @@ For repeatable batch evaluation and agent-driven scripts, prefer a command. Use 
 
 ## Start a native Notebook task
 
-The current MCP compute service supports `command`, `shell` and `experiment`; it does not expose a `notebook` task kind. Use the native Determined CLI for this optional workflow. Complete the [CLI setup](Determined_AI_User_Guide.md#install-and-authenticate) first.
+Use the native Determined CLI for this optional Notebook workflow. Complete the [CLI setup](Determined_AI_User_Guide.md#install-and-authenticate) first; the canonical [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) lists the task kinds available through MCP.
 
 Copy the shared-mount template:
 
@@ -28,7 +28,7 @@ Copy the shared-mount template:
 cp examples/compute/shell.yaml notebook.yaml
 ```
 
-Edit `notebook.yaml`: replace the user, pool and image placeholders, choose an image with Determined Notebook support, and set a meaningful `description`. Use `resources.slots: 0` for CPU-only analysis; request GPUs only when the analysis needs them. Check the selected pool's schedulable slots or auxiliary-container capacity as appropriate. Native Notebook submissions can queue; they do not have the MCP launch admission check.
+Edit `notebook.yaml`: replace the user, pool and image placeholders, choose an image with Determined Notebook support, and set a meaningful `description`. Use `resources.slots: 0` for CPU-only analysis; request GPUs only when the analysis needs them. Check the selected pool's schedulable slots or auxiliary-container capacity as appropriate. Native Notebook submissions can queue.
 
 Start the task without a file context:
 

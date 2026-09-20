@@ -4,6 +4,8 @@
 
 Cluster jobs should keep code, data, packages, checkpoints, logs, and results on approved shared storage. A personal computer does not need to mount those filesystems: files can be staged through the login node over SSH.
 
+This page documents the cluster's physical storage layout and native SSH/rsync workflow. MCP storage backends, path translation, and configuration are maintained in the canonical [shared-storage access reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/shared-storage-access.md).
+
 ![Storage model](assets/Getting_started/storage_model.svg)
 
 ## Storage roots

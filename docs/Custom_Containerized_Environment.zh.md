@@ -131,7 +131,7 @@ environment:
   image: harbor.cvgl.lab/<project>/<image>:<version-tag>
 ```
 
-任务规划和提交请参阅 [Determined compute 指南](Determined_AI_User_Guide.zh.md)和 [MCP 工作流](Agent_Workflow.zh.md)。代码、数据集、checkpoint 和输出请遵循[共享存储](Shared_Storage.zh.md)。镜像应保存运行环境；不断变化的数据和运行产物应放在共享存储上。
+原生任务规划和提交请参阅 [Determined compute 指南](Determined_AI_User_Guide.zh.md)，agent 辅助操作请参阅规范的 [MCP 工作流](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.zh.md)。代码、数据集、checkpoint 和输出请遵循[共享存储](Shared_Storage.zh.md)。镜像应保存运行环境；不断变化的数据和运行产物应放在共享存储上。
 
 <a id="troubleshooting"></a>
 ## 故障排查

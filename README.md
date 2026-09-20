@@ -4,7 +4,7 @@
 
 Run workloads on the GPU cluster and keep code, datasets, checkpoints and results on shared storage.
 
-**Recommended: use a local stdio-capable client or agent with [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp).** Its deterministic storage and task tools do not depend on Codex, GPT, or another model family; the client chooses its model. It can check storage and schedulable capacity, plan and launch tasks, and track results. Start with the [agent workflow](docs/Agent_Workflow.md); agents reading this repository should start with [AGENTS.md](AGENTS.md).
+**Recommended: use [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/README.md) for agent-assisted cluster work.** Follow its canonical [agent workflow](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md) and [agent instructions](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/AGENTS.md). This repository covers CVGL-specific policy, native Determined operation, storage, network access, and development tools.
 
 1. [Connect to the cluster](docs/Getting_started.md): accounts, network access, certificates and SSH.
 2. [Prepare shared storage](docs/Shared_Storage.md): choose your project directory, transfer files and map it into containers.
@@ -13,7 +13,7 @@ Run workloads on the GPU cluster and keep code, datasets, checkpoints and result
 
 | Work | Start here |
 | --- | --- |
-| Ask any local stdio-capable agent to prepare, run and follow a workload | [MCP workflow — recommended](docs/Agent_Workflow.md) |
+| Ask an agent to prepare, run and follow a workload | [Canonical MCP workflow — recommended](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md) |
 | One-off scripts, evaluation and non-interactive debug runs | [Command tasks](docs/Determined_AI_User_Guide.md#run-a-short-command) |
 | Interactive debugging, VS Code or PyCharm | [Interactive shells](docs/Interactive_Shell.md) |
 | Data exploration, visual analysis and teaching | [Jupyter — optional](docs/Jupyter_Notebooks.md) |
@@ -25,6 +25,6 @@ Check schedulable capacity before submitting; avoid queuing by default. Low GPU 
 
 Do not upload code or dataset bundles as Determined task context. A container path can be `/SSD/...` or another configured mount; it does not have to be below `/run/determined/workdir/`. Your own computer does not need to mount cluster storage.
 
-For manual operation, use the native CLI examples in the task guide. Installation, MCP configuration and tool parameters are maintained in the [MCP repository documentation](https://github.com/WU-CVGL/determined_cluster_mcp#readme).
+For manual operation, use the native CLI examples in the task guide. MCP installation is maintained in the [MCP README](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/README.md); API and configuration details are in the [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md).
 
 [Troubleshooting](docs/Troubleshooting.md) · [Network and remote access](docs/Network_and_Remote_Access.md) · [Cluster reference](docs/Cluster_Reference.md) · [Contributing](CONTRIBUTING.md)

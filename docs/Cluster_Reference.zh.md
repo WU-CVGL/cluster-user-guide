@@ -42,7 +42,7 @@
 集群运行 Determined **0.38.1**。请使用任务指南中与之匹配的 CLI 版本，并在 master 升级后更新配置的版本。
 
 - [cluster-setup](https://github.com/WU-CVGL/cluster-setup) 包含基础设施定义，其中包括挂载、Determined 配置和看门狗代码。已部署的检出版本可能包含尚未推送到该仓库的更改。
-- [determined-compute](https://github.com/WU-CVGL/determined_cluster_mcp) 维护计算 CLI、MCP 服务及其配置参考。
+- [`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/README.zh.md) 维护计算 CLI 和 MCP 服务；其[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)定义相关配置。
 - 本指南维护用户工作流程。部署相关说明应与对应的服务配置保持一致。
 
 Shell 策略记录在[交互式 shell](Interactive_Shell.zh.md)中。Docker/Harbor 兼容流程记录在[容器环境](Custom_Containerized_Environment.zh.md)中。

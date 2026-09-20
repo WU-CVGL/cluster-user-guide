@@ -2,7 +2,7 @@
 
 [首页](../README.zh.md)
 
-[MCP 工作流——推荐](Agent_Workflow.zh.md)
+[MCP 工作流——推荐](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.zh.md)
 
 [Agent 阅读指南](../AGENTS.zh.md)
 

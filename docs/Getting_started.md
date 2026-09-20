@@ -4,7 +4,7 @@
 
 This page covers the shortest path from a new account to an SSH login. For storage, Determined, containers, or less common access methods, follow the linked guides at the end.
 
-For agent-assisted cluster work and the Determined MCP service, see [Agent workflow](Agent_Workflow.md) and [`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp).
+For agent-assisted cluster work and the Determined MCP service, see the canonical [agent workflow](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md) and [installation guide](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/README.md).
 
 ## 1. Request the accounts you need
 

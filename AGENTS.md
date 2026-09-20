@@ -2,7 +2,7 @@
 
 [English](AGENTS.md) | [简体中文](AGENTS.zh.md)
 
-This repository documents CVGL cluster use. For operational work, prefer a connected [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp); its deterministic tool schemas and service documentation define the API. Any client or agent that can use a local stdio MCP server can follow the workflow. The client selects its model; task and storage tools do not depend on Codex, GPT, or another model family. This repository supplies cluster policy and user workflows.
+This repository documents CVGL cluster policy and native user workflows. For Determined Cluster MCP operations, follow the canonical [agent instructions](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/AGENTS.md) and [general workflow](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md). The [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) defines the API and configuration.
 
 Here, an agent is an AI assistant. A **Determined agent** is a compute-node service, and **ssh-agent** holds SSH authentication keys; these are separate components.
 
@@ -10,11 +10,14 @@ Here, an agent is an AI assistant. A **Determined agent** is a compute-node serv
 
 | Task | Read next |
 | --- | --- |
-| Run or monitor a workload | [Agent workflow](docs/Agent_Workflow.md), then [task selection](docs/Determined_AI_User_Guide.md) |
-| Resolve paths or transfer files | [Shared storage](docs/Shared_Storage.md) and the MCP storage-access reference linked there or in the agent workflow |
-| Configure login or credentials | [Getting started](docs/Getting_started.md), then [troubleshooting](docs/Troubleshooting.md) |
+| Run or monitor a workload through MCP | [Canonical agent workflow](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md), then local [task selection](docs/Determined_AI_User_Guide.md) |
+| Install or configure MCP | [MCP README](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/README.md) and [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) |
+| Access shared storage through MCP | Local [storage layout](docs/Shared_Storage.md) and canonical [storage-access reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/shared-storage-access.md) |
+| Troubleshoot MCP | [Canonical MCP troubleshooting](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/troubleshooting.md), then local [cluster troubleshooting](docs/Troubleshooting.md) for network, certificates, mounts, Buildx, and native tasks |
+| Configure the optional Codex consultation backend | [Consultation reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/consultation.md) |
+| Configure cluster login or credentials | [Getting started](docs/Getting_started.md), then [cluster troubleshooting](docs/Troubleshooting.md) |
 | Debug interactively or connect an IDE | [Interactive shells](docs/Interactive_Shell.md), including the cleanup policy |
-| Explore data or present results in a notebook | [Jupyter](docs/Jupyter_Notebooks.md); native Notebook tasks are outside the current MCP task kinds |
+| Explore data or present results in a notebook | [Jupyter](docs/Jupyter_Notebooks.md) for the native Notebook workflow |
 | Configure experiment tracking | [Self-hosted W&B](docs/Weights_and_Biases.md); cluster tasks use the 100G LAN endpoint |
 | Build an image | [Container environments](docs/Custom_Containerized_Environment.md), with the current [Buildx and Harbor setup](docs/Buildx_and_Harbor.md) |
 | Find service URLs or evidence sources | [Cluster reference](docs/Cluster_Reference.md) |
@@ -22,20 +25,17 @@ Here, an agent is an AI assistant. A **Determined agent** is a compute-node serv
 
 Every documentation page has a `.zh.md` counterpart. Use the reader's preferred language. Commands, configuration keys and paths have the same meaning in both versions.
 
-## Operational defaults
+## Site-specific points
 
-- Reuse project configuration when available. Resolve required image, pool, slot count, paths and success criteria before launch; ask for missing requirements rather than inventing them.
-- Use `command` for short non-interactive work, `shell` for interactive debugging, and `experiment` for overnight training or experiment lifecycle features. Choose a meaningful name and description.
-- Jupyter is optional for human-led exploration and visualization. The current MCP has no `notebook` task kind; use the documented native workflow when appropriate. Long-idle native Notebook tasks are managed manually by the administrator, not by the shell watchdog.
-- Keep code, data and outputs on mapped shared storage. Do not upload project contexts or code/data bundles through Determined. Distinguish cluster host, container and MCP-server-local paths; the user's computer need not mount shared storage.
-- Check live schedulable capacity and keep `allow_queue: false` unless the user intends to queue. Low GPU utilization is not proof of free slots. A capacity snapshot does not reserve resources.
-- Preview storage transfers and inspect their resolved paths before executing within the user's authorized scope. Respect read-only mounts and filesystem permissions. Reading this guide alone does not authorize a launch, transfer or infrastructure change.
-- Inspect the plan, then use a stable request ID. After uncertain acceptance, inspect or reconcile the existing record before considering another submission. Follow logs and status, then verify the requested outputs before reporting success.
-- Use credential references and existing authenticated sessions. Never place credential values in prompts, task metadata, source, logs or reports.
-- The client agent may plan and call deterministic MCP tools directly. `compute_consult` is an optional server-side, read-only extension, not a required workflow step; its backend is separate from the client's model choice.
+- The cluster currently runs Determined `0.38.1`; native clients should use the matching version.
+- Use `command` for short non-interactive work, `shell` for interactive debugging, native `notebook` for optional human-led exploration, and `experiment` for long training or experiment lifecycle features.
+- Keep code, data and outputs on mapped shared storage. Do not upload project contexts or code/data bundles through Determined. A user's computer does not need to mount cluster storage.
+- Check live scheduler state before native submissions. Low GPU utilization does not prove that slots are free, and native `det` submissions can queue.
+- The shell watchdog uses sustained GPU utilization rather than keyboard inactivity. Native Notebook tasks are managed separately by the administrator.
+- Use the cluster's 100G LAN W&B endpoint from compute tasks. Follow the local network, certificate, storage, Harbor, and shell-policy pages for deployment-specific behavior.
 
 ## Documentation maintenance
 
-Use live observations for current capacity and status, repository configuration for policy, and older environment recipes only as starting points. Do not turn the shell's GPU-based cleanup policy into a keyboard-inactivity timeout. Review an older recipe's dependencies before recommending it as a default.
+Use live observations for current capacity and status, repository configuration for policy, and older environment recipes only as starting points. Do not turn the shell's GPU-based cleanup policy into a keyboard-inactivity timeout.
 
-When editing docs, update English and Chinese together, preserve language links and stable section anchors, and run `python scripts/check_docs.py`. Keep example commands and resource requirements consistent across languages. Keep the API reference in the MCP repository rather than duplicating its schema here. No live launch or image build is required merely to translate or check documentation.
+Update English and Chinese together, preserve language links and stable section anchors, and run `python scripts/check_docs.py`. Keep MCP setup, operational rules, API details, and troubleshooting in `WU-CVGL/determined_cluster_mcp`; link its canonical documents instead of copying them here.
