@@ -5,7 +5,9 @@
 
 [首页](../README.zh.md) · [任务类型选择](Determined_AI_User_Guide.zh.md)
 
-推荐将你的 agent 接入 [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp)，处理日常集群任务。该服务通过 stdio MCP 提供存储和计算工具。使用能够启动 stdio MCP 服务的客户端；手动操作仍可使用原生 CLI。
+推荐将你的 agent 接入 [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp)，处理日常集群任务。该服务通过本地 stdio MCP 提供确定性的存储和计算工具。任何能够启动并使用本地 stdio MCP 服务的客户端或 agent 都可以遵循本工作流；手动操作仍可使用原生 CLI。
+
+MCP 的任务和存储工具不依赖 Codex、GPT 或任何其他模型家族。模型由 MCP 客户端自行选择，可以是 Claude、Grok 或其他模型。模型名称不表示对应厂商的 UI 一定能够启动本地 stdio MCP 服务；请确认你计划使用的客户端具备这一能力。
 
 Agent 应先阅读 [AGENTS.zh.md](../AGENTS.zh.md)，再阅读本工作流及相关任务页面。仓库名为 `determined_cluster_mcp`，可执行程序仍为 `determined-compute` 和 `determined-compute-mcp`。
 
@@ -34,7 +36,9 @@ cd determined_cluster_mcp
 
 计算配置描述集群计算节点上的路径及其容器映射。可选的存储访问配置描述 MCP 服务如何通过本地路径或登录节点访问这些目录。客户端不需要本地 NFS 挂载。SSH 认证代理、macOS Keychain、密码、系统 keyring 和 ControlMaster 复用的配置见[存储访问参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/shared-storage-access.zh.md)。
 
-依赖 SSH 认证代理时，MCP 进程必须继承可用的 `SSH_AUTH_SOCK`。使用 ControlMaster 时，其 socket 必须位于同一机器且对 MCP 进程可访问。只读咨询 worker 无法执行需要凭据的存储传输或提交任务。调用 MCP 工具不需要全局安装 skill。
+依赖 SSH 认证代理时，MCP 进程必须继承可用的 `SSH_AUTH_SOCK`。使用 ControlMaster 时，其 socket 必须位于同一机器且对 MCP 进程可访问。调用 MCP 工具不需要全局安装 skill。
+
+客户端 agent 可以自行规划并直接调用下文的确定性工具，不需要 `compute_consult`。如果服务配置了可选咨询 worker，它是独立的服务端只读扩展，无法执行需要凭据的存储传输或提交任务；它可用的后端也不决定 MCP 客户端使用哪个模型。
 
 <a id="run-a-workload"></a>
 ## 运行任务

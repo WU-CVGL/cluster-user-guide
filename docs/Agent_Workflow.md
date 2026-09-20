@@ -4,7 +4,9 @@
 
 [Home](../README.md) · [Task selection](Determined_AI_User_Guide.md)
 
-We recommend connecting your agent to [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp) for routine cluster work. The service exposes storage and compute tools through MCP over stdio. Use a client that can start a stdio MCP server; native CLI workflows remain available for manual operation.
+We recommend connecting your agent to [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp) for routine cluster work. The service exposes deterministic storage and compute tools through local MCP over stdio. Any client or agent that can start and use a local stdio MCP server can follow this workflow; native CLI workflows remain available for manual operation.
+
+The MCP task and storage tools do not depend on Codex, GPT, or any other model family. The MCP client selects its own model, which could be Claude, Grok, or another model. A model name does not imply that the corresponding vendor UI can start a local stdio MCP server; confirm that capability in the client you intend to use.
 
 Agents should read [AGENTS.md](../AGENTS.md), then this workflow and the task-specific pages it links. The repository is named `determined_cluster_mcp`; its executables remain `determined-compute` and `determined-compute-mcp`.
 
@@ -31,7 +33,9 @@ Follow the service's [installation HOWTO](https://github.com/WU-CVGL/determined_
 
 The compute profile describes paths on cluster agents and their container mappings. An optional storage-access configuration describes how the MCP server reaches those paths, locally or through the login node. Client storage access does not require a local NFS mount. See the maintained [storage-access reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/shared-storage-access.md) for SSH agents, macOS Keychain, password/keyring access and ControlMaster reuse.
 
-The MCP process must inherit a usable `SSH_AUTH_SOCK` when relying on an SSH agent. A ControlMaster socket must be reachable by that process on the same machine. A read-only consultation worker cannot perform credentialed storage transfers or launch tasks. Installing a skill globally is not required to call MCP tools.
+The MCP process must inherit a usable `SSH_AUTH_SOCK` when relying on an SSH agent. A ControlMaster socket must be reachable by that process on the same machine. Installing a skill globally is not required to call MCP tools.
+
+The client agent can plan directly and call the deterministic tools below; `compute_consult` is not required. If the service is configured with an optional consultation worker, that worker is a separate server-side, read-only extension. It cannot perform credentialed storage transfers or launch tasks, and its available backend does not determine which model the MCP client uses.
 
 ## Run a workload
 

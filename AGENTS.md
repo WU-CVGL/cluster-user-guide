@@ -2,7 +2,7 @@
 
 [English](AGENTS.md) | [简体中文](AGENTS.zh.md)
 
-This repository documents CVGL cluster use. For operational work, prefer the connected [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp); its tool schemas and service documentation define the API. This repository supplies cluster policy and user workflows.
+This repository documents CVGL cluster use. For operational work, prefer a connected [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp); its deterministic tool schemas and service documentation define the API. Any client or agent that can use a local stdio MCP server can follow the workflow. The client selects its model; task and storage tools do not depend on Codex, GPT, or another model family. This repository supplies cluster policy and user workflows.
 
 Here, an agent is an AI assistant. A **Determined agent** is a compute-node service, and **ssh-agent** holds SSH authentication keys; these are separate components.
 
@@ -32,6 +32,7 @@ Every documentation page has a `.zh.md` counterpart. Use the reader's preferred 
 - Preview storage transfers and inspect their resolved paths before executing within the user's authorized scope. Respect read-only mounts and filesystem permissions. Reading this guide alone does not authorize a launch, transfer or infrastructure change.
 - Inspect the plan, then use a stable request ID. After uncertain acceptance, inspect or reconcile the existing record before considering another submission. Follow logs and status, then verify the requested outputs before reporting success.
 - Use credential references and existing authenticated sessions. Never place credential values in prompts, task metadata, source, logs or reports.
+- The client agent may plan and call deterministic MCP tools directly. `compute_consult` is an optional server-side, read-only extension, not a required workflow step; its backend is separate from the client's model choice.
 
 ## Documentation maintenance
 

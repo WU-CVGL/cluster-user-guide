@@ -5,7 +5,7 @@
 
 在 GPU 集群上运行任务，将代码、数据集、检查点和结果保存在共享存储中。
 
-**推荐将你的 agent 接入 [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp)。** 它提供存储检查、可调度容量查询、任务规划、提交和结果跟踪工具。用户从 [agent 工作流](docs/Agent_Workflow.zh.md)开始；读取本仓库的 agent 从 [AGENTS.zh.md](AGENTS.zh.md) 开始。
+**推荐让支持本地 stdio 的客户端或 agent 接入 [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp)。** 它提供确定性的存储和任务工具，不依赖 Codex、GPT 或其他模型家族；模型由客户端选择。它可以检查存储和可调度容量、规划和提交任务并跟踪结果。用户从 [agent 工作流](docs/Agent_Workflow.zh.md)开始；读取本仓库的 agent 从 [AGENTS.zh.md](AGENTS.zh.md) 开始。
 
 1. [连接集群](docs/Getting_started.zh.md)：申请账号，配置网络、证书和 SSH。
 2. [准备共享存储](docs/Shared_Storage.zh.md)：选择项目目录、传输文件并配置容器挂载。
@@ -14,7 +14,7 @@
 
 | 需求 | 入口 |
 | --- | --- |
-| 让 agent 准备、运行并跟踪任务 | [MCP 工作流——推荐](docs/Agent_Workflow.zh.md) |
+| 让任意支持本地 stdio 的 agent 准备、运行并跟踪任务 | [MCP 工作流——推荐](docs/Agent_Workflow.zh.md) |
 | 一次性脚本、评估和非交互式调试 | [Command 任务](docs/Determined_AI_User_Guide.zh.md#run-a-short-command) |
 | 交互式调试、VS Code 或 PyCharm | [交互式 Shell](docs/Interactive_Shell.zh.md) |
 | 数据探索、可视化分析与教学 | [Jupyter——可选](docs/Jupyter_Notebooks.zh.md) |

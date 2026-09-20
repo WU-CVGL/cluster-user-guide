@@ -4,7 +4,7 @@
 
 Run workloads on the GPU cluster and keep code, datasets, checkpoints and results on shared storage.
 
-**Recommended: use your agent with [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp).** It provides tools to check storage and schedulable capacity, plan and launch tasks, and track results. Start with the [agent workflow](docs/Agent_Workflow.md); agents reading this repository should start with [AGENTS.md](AGENTS.md).
+**Recommended: use a local stdio-capable client or agent with [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp).** Its deterministic storage and task tools do not depend on Codex, GPT, or another model family; the client chooses its model. It can check storage and schedulable capacity, plan and launch tasks, and track results. Start with the [agent workflow](docs/Agent_Workflow.md); agents reading this repository should start with [AGENTS.md](AGENTS.md).
 
 1. [Connect to the cluster](docs/Getting_started.md): accounts, network access, certificates and SSH.
 2. [Prepare shared storage](docs/Shared_Storage.md): choose your project directory, transfer files and map it into containers.
@@ -13,7 +13,7 @@ Run workloads on the GPU cluster and keep code, datasets, checkpoints and result
 
 | Work | Start here |
 | --- | --- |
-| Ask an agent to prepare, run and follow a workload | [MCP workflow — recommended](docs/Agent_Workflow.md) |
+| Ask any local stdio-capable agent to prepare, run and follow a workload | [MCP workflow — recommended](docs/Agent_Workflow.md) |
 | One-off scripts, evaluation and non-interactive debug runs | [Command tasks](docs/Determined_AI_User_Guide.md#run-a-short-command) |
 | Interactive debugging, VS Code or PyCharm | [Interactive shells](docs/Interactive_Shell.md) |
 | Data exploration, visual analysis and teaching | [Jupyter — optional](docs/Jupyter_Notebooks.md) |

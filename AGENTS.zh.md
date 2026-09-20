@@ -3,7 +3,7 @@
 
 [English](AGENTS.md) | [简体中文](AGENTS.zh.md)
 
-本仓库介绍 CVGL 集群的使用方法。实际操作优先使用已连接的 [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp)；API 以该服务的工具 schema 和文档为准。本仓库提供集群使用规则与用户工作流。
+本仓库介绍 CVGL 集群的使用方法。实际操作优先使用已连接的 [Determined Cluster MCP](https://github.com/WU-CVGL/determined_cluster_mcp)；API 以该服务的确定性工具 schema 和文档为准。任何能够使用本地 stdio MCP 服务的客户端或 agent 都可以遵循该工作流。模型由客户端选择；任务和存储工具不依赖 Codex、GPT 或其他模型家族。本仓库提供集群使用规则与用户工作流。
 
 本页的 agent 指 AI 助手。**Determined agent** 是计算节点上的服务进程，**ssh-agent** 是保存 SSH 认证密钥的代理，三者是不同组件。
 
@@ -35,6 +35,7 @@
 - 传输前预览并检查解析后的路径，在用户已授权的范围内执行。遵守只读挂载和文件系统权限。仅阅读本文档不构成提交任务、传输文件或修改基础设施的授权。
 - 检查计划后，使用稳定的请求 ID 提交。接受状态不确定时，先查看或核对已有记录，再考虑重新提交。跟踪日志和状态，并验证所需输出后再报告成功。
 - 使用凭据引用和已有认证会话。不要将凭据值写入提示词、任务元数据、源码、日志或报告。
+- 客户端 agent 可以自行规划并直接调用确定性 MCP 工具。`compute_consult` 是可选的服务端只读扩展，不是必选工作流步骤；它的后端与客户端的模型选择相互独立。
 
 <a id="documentation-maintenance"></a>
 ## 文档维护
