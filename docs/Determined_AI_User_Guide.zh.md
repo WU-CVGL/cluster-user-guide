@@ -42,7 +42,7 @@ python3 -m pip install --user "$DET_WHEEL"
 det --version
 ```
 
-pip 可能警告 `~/.local/bin` 不在 `PATH` 中。可以忽略这条警告。
+pip 可能警告 `~/.local/bin` 不在 `PATH` 中。可以忽略这条警告：登录节点上的 `det` 会运行你安装的版本。
 
 在个人设备上，使用 Python 3.8 或更高版本，并安装在虚拟环境中：
 

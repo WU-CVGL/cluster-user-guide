@@ -39,7 +39,7 @@ python3 -m pip install --user "$DET_WHEEL"
 det --version
 ```
 
-pip may warn that `~/.local/bin` is not on `PATH`. You can ignore the warning.
+pip may warn that `~/.local/bin` is not on `PATH`. You can ignore the warning: the login node's `det` runs the version you installed.
 
 On your own device, use Python 3.8 or later, in a virtual environment:
 
