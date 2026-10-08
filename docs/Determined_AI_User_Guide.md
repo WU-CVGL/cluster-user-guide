@@ -45,7 +45,7 @@ export DET_MASTER=https://gpu.cvgl.lab
 det user login <username>
 ```
 
-The CLI must match the cluster's version. `det version` shows the CLI and master versions, and `det` warns when they differ. When they differ, set `DET_VERSION` to the master's version and run the install again. An older CLI can fail, for example when you change your password. See [Cluster Reference](Cluster_Reference.md) for the live service and configuration sources.
+The CLI must match the cluster's version. `det version` shows the CLI and master versions, and `det` warns when they differ. Then set `DET_VERSION` to the master's version and run the install again. An older CLI can fail, for example when you change your password. See [Cluster Reference](Cluster_Reference.md) for the live service and configuration sources.
 
 Check authentication before launching work:
 
