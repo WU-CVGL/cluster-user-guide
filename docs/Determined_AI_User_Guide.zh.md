@@ -28,16 +28,27 @@ Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久�
 <a id="install-and-authenticate"></a>
 ## 安装与认证
 
-集群运行 Determined `0.38.1`；请安装匹配的 CLI。登录节点已安装集群 CA；个人设备请先完成[证书配置](Getting_started.zh.md#3-enroll-the-cluster-ca-when-required)。仅当 CLI 仍需显式 CA 路径时，将 `DET_MASTER_CERT_FILE` 指向下载的 `cvgl.crt`：
+集群运行 [WU-CVGL/determined](https://github.com/WU-CVGL/determined)，它是 Determined 的一个分支。请从该分支的 release 安装与集群版本一致的 CLI。使用 Python 3.8 或更高版本，并安装在虚拟环境中：
 
 ```bash
-python -m pip install "determined==0.38.1"
+python3 -m venv ~/.venvs/det
+source ~/.venvs/det/bin/activate
+DET_VERSION=0.42.0
+python -m pip install "https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
+det --version
+```
+
+每个新 shell 中都要再次运行 `source` 这一行。不要运行 `pip install determined`：它安装的是上游 CLI。如果从 GitHub 下载很慢，请使用[代理](Network_and_Remote_Access.zh.md#proxies-and-mirrors)。
+
+登录节点已安装集群 CA；个人设备请先完成[证书配置](Getting_started.zh.md#3-enroll-the-cluster-ca-when-required)。仅当 CLI 仍需显式 CA 路径时，将 `DET_MASTER_CERT_FILE` 指向下载的 `cvgl.crt`：
+
+```bash
 export DET_MASTER=https://gpu.cvgl.lab
 # If needed: export DET_MASTER_CERT_FILE=/absolute/path/to/cvgl.crt
 det user login <username>
 ```
 
-Master 升级后应再次匹配 CLI 版本。实时服务和配置来源见[集群参考](Cluster_Reference.zh.md)。
+CLI 版本必须与集群一致。`det version` 显示 CLI 和 master 的版本；两者不一致时，`det` 会给出警告。此时请把 `DET_VERSION` 改为 master 的版本，再运行一次安装。旧版 CLI 可能出错，例如在修改密码时。实时服务和配置来源见[集群参考](Cluster_Reference.zh.md)。
 
 启动任务前检查认证：
 

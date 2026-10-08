@@ -30,7 +30,7 @@
 <a id="site-specific-points"></a>
 ## 集群专用要点
 
-- 集群当前运行 Determined `0.38.1`；原生客户端应使用匹配版本。
+- 集群运行 Determined 的 WU-CVGL 分支。原生客户端使用该分支与集群版本一致的 CLI，按[任务指南](docs/Determined_AI_User_Guide.zh.md#install-and-authenticate)安装，不要从 PyPI 安装 `determined`。
 - 短时非交互任务使用 `command`，交互调试使用 `shell`，可选的人工交互探索使用原生 `notebook`，长时训练或需要实验生命周期管理时使用 `experiment`。
 - 代码、数据和输出放在已映射的共享存储中。不要通过 Determined 上传项目上下文或代码、数据包。用户电脑不必挂载集群共享存储。
 - 原生提交前检查调度器实时状态。GPU 利用率低不能证明 slot 空闲，原生 `det` 提交可能进入队列。

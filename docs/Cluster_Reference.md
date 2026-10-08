@@ -34,7 +34,7 @@ See [shared storage](Shared_Storage.md) for the configured storage families, and
 
 ## Configuration sources
 
-The cluster runs Determined **0.38.1**. Use the matching CLI version in the task guide and update the configured version when the master is upgraded.
+The cluster runs [WU-CVGL/determined](https://github.com/WU-CVGL/determined), a fork of Determined. Its [release notes](https://github.com/WU-CVGL/determined/blob/main/docs/release-notes.rst) list the changes. The [task guide](Determined_AI_User_Guide.md#install-and-authenticate) installs the matching CLI; update its `DET_VERSION` when the master is upgraded.
 
 - [cluster-setup](https://github.com/WU-CVGL/cluster-setup) contains infrastructure definitions, including mounts, Determined configuration and watchdog code. The deployed checkout may contain changes that have not reached the repository.
 - [`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/README.md) maintains the compute CLI and MCP service; its [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) defines their configuration.

@@ -45,7 +45,7 @@ Print the underlying SSH command when another tool needs it:
 det shell show-ssh-command <shell-id>
 ```
 
-`show-ssh-command` is the current spelling. The older `show_ssh_command` alias is deprecated upstream.
+`show-ssh-command` is the current spelling. The older `show_ssh_command` alias is deprecated.
 
 Stop the shell when finished:
 

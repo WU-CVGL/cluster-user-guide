@@ -25,16 +25,27 @@ Native command and shell configs expose one `description` field, so put the shor
 
 ## Install and authenticate
 
-The cluster runs Determined `0.38.1`; install the matching CLI. The login node already has the cluster CA; on your own device, follow the [certificate setup](Getting_started.md#3-enroll-the-cluster-ca-when-required). Set `DET_MASTER_CERT_FILE` to the downloaded `cvgl.crt` only if the CLI still needs an explicit CA path:
+The cluster runs [WU-CVGL/determined](https://github.com/WU-CVGL/determined), a fork of Determined. Install the fork's CLI from its release, in the cluster's version. Use Python 3.8 or later, in a virtual environment:
 
 ```bash
-python -m pip install "determined==0.38.1"
+python3 -m venv ~/.venvs/det
+source ~/.venvs/det/bin/activate
+DET_VERSION=0.42.0
+python -m pip install "https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
+det --version
+```
+
+Run the `source` line again in each new shell. Do not run `pip install determined`: it installs the upstream CLI. If the download from GitHub is slow, use a [proxy](Network_and_Remote_Access.md#proxies-and-mirrors).
+
+The login node already has the cluster CA; on your own device, follow the [certificate setup](Getting_started.md#3-enroll-the-cluster-ca-when-required). Set `DET_MASTER_CERT_FILE` to the downloaded `cvgl.crt` only if the CLI still needs an explicit CA path:
+
+```bash
 export DET_MASTER=https://gpu.cvgl.lab
 # If needed: export DET_MASTER_CERT_FILE=/absolute/path/to/cvgl.crt
 det user login <username>
 ```
 
-Match the CLI again when the master is upgraded. See [Cluster Reference](Cluster_Reference.md) for the live service and configuration sources.
+The CLI must match the cluster's version. `det version` shows the CLI and master versions, and `det` warns when they differ. When they differ, set `DET_VERSION` to the master's version and run the install again. An older CLI can fail, for example when you change your password. See [Cluster Reference](Cluster_Reference.md) for the live service and configuration sources.
 
 Check authentication before launching work:
 
