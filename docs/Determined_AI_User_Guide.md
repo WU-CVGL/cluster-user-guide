@@ -32,11 +32,16 @@ DET_VERSION=0.42.0
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
-On the login node, install it for your account:
+On the login node, `det` is installed in the cluster's version. Check it:
+
+```bash
+det --version
+```
+
+If it shows another version, install the cluster's version for your account:
 
 ```bash
 python3 -m pip install --user "$DET_WHEEL"
-det --version
 ```
 
 pip may warn that `~/.local/bin` is not on `PATH`. You can ignore the warning: the login node's `det` runs the version you installed.

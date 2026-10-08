@@ -35,11 +35,16 @@ DET_VERSION=0.42.0
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
-在登录节点上，为自己的账户安装：
+登录节点已安装与集群版本一致的 `det`。检查版本：
+
+```bash
+det --version
+```
+
+如果显示的是其他版本，为自己的账户安装集群版本：
 
 ```bash
 python3 -m pip install --user "$DET_WHEEL"
-det --version
 ```
 
 pip 可能警告 `~/.local/bin` 不在 `PATH` 中。可以忽略这条警告：登录节点上的 `det` 会运行你安装的版本。
