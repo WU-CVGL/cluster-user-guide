@@ -75,9 +75,15 @@ det slot list --json
 
 Count only enabled, non-draining, free slots in the requested pool. Multi-GPU single-node work requires enough free slots on one agent.
 
-Pools are public unless an administrator restricts one. The WebUI does not list a restricted pool that you have no access to, but `det slot list` still shows its slots. A submission to it fails with `user "<username>" may not use resource pool "<pool>": the pool is restricted; choose another pool or ask an administrator for access`. Choose another pool, or ask the cluster administrator for access.
+Pools are public unless an administrator restricts one. The WebUI does not list a restricted pool that you have no access to, but `det slot list` still shows its slots. A submission to it fails with:
 
-In the WebUI, open a pool from **Cluster**. Its **Active** tab lists the GPUs each job holds, by node, for example `node08: 4, 5, 6, 7`. The numbers are the node's `nvidia-smi` indexes. Click them to outline the GPUs in the pool's topology panel.
+```text
+user "<username>" may not use resource pool "<pool>": the pool is restricted; choose another pool or ask an administrator for access (if resources.resource_pool was not set, "<pool>" is the default pool for this workspace or the cluster)
+```
+
+Choose another pool with `resources.resource_pool`, or ask the cluster administrator for access.
+
+In the WebUI, open a pool from **Cluster**. Its **Active** tab lists the GPUs each job holds, by node, for example `node07: 0, 2` or `node08: 4-7`. Three or more consecutive GPUs show as a range. The numbers are the node's `nvidia-smi` indexes. Click them to outline the GPUs in the pool's topology panel.
 
 The native `det` launch commands can queue. Capacity can change between inspection and submission, so recheck the submitted task and cancel it if queuing was unintended. MCP capacity and admission behavior is documented in the canonical [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md).
 
@@ -94,10 +100,10 @@ resources:
 Commands and shells take the same key next to `resources.slots`.
 
 - `soft` starts the job as soon as it fits, on the best-connected set of free GPUs of its node, ranked by NVLink, peer-to-peer path, NUMA node and PCIe link width. Use it by default.
-- `strong` waits until one NUMA node of a node has as many free GPUs as the job asks for, and gives the job those GPUs. Use it when the job is much slower across NUMA nodes and can wait. A waiting job is `QUEUED`, and its log says what it waits for. When no NUMA node in the pool has that many GPUs, the job fails with `no NUMA node in pool <pool> has <n> slots; use soft`.
+- `strong` waits until one NUMA node of a node has as many free GPUs as the job asks for, and gives the job those GPUs. Use it when the job is much slower across NUMA nodes and can wait. A waiting job is `QUEUED`, and its log says what it waits for. When no NUMA node in the pool has that many GPUs, the submission is refused, or a queued job fails, with a message that contains `no NUMA node in pool <pool> has <n> slots; use soft`.
 - `true` is not a value and is rejected.
 
-Neither value changes a 1-GPU job, and `soft` does not change a job across several nodes. With either value, the task log names the GPUs the job got.
+Neither value changes a 1-GPU job, and `soft` does not change a job across several nodes. For a job with 2 or more GPUs on one node, the task log has a line starting `GPU topology preference` that names the node and its GPUs.
 
 ## Run a short command
 
