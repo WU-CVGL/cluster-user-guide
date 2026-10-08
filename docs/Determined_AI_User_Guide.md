@@ -25,16 +25,44 @@ Native command and shell configs expose one `description` field, so put the shor
 
 ## Install and authenticate
 
-The cluster runs Determined `0.38.1`; install the matching CLI. The login node already has the cluster CA; on your own device, follow the [certificate setup](Getting_started.md#3-enroll-the-cluster-ca-when-required). Set `DET_MASTER_CERT_FILE` to the downloaded `cvgl.crt` only if the CLI still needs an explicit CA path:
+The cluster runs [WU-CVGL/determined](https://github.com/WU-CVGL/determined), a fork of Determined. Install the fork's CLI from its release, in the cluster's version. First set the version and the release wheel:
 
 ```bash
-python -m pip install "determined==0.38.1"
+DET_VERSION=0.42.0
+DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
+```
+
+On the login node, install it for your account:
+
+```bash
+python3 -m pip install --user "$DET_WHEEL"
+det --version
+```
+
+pip may warn that `~/.local/bin` is not on `PATH`. You can ignore the warning: the login node's `det` runs the version you installed.
+
+On your own device, use Python 3.8 or later, in a virtual environment:
+
+```bash
+python3 -m venv ~/.venvs/det
+source ~/.venvs/det/bin/activate
+python -m pip install "$DET_WHEEL"
+det --version
+```
+
+Run the `source` line again in each new shell. On Windows, the activate script is `~/.venvs/det/Scripts/activate`.
+
+Do not run `pip install determined`: it installs the upstream CLI. If downloads from GitHub or PyPI are slow or fail, use a [proxy or mirror](Network_and_Remote_Access.md#proxies-and-mirrors).
+
+The login node already has the cluster CA; on your own device, follow the [certificate setup](Getting_started.md#3-enroll-the-cluster-ca-when-required). Set `DET_MASTER_CERT_FILE` to the downloaded `cvgl.crt` only if the CLI still needs an explicit CA path:
+
+```bash
 export DET_MASTER=https://gpu.cvgl.lab
 # If needed: export DET_MASTER_CERT_FILE=/absolute/path/to/cvgl.crt
 det user login <username>
 ```
 
-Match the CLI again when the master is upgraded. See [Cluster Reference](Cluster_Reference.md) for the live service and configuration sources.
+The CLI must match the cluster's version. `det version` shows the CLI and master versions, and `det` warns when they differ. Then repeat the install with `DET_VERSION` set to the master's version. An older CLI can fail, for example when you change your password. See [Cluster Reference](Cluster_Reference.md) for the live service and configuration sources.
 
 Check authentication before launching work:
 

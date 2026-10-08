@@ -39,7 +39,7 @@
 <a id="configuration-sources"></a>
 ## 配置来源
 
-集群运行 Determined **0.38.1**。请使用任务指南中与之匹配的 CLI 版本，并在 master 升级后更新配置的版本。
+集群运行 [WU-CVGL/determined](https://github.com/WU-CVGL/determined)，它是 Determined 的一个分支。其[发布说明](https://github.com/WU-CVGL/determined/blob/main/docs/release-notes.rst)列出各版本的变更。[任务指南](Determined_AI_User_Guide.zh.md#install-and-authenticate)安装与之匹配的 CLI；master 升级后，请更新其中的 `DET_VERSION`。
 
 - [cluster-setup](https://github.com/WU-CVGL/cluster-setup) 包含基础设施定义，其中包括挂载、Determined 配置和看门狗代码。已部署的检出版本可能包含尚未推送到该仓库的更改。
 - [`WU-CVGL/determined_cluster_mcp`](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/README.zh.md) 维护计算 CLI 和 MCP 服务；其[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)定义相关配置。

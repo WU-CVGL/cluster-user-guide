@@ -48,7 +48,7 @@ det shell open <shell-id>
 det shell show-ssh-command <shell-id>
 ```
 
-`show-ssh-command` 是当前写法。上游已弃用旧的 `show_ssh_command` 别名。
+`show-ssh-command` 是当前写法。旧的 `show_ssh_command` 别名已弃用。
 
 完成后停止 shell：
 

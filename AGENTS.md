@@ -27,7 +27,7 @@ Every documentation page has a `.zh.md` counterpart. Use the reader's preferred 
 
 ## Site-specific points
 
-- The cluster currently runs Determined `0.38.1`; native clients should use the matching version.
+- The cluster runs the WU-CVGL fork of Determined. Native clients use the fork's CLI in the cluster's version, installed as in the [task guide](docs/Determined_AI_User_Guide.md#install-and-authenticate), not `determined` from PyPI.
 - Use `command` for short non-interactive work, `shell` for interactive debugging, native `notebook` for optional human-led exploration, and `experiment` for long training or experiment lifecycle features.
 - Keep code, data and outputs on mapped shared storage. Do not upload project contexts or code/data bundles through Determined. A user's computer does not need to mount cluster storage.
 - Check live scheduler state before native submissions. Low GPU utilization does not prove that slots are free, and native `det` submissions can queue.
