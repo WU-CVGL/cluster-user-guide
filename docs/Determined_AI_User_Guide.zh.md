@@ -80,7 +80,30 @@ det slot list --json
 
 只统计目标资源池中已启用、未处于排空（draining）状态且空闲的槽位。单机多 GPU 任务需要同一计算节点的 Determined agent 上有足够的空闲槽位。
 
+资源池默认公开，除非管理员将其设为受限。WebUI 不会列出你无权使用的受限资源池，但 `det slot list` 仍会显示它的 slot。向该资源池提交任务会失败，并报错 `user "<username>" may not use resource pool "<pool>": the pool is restricted; choose another pool or ask an administrator for access`。请选择其他资源池，或向集群管理员申请访问权限。
+
+在 WebUI 中，从 **Cluster** 打开一个资源池。它的 **Active** 标签页按节点列出每个任务占用的 GPU，例如 `node08: 4, 5, 6, 7`。这些编号是该节点上 `nvidia-smi` 显示的序号。点击它们，即可在资源池的拓扑面板中框出这些 GPU。
+
 原生 `det` 启动命令可能进入队列。容量可能在检查与提交之间变化，因此提交后应检查任务；如果本无意排队，则取消任务。MCP 的容量和准入行为以规范的[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)为准。
+
+<a id="request-well-connected-gpus"></a>
+## 申请互联良好的 GPU
+
+DDP 等在一个节点上使用 2 个或更多 GPU 的任务，应设置 `resources.prefer_gpu_topology`：
+
+```yaml
+resources:
+  slots_per_trial: 4
+  prefer_gpu_topology: soft
+```
+
+Command 和 shell 在 `resources.slots` 旁使用同一个键。
+
+- `soft`：任务一旦放得下就立即启动，并获得所在节点上互联最好的一组空闲 GPU，按 NVLink、点对点（P2P）路径、NUMA 节点和 PCIe 链路宽度排序。默认使用它。
+- `strong`：任务等待，直到某个节点的一个 NUMA 节点上的空闲 GPU 数达到任务申请的数量，然后获得这些 GPU。任务跨 NUMA 节点运行明显变慢且可以等待时使用它。等待中的任务处于 `QUEUED` 状态，其日志会说明它在等待什么。如果资源池中没有任何 NUMA 节点拥有这么多 GPU，任务会失败并报错 `no NUMA node in pool <pool> has <n> slots; use soft`。
+- `true` 不是合法取值，会被拒绝。
+
+两种取值都不会改变单 GPU 任务，`soft` 也不会改变跨多个节点的任务。使用任一取值时，任务日志都会写明任务获得的 GPU。
 
 <a id="run-a-short-command"></a>
 ## 运行短时 command
