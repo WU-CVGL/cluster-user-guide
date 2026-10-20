@@ -85,7 +85,7 @@
 | 型号 | ASUS ESC8000A-E12 |
 | CPU | AMD EPYC 9554 * 2 (128C/256T, 3.1-3.75GHz) |
 | 内存 | SK Hynix HMCG94AEBRA109N DDR5 1536G (64G*24) 4800MT/s ECC REG |
-| GPU | NVIDIA (0x10de) RTX 6000 Ada Generation 48G * 8 |
+| GPU | NVIDIA (0x10de) RTX 6000 Ada Generation 48G * 6 |
 | SSD | Samsung PM9A3 (MZQL21T9HCJR-00A07) 1.92TB 2.5" NVMe U.2 硬盘 * 2 |
 | 网卡 | Mellanox ConnectX-6 VPI 网卡；HDR100、EDR IB/100GbE；双端口 QSFP56；PCIe4.0 x16；(MCX653106A-ECAT) |
 | 网卡 | Intel I350-T2 1GbE 双端口 |

@@ -78,7 +78,7 @@ GPU Node 8:
 |  Model | ASUS ESC8000A-E12|
 |  CPU   | AMD EPYC 9554 * 2 (128C/256T, 3.1-3.75GHz)|
 |  RAM   | SK Hynix HMCG94AEBRA109N DDR5 1536G (64G*24) 4800MT/s ECC REG|
-|  GPU   | NVIDIA (0x10de) RTX 6000 Ada Generation 48G * 8 |
+|  GPU   | NVIDIA (0x10de) RTX 6000 Ada Generation 48G * 6 |
 |  SSD   | Samsung PM9A3 (MZQL21T9HCJR-00A07) 1.92TB 2.5" NVMe U.2 drive * 2|
 |  NIC   | Mellanox ConnectX-6 VPI NIC; HDR100, EDR IB/100GbE; dual-port QSFP56; PCIe4.0 x16; (MCX653106A-ECAT)|
 |  NIC   | Intel I350-T2 1GbE Dual Port |
