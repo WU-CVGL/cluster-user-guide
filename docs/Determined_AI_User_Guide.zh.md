@@ -121,7 +121,7 @@ user "<username>" may not use resource pool "<pool>": the pool is restricted; ch
 
 请用 `resources.resource_pool` 选择其他资源池，或向集群管理员申请访问权限。
 
-在 WebUI 中，从 **Cluster** 打开一个资源池。它的 **Active** 标签页按节点列出每个任务占用的 GPU，例如 `node07: 0, 2` 或 `node08: 3-5`。连续三个及以上的 GPU 显示为一个范围。这些编号是该节点上 `nvidia-smi` 显示的序号。点击它们，即可在资源池的拓扑面板中框出这些 GPU。
+在 WebUI 中，从 **Cluster** 打开一个资源池。它的 **Active** 标签页按节点列出每个任务占用的 GPU，例如 `node07: 0, 2` 或 `node08: 1-3`。连续三个及以上的 GPU 显示为一个范围。这些编号是该节点上 `nvidia-smi` 显示的序号。点击它们，即可在资源池的拓扑面板中框出这些 GPU。
 
 原生 `det` 启动命令可能进入队列。容量可能在检查与提交之间变化，因此提交后应检查任务；如果本无意排队，则取消任务。MCP 的容量和准入行为以规范的[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)为准。
 

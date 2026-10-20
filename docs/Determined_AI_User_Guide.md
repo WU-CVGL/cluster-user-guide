@@ -116,7 +116,7 @@ user "<username>" may not use resource pool "<pool>": the pool is restricted; ch
 
 Choose another pool with `resources.resource_pool`, or ask the cluster administrator for access.
 
-In the WebUI, open a pool from **Cluster**. Its **Active** tab lists the GPUs each job holds, by node, for example `node07: 0, 2` or `node08: 3-5`. Three or more consecutive GPUs show as a range. The numbers are the node's `nvidia-smi` indexes. Click them to outline the GPUs in the pool's topology panel.
+In the WebUI, open a pool from **Cluster**. Its **Active** tab lists the GPUs each job holds, by node, for example `node07: 0, 2` or `node08: 1-3`. Three or more consecutive GPUs show as a range. The numbers are the node's `nvidia-smi` indexes. Click them to outline the GPUs in the pool's topology panel.
 
 The native `det` launch commands can queue. Capacity can change between inspection and submission, so recheck the submitted task and cancel it if queuing was unintended. MCP capacity and admission behavior is documented in the canonical [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md).
 
