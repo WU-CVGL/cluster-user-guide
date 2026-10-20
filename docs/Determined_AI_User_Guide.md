@@ -28,7 +28,7 @@ Native command and shell configs expose one `description` field, so put the shor
 The cluster runs [WU-CVGL/determined](https://github.com/WU-CVGL/determined), a fork of Determined. Install the fork's CLI from its release, in the cluster's version. First set the version and the release wheel:
 
 ```bash
-DET_VERSION=0.42.0
+DET_VERSION=0.42.1
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
@@ -108,7 +108,7 @@ det slot list --json
 
 Count only enabled, non-draining, free slots in the requested pool. Multi-GPU single-node work requires enough free slots on one agent.
 
-Pools are public unless an administrator restricts one. The WebUI does not list a restricted pool that you have no access to, but `det slot list` still shows its slots. A submission to it fails with:
+Pools are public unless an administrator restricts one. The WebUI shows a restricted pool that you have no access to striped and tagged **Restricted**, and you cannot pick it in pool pickers. A submission to it fails with:
 
 ```text
 user "<username>" may not use resource pool "<pool>": the pool is restricted; choose another pool or ask an administrator for access (if resources.resource_pool was not set, "<pool>" is the default pool for this workspace or the cluster)

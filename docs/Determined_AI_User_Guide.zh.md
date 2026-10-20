@@ -31,7 +31,7 @@ Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久�
 集群运行 [WU-CVGL/determined](https://github.com/WU-CVGL/determined)，它是 Determined 的一个分支。请从该分支的 release 安装与集群版本一致的 CLI。先设置版本和 release 中的 wheel：
 
 ```bash
-DET_VERSION=0.42.0
+DET_VERSION=0.42.1
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
@@ -113,7 +113,7 @@ det slot list --json
 
 只统计目标资源池中已启用、未处于排空（draining）状态且空闲的槽位。单机多 GPU 任务需要同一计算节点的 Determined agent 上有足够的空闲槽位。
 
-资源池默认公开，除非管理员将其设为受限。WebUI 不会列出你无权使用的受限资源池，但 `det slot list` 仍会显示它的 slot。向该资源池提交任务会失败，并报错：
+资源池默认公开，除非管理员将其设为受限。WebUI 会以条纹和 **Restricted** 标签显示你无权使用的受限资源池，资源池选择器中无法选择它。向该资源池提交任务会失败，并报错：
 
 ```text
 user "<username>" may not use resource pool "<pool>": the pool is restricted; choose another pool or ask an administrator for access (if resources.resource_pool was not set, "<pool>" is the default pool for this workspace or the cluster)
