@@ -60,11 +60,22 @@ If a managed aria2 service is currently offered, obtain its current endpoint and
 
 ## Proxies and mirrors
 
-Proxy endpoints, routes, quotas, and uptime change. Request a currently approved HTTP or SOCKS proxy from the administrator and avoid embedding it in source code. Scope proxy variables to the command or shell that needs them:
+The supplementary services VM runs HTTP and SOCKS5 proxies. Use the address `192.168.233.8` from the cluster (login node, GPU nodes, Determined tasks) and `10.0.1.68` from the campus network. Each proxy has its own pair of ports on both addresses:
+
+| Proxy | Traffic per month | HTTP | SOCKS5 |
+| :--- | :--- | :--- | :--- |
+| Bandwagon Los Angeles DC5, CN2 GIA-E (default) | 1 TB | `59889` | `59880` |
+| Bandwagon Los Angeles DC1, CN2 GIA | 2 TB | `28889` | `20089` |
+| Bandwagon Los Angeles DC6, CN2 GIA-E | 1 TB | `18889` | `10089` |
+| RackNerd Los Angeles DC-03, BGP | 12 TB | `58889` | `50089` |
+
+For example, the default proxy is `http://192.168.233.8:59889` or `socks5://192.168.233.8:59880` on the cluster. If one proxy is slow or fails, use another. Everyone shares the monthly traffic, so use a Chinese mirror for large downloads where one exists.
+
+Keep proxy addresses out of source code. Scope proxy variables to the command or shell that needs them:
 
 ```bash
-export HTTP_PROXY=http://PROXY_HOST:PORT
-export HTTPS_PROXY=http://PROXY_HOST:PORT
+export HTTP_PROXY=http://192.168.233.8:59889
+export HTTPS_PROXY=http://192.168.233.8:59889
 export http_proxy="$HTTP_PROXY"
 export https_proxy="$HTTPS_PROXY"
 export NO_PROXY=localhost,127.0.0.1,.cvgl.lab

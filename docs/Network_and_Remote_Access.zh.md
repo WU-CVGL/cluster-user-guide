@@ -66,11 +66,22 @@
 <a id="proxies-and-mirrors"></a>
 ## 代理与镜像
 
-代理端点、路由、配额和可用时间可能变化。请向管理员申请当前批准的 HTTP 或 SOCKS 代理，不要把它硬编码进源代码。把代理变量限制在确有需要的命令或 shell 中：
+辅助服务虚拟机提供 HTTP 和 SOCKS5 代理。在集群内（登录节点、GPU 节点、Determined 任务）使用地址 `192.168.233.8`，在校园网中使用 `10.0.1.68`。每个代理在两个地址上使用相同的一对端口：
+
+| 代理 | 每月流量 | HTTP | SOCKS5 |
+| :--- | :--- | :--- | :--- |
+| Bandwagon 洛杉矶 DC5，CN2 GIA-E（默认） | 1 TB | `59889` | `59880` |
+| Bandwagon 洛杉矶 DC1，CN2 GIA | 2 TB | `28889` | `20089` |
+| Bandwagon 洛杉矶 DC6，CN2 GIA-E | 1 TB | `18889` | `10089` |
+| RackNerd 洛杉矶 DC-03，BGP | 12 TB | `58889` | `50089` |
+
+例如，在集群内默认代理是 `http://192.168.233.8:59889` 或 `socks5://192.168.233.8:59880`。某个代理很慢或不可用时，换用另一个。每月流量由所有人共享，大文件下载如有国内镜像，请使用镜像。
+
+不要把代理地址写进源代码。把代理变量限制在确有需要的命令或 shell 中：
 
 ```bash
-export HTTP_PROXY=http://PROXY_HOST:PORT
-export HTTPS_PROXY=http://PROXY_HOST:PORT
+export HTTP_PROXY=http://192.168.233.8:59889
+export HTTPS_PROXY=http://192.168.233.8:59889
 export http_proxy="$HTTP_PROXY"
 export https_proxy="$HTTPS_PROXY"
 export NO_PROXY=localhost,127.0.0.1,.cvgl.lab
