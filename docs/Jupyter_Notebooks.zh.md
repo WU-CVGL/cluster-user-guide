@@ -57,6 +57,6 @@ Notebook、输入和结果均保存在[共享存储](Shared_Storage.zh.md)中。
 det notebook kill <notebook-id>
 ```
 
-**目前，长时间空闲的原生 Jupyter/Notebook 任务由管理员手动停止（kill）。** 这些任务没有约定固定的自动空闲超时，不能套用 shell 的 watchdog 回收策略。
+**占用 GPU 的原生 JupyterLab notebook 与 shell 适用相同的[回收策略](Interactive_Shell.zh.md#shell-cleanup-policy)：** GPU 持续空闲的 notebook 会先收到警告，随后被停止。仅使用 CPU 的 notebook 不受此策略影响。
 
 如果在 Determined **shell** 内启动 Jupyter，底层任务仍然是 shell，依然受 [shell 回收策略](Interactive_Shell.zh.md#shell-cleanup-policy)管理。Notebook 界面不会改变任务的生命周期。

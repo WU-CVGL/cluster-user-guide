@@ -53,6 +53,6 @@ Keep notebooks, inputs and results on [shared storage](Shared_Storage.md). Savin
 det notebook kill <notebook-id>
 ```
 
-**Long-idle native Jupyter/Notebook tasks are currently stopped manually by the administrator.** There is no fixed automatic idle timeout promised for these tasks, and the shell watchdog policy must not be applied to them.
+**Native JupyterLab notebooks that hold GPUs follow the same [cleanup policy](Interactive_Shell.md#shell-cleanup-policy) as shells:** a notebook whose GPUs stay idle is warned and later stopped. CPU-only notebooks are not stopped by it.
 
 If you start Jupyter inside a Determined **shell**, the underlying task is still a shell and remains subject to the [shell cleanup policy](Interactive_Shell.md#shell-cleanup-policy). The notebook interface does not change the task's lifecycle.

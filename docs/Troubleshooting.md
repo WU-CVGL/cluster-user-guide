@@ -19,7 +19,7 @@ Start with the failing layer. Record the task ID, relevant command and sanitized
 | A path exists on the login node but not in the task | Check the compute node's host mount, the task's `bind_mounts` and the container path. Check permissions for the task user. Use absolute paths; `/run/determined/workdir/` is not a required mount prefix. |
 | Files disappear after a task ends | Check whether they were written inside the temporary container filesystem. Write persistent work to the configured shared mount throughout the task. |
 | A shell was reclaimed | Read the [idle policy](Interactive_Shell.md). Check the alert/notification and shared outputs, then start a new shell and reconnect. Keeping SSH connected or running tmux does not exempt a shell. |
-| A native Notebook task was stopped while idle | Long-idle Notebook tasks are currently stopped manually by the administrator. Save notebooks and results on shared storage, then start a new task when needed; see [Jupyter](Jupyter_Notebooks.md). |
+| A native Notebook task was stopped while idle | A notebook whose GPUs stay idle is warned and then stopped by the watchdog, as shells are; see the [cleanup policy](Interactive_Shell.md#shell-cleanup-policy). Save notebooks and results on shared storage, then start a new task when needed; see [Jupyter](Jupyter_Notebooks.md). |
 | An rsync transfer fails partway through | Inspect the error and destination before retrying. A failed transfer may have copied some files. Correct permissions or storage configuration, then review a fresh preview. |
 
 If native `det` needs an explicit CA path, set `DET_MASTER_CERT_FILE` to the downloaded `cvgl.crt` in the environment of that process.
