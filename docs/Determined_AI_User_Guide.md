@@ -28,7 +28,7 @@ Native command and shell configs expose one `description` field, so put the shor
 The cluster runs [WU-CVGL/determined](https://github.com/WU-CVGL/determined), a fork of Determined. Install the fork's CLI from its release, in the cluster's version. First set the version and the release wheel:
 
 ```bash
-DET_VERSION=0.42.1
+DET_VERSION=0.42.3
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
@@ -137,6 +137,28 @@ Commands and shells take the same key next to `resources.slots`.
 - `true` is not a value and is rejected.
 
 Neither value changes a 1-GPU job, and `soft` does not change a job across several nodes. For a job with 2 or more GPUs on one node, the task log has a line starting `GPU topology preference` that names the node and its GPUs.
+
+## Use GPUs of different models in one job
+
+To give one job GPUs of different models on one node, for example an RTX 4090 for simulation and an H100 PCIe for learning, name groups in `resources.gpu_groups`:
+
+```yaml
+resources:
+  slots: 2
+  gpu_groups:
+    - name: simulation
+      count: 1
+      models: ["NVIDIA GeForce RTX 4090"]
+    - name: learner
+      count: 1
+      models: ["NVIDIA H100 PCIe"]
+```
+
+- The counts must add up to `slots` (`slots_per_trial` in an experiment). Model names must match the names `nvidia-smi` prints exactly.
+- The job runs on one node and starts only when that node has free GPUs for every group. When no node of the pool has such GPUs, the submission is refused with a message that contains `has GPUs for gpu_groups`.
+- In the container, `DET_GPU_GROUPS` maps each group to its GPU UUIDs, for example `{"learner":["GPU-…"],"simulation":["GPU-…"]}`. Start each process with `CUDA_VISIBLE_DEVICES` set to its group's UUIDs, comma-separated.
+
+[Hardware Inventory](Hardware_Inventory.md) lists each node's GPU models. See the fork's [`gpu_groups` reference](https://github.com/WU-CVGL/determined/blob/main/docs/reference/experiment-config-reference.rst#gpu-groups) for the details.
 
 ## Run a short command
 
