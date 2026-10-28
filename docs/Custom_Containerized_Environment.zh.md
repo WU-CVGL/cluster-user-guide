@@ -133,6 +133,26 @@ environment:
 
 原生任务规划和提交请参阅 [Determined compute 指南](Determined_AI_User_Guide.zh.md)，agent 辅助操作请参阅规范的 [MCP 工作流](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.zh.md)。代码、数据集、checkpoint 和输出请遵循[共享存储](Shared_Storage.zh.md)。镜像应保存运行环境；不断变化的数据和运行产物应放在共享存储上。
 
+<a id="keep-determineds-packages-out-of-your-python-environment"></a>
+### 不让 Determined 的包进入你的 Python 环境
+
+每个任务启动时都会用 `"$DET_PYTHON_EXECUTABLE" -m pip install --user` 安装集群的 Determined SDK，`DET_PYTHON_EXECUTABLE` 默认为 `python3`。pip 会把 SDK 及其依赖（例如 `requests<2.32`）装到 `/run/determined/pythonuserbase`。之后，任何读取 user site-packages 且 Python 版本相同的解释器都会导入这些版本，而不是你环境中的版本。标准虚拟环境不会读取它们。
+
+要让固定版本的环境保持不变，请把它装在虚拟环境中，并给 Determined 一个单独的解释器：
+
+```dockerfile
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/python -m pip install --requirement /tmp/requirements.txt
+RUN python3 -m venv --system-site-packages /opt/det-python
+ENV DET_PYTHON_EXECUTABLE=/opt/det-python/bin/python
+```
+
+用 `/opt/venv/bin/python` 运行你的代码，例如 `det cmd run '/opt/venv/bin/python train.py'`。导入 `determined` 的代码（例如 Core API 训练）需要在自己的解释器中安装 SDK，因此这种拆分只适用于不导入它的代码。
+
+- `DET_PYTHON_EXECUTABLE` 不能是该虚拟环境本身；Dockerfile 也不能在未设置它时把 `/opt/venv/bin` 放在 `PATH` 最前面，否则任务会以 `Can not perform a '--user' install. User site-packages are not visible in this virtualenv.` 失败。
+- 当镜像的系统 Python 以 `externally-managed-environment` 拒绝 pip 时（Debian 12 及以后、Ubuntu 23.04 及以后），这个单独的解释器同样可用。
+- 每个任务启动时，pip 都会下载 SDK 缺少的依赖。可在镜像中预先安装一次以节省时间：`RUN /opt/det-python/bin/python -m pip install https://github.com/WU-CVGL/determined/releases/download/<version>/determined-<version>-py3-none-any.whl`。
+
 <a id="troubleshooting"></a>
 ## 故障排查
 
@@ -141,3 +161,4 @@ environment:
 - builder 报告 DNS lookup 失败或独立 BuildKit registry 错误：使用 [Buildx 与 Harbor](Buildx_and_Harbor.zh.md#failure-stages)中的三层诊断。
 - package constraint 产生类似 `=0.16.0` 的文件：给传入 shell 的完整 requirement 加引号。
 - Determined 任务看不到代码或输出：检查 bind mount，并使用已认可的共享存储根目录。
+- 任务以 `externally-managed-environment` 或 `Can not perform a '--user' install` 失败：按[不让 Determined 的包进入你的 Python 环境](#keep-determineds-packages-out-of-your-python-environment)给 Determined 单独的解释器。

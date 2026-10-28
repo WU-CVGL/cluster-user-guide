@@ -124,6 +124,25 @@ environment:
 
 See the [Determined compute guide](Determined_AI_User_Guide.md) for native planning and submission, or the canonical [MCP workflow](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md) for agent-assisted operation. Follow [Shared storage](Shared_Storage.md) for code, datasets, checkpoints, and outputs. The image should contain the runtime environment; changing data and run artifacts belong on shared storage.
 
+### Keep Determined's packages out of your Python environment
+
+Every task starts by installing the cluster's Determined SDK with `"$DET_PYTHON_EXECUTABLE" -m pip install --user`, where `DET_PYTHON_EXECUTABLE` defaults to `python3`. pip puts the SDK and its dependencies, for example `requests<2.32`, in `/run/determined/pythonuserbase`. Any interpreter of the same Python version that reads user site-packages then imports those versions instead of your environment's. A standard virtual environment does not read them.
+
+To keep a pinned environment exact, install it in a virtual environment and give Determined an interpreter of its own:
+
+```dockerfile
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/python -m pip install --requirement /tmp/requirements.txt
+RUN python3 -m venv --system-site-packages /opt/det-python
+ENV DET_PYTHON_EXECUTABLE=/opt/det-python/bin/python
+```
+
+Run your code with `/opt/venv/bin/python`, for example `det cmd run '/opt/venv/bin/python train.py'`. Code that imports `determined`, such as Core API training, needs the SDK in its own interpreter, so use this split only for code that does not.
+
+- `DET_PYTHON_EXECUTABLE` must not be the virtual environment itself, and the Dockerfile must not put `/opt/venv/bin` first in `PATH` without setting it: the task then fails with `Can not perform a '--user' install. User site-packages are not visible in this virtualenv.`
+- The separate interpreter also works when the image's system Python refuses pip with `externally-managed-environment` (Debian 12 and later, Ubuntu 23.04 and later).
+- pip downloads the SDK's missing dependencies when each task starts. Install them once in the image to save that time: `RUN /opt/det-python/bin/python -m pip install https://github.com/WU-CVGL/determined/releases/download/<version>/determined-<version>-py3-none-any.whl`.
+
 ## Troubleshooting
 
 - A default Buildx build reports `x509: certificate signed by unknown authority` while requesting `https://harbor.cvgl.lab/service/token`: run that Buildx command with the documented `SSL_CERT_DIR`.
@@ -131,3 +150,4 @@ See the [Determined compute guide](Determined_AI_User_Guide.md) for native plann
 - A builder reports DNS lookup failure or an isolated BuildKit registry error: use the three-layer diagnosis in [Buildx and Harbor](Buildx_and_Harbor.md#failure-stages).
 - A package constraint creates a file such as `=0.16.0`: quote the complete requirement passed to the shell.
 - A Determined task cannot see code or output: check its bind mounts and use an approved shared-storage root.
+- A task fails with `externally-managed-environment` or `Can not perform a '--user' install`: give Determined its own interpreter, as in [Keep Determined's packages out of your Python environment](#keep-determineds-packages-out-of-your-python-environment).
