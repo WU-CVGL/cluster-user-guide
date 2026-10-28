@@ -31,7 +31,7 @@ Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久�
 集群运行 [WU-CVGL/determined](https://github.com/WU-CVGL/determined)，它是 Determined 的一个分支。请从该分支的 release 安装与集群版本一致的 CLI。先设置版本和 release 中的 wheel：
 
 ```bash
-DET_VERSION=0.42.1
+DET_VERSION=0.42.2
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
@@ -143,6 +143,29 @@ Command 和 shell 在 `resources.slots` 旁使用同一个键。
 - `true` 不是合法取值，会被拒绝。
 
 两种取值都不会改变单 GPU 任务，`soft` 也不会改变跨多个节点的任务。对于在一个节点上使用 2 个或更多 GPU 的任务，任务日志中有一行以 `GPU topology preference` 开头，写明节点及其 GPU。
+
+<a id="use-gpus-of-different-models-in-one-job"></a>
+## 在一个任务中使用不同型号的 GPU
+
+要让一个任务在同一节点上获得不同型号的 GPU，例如一张 RTX 4090 用于仿真、一张 H100 PCIe 用于学习，请在 `resources.gpu_groups` 中命名各组：
+
+```yaml
+resources:
+  slots: 2
+  gpu_groups:
+    - name: simulation
+      count: 1
+      models: ["NVIDIA GeForce RTX 4090"]
+    - name: learner
+      count: 1
+      models: ["NVIDIA H100 PCIe"]
+```
+
+- 各组数量之和必须等于 `slots`（experiment 中为 `slots_per_trial`）。型号名必须与 `nvidia-smi` 打印的名称完全一致。
+- 任务只在一个节点上运行，并且只有当该节点有满足每个组的空闲 GPU 时才启动。资源池中没有节点拥有这样的 GPU 时，提交会被拒绝，报错中包含 `has GPUs for gpu_groups`。
+- 容器中的 `DET_GPU_GROUPS` 把每个组映射到其 GPU UUID，例如 `{"learner":["GPU-…"],"simulation":["GPU-…"]}`。启动每个进程时，把 `CUDA_VISIBLE_DEVICES` 设为其组的 UUID，以逗号分隔。
+
+[硬件清单](Hardware_Inventory.zh.md)列出每个节点的 GPU 型号。详情见分支的 [`gpu_groups` 参考](https://github.com/WU-CVGL/determined/blob/main/docs/reference/experiment-config-reference.rst#gpu-groups)。
 
 <a id="run-a-short-command"></a>
 ## 运行短时 command
