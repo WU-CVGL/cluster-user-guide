@@ -31,7 +31,7 @@ Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久�
 集群运行 [WU-CVGL/determined](https://github.com/WU-CVGL/determined)，它是 Determined 的一个分支。请从该分支的 release 安装与集群版本一致的 CLI。先设置版本和 release 中的 wheel：
 
 ```bash
-DET_VERSION=0.42.3
+DET_VERSION=0.42.4
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
