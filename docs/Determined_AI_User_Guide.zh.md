@@ -19,7 +19,7 @@ Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久�
 
 一次性工作默认使用 command，包括短时无人值守任务。需要人工与进程交互时使用 shell。跨夜训练，或需要检查点恢复和试验跟踪时，使用 experiment。
 
-[Jupyter](Jupyter_Notebooks.zh.md) 是交互式研究的可选原生入口。长时间空闲的原生 Notebook 任务目前由管理员手动停止，不由 shell watchdog 管理。MCP 支持的任务类型以规范的[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)为准。
+[Jupyter](Jupyter_Notebooks.zh.md) 是交互式研究的可选原生入口。占用 GPU 的 Notebook 与 shell 适用相同的空闲[回收策略](Interactive_Shell.zh.md#shell-cleanup-policy)。MCP 支持的任务类型以规范的[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)为准。
 
 为每个任务设置简短且有意义的名称，并用描述说明它运行什么。`evaluate-checkpoint-240k` 这类名称比 UUID 或 `test` 更便于操作。
 
@@ -202,7 +202,7 @@ det experiment cancel <experiment-id>
 <a id="shell-cleanup-policy"></a>
 ## Shell 清理策略
 
-当前 shell watchdog 依据持续 GPU 利用率，而不是键盘活动。持续低于阈值的 shell 可能先收到警告，随后被停止；时间是近似值，不是截止时间。详见[交互式 Shell 清理策略](Interactive_Shell.zh.md#shell-cleanup-policy)。请持续将工作保存到共享存储，无人值守的长时工作应使用 experiment。
+Watchdog 依据持续 GPU 利用率，而不是键盘活动。持续低于阈值的 shell 或 GPU notebook 可能先收到警告，随后被停止；时间是近似值，不是截止时间。详见[交互式 Shell 清理策略](Interactive_Shell.zh.md#shell-cleanup-policy)。请持续将工作保存到共享存储，无人值守的长时工作应使用 experiment。
 
 <a id="related-pages"></a>
 ## 相关页面

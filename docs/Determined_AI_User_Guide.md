@@ -17,7 +17,7 @@ Determined runs containerized work on the GPU cluster. Keep the durable parts of
 
 Use a command by default for one-off work, including short unattended jobs. Use a shell when a person needs to interact with the process. Use an experiment for overnight training or when checkpoint recovery and trial tracking are needed.
 
-[Jupyter](Jupyter_Notebooks.md) is an optional native interface for interactive research. Long-idle native Notebook tasks are currently stopped manually by the administrator; the shell watchdog does not manage them. See the canonical [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) for MCP-supported task kinds.
+[Jupyter](Jupyter_Notebooks.md) is an optional native interface for interactive research. Notebooks that hold GPUs follow the same idle [cleanup policy](Interactive_Shell.md#shell-cleanup-policy) as shells. See the canonical [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) for MCP-supported task kinds.
 
 Give every task a short, meaningful name and a description that says what it runs. Names such as `evaluate-checkpoint-240k` are easier to operate than UUIDs or `test`.
 
@@ -192,7 +192,7 @@ Design training to resume from shared checkpoints. A container restart must not 
 
 ## Shell cleanup policy
 
-The current shell watchdog is based on sustained GPU utilization, not keyboard activity. A shell that stays below the configured threshold can be warned and later stopped; timing is approximate rather than a deadline. See the [Interactive Shell cleanup policy](Interactive_Shell.md#shell-cleanup-policy). Save work continuously to shared storage and use an experiment for long unattended work.
+The watchdog is based on sustained GPU utilization, not keyboard activity. A shell or GPU notebook that stays below the configured threshold can be warned and later stopped; timing is approximate rather than a deadline. See the [Interactive Shell cleanup policy](Interactive_Shell.md#shell-cleanup-policy). Save work continuously to shared storage and use an experiment for long unattended work.
 
 ## Related pages
 

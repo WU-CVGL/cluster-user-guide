@@ -107,16 +107,16 @@ det shell start --config-file examples/compute/shell.yaml -- -L7007:localhost:70
 <a id="shell-cleanup-policy"></a>
 ## Shell 清理策略
 
-以下清理规则仅适用于 **shell**，衡量容器 GPU 利用率，而不是键盘或 SSH 活动。
+以下清理规则适用于占用 GPU 的 **shell** 和 **JupyterLab notebook**，衡量容器 GPU 利用率，而不是键盘或 SSH 活动。
 
 - Grafana 每 60 秒评估一次规则。
-- 当 shell 映射到的 GPU 最大利用率持续 15 分钟低于 10% 时，进入 alerting 状态。
-- Watchdog 在每个整点扫描。第一次匹配时发送警告；如果同一告警在下一个整点仍存在，就停止该 shell。
+- 当 shell 或 notebook 映射到的 GPU 最大利用率持续 15 分钟低于 10% 时，进入 alerting 状态。
+- Watchdog 每 30 分钟检查一次（每小时的 :00 和 :30）。第一次匹配时发送警告；如果同一告警在下一次检查时仍存在，就停止该任务。
 - 30 分钟 query window 只是读取数据的窗口，不是额外等待时间。
-- 此规则不会将 No Data 和查询错误状态视为告警，也不会停止其他 Determined 工作负载类型。
+- 此规则不会将 No Data 和查询错误状态视为告警；watchdog 不会停止 command、TensorBoard 和 experiment。
 
-若 GPU 利用率持续偏低，根据评估和整点扫描的相位，警告与清理流程给出的理论停止时间约为 75–135 分钟。这不是严格的两小时超时，也不是保证的截止时间；扫描时机和服务故障都可能改变它。
+若 GPU 利用率持续偏低，根据评估和检查时刻的相位，警告与清理流程给出的理论停止时间约为 45–75 分钟。这不是严格的超时，也不是保证的截止时间；检查时机和服务故障都可能改变它。
 
-被停止的 shell 无法重连。请将工作保存在共享存储上，并及时处理警告。无人值守的一次性脚本使用 command；长时训练和跨夜工作使用 experiment。
+被停止的 shell 或 notebook 无法重连。请将工作保存在共享存储上，并及时处理警告。无人值守的一次性脚本使用 command；长时训练和跨夜工作使用 experiment。
 
 部署源码由[集群参考](Cluster_Reference.zh.md)链接。应使本说明与 watchdog 和 Grafana 配置保持一致。

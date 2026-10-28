@@ -20,7 +20,7 @@
 | 登录节点上存在某路径，但任务内不存在 | 检查计算节点的 host mount、任务的 `bind_mounts` 和容器路径。检查任务用户权限。使用绝对路径；`/run/determined/workdir/` 不是强制的挂载前缀。 |
 | 任务结束后文件消失 | 检查文件是否写入临时容器文件系统。任务执行期间，应持续将需要保留的内容写入已配置的共享挂载。 |
 | Shell 被回收 | 阅读[空闲策略](Interactive_Shell.zh.md)。检查告警/通知和共享输出，然后启动新 shell 并重连。保持 SSH 连接或运行 tmux 不会使 shell 获得豁免。 |
-| 原生 Notebook 任务在空闲期间被停止 | 长时间空闲的 Notebook 任务目前由管理员手动停止。将 Notebook 和结果保存在共享存储中，需要时重新启动任务；参阅 [Jupyter](Jupyter_Notebooks.zh.md)。 |
+| 原生 Notebook 任务在空闲期间被停止 | GPU 持续空闲的 Notebook 会像 shell 一样先收到 watchdog 警告，随后被停止；参阅[回收策略](Interactive_Shell.zh.md#shell-cleanup-policy)。将 Notebook 和结果保存在共享存储中，需要时重新启动任务；参阅 [Jupyter](Jupyter_Notebooks.zh.md)。 |
 | rsync 传输中途失败 | 重试前检查错误和目标目录。失败的传输可能已复制部分文件。修复权限或存储配置，然后重新检查一次新的 preview。 |
 
 如果原生 `det` 需要显式 CA 路径，请在该进程的环境中将 `DET_MASTER_CERT_FILE` 指向下载的 `cvgl.crt`。

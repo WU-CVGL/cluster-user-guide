@@ -99,16 +99,16 @@ Choose an unused local port if `7007` is already occupied. Expose only the ports
 
 ## Shell cleanup policy
 
-The cleanup rule applies to **shells** and measures container GPU utilization. It does not measure keyboard or SSH activity.
+The cleanup rule applies to **shells** and **JupyterLab notebooks** that hold GPUs, and measures container GPU utilization. It does not measure keyboard or SSH activity.
 
 - Grafana evaluates the rule every 60 seconds.
-- A shell becomes alerting after its maximum mapped GPU utilization remains below 10% for 15 minutes.
-- The watchdog scans at the top of each hour. The first matching scan sends a warning; if the same alert is still present at the next top-of-hour scan, it stops the shell.
+- A shell or notebook becomes alerting after its maximum mapped GPU utilization remains below 10% for 15 minutes.
+- The watchdog checks every 30 minutes, at :00 and :30. The first matching check sends a warning; if the same alert is still present at the next check, it stops the task.
 - The 30-minute query window is only the data-reading window; it is not another waiting period.
-- No-data and query-error states are not treated as alerts by this rule. Other Determined workload kinds are not stopped by this shell watchdog.
+- No-data and query-error states are not treated as alerts by this rule. Commands, TensorBoards and experiments are not stopped by the watchdog.
 
-With continuously low GPU utilization, warning and cleanup phases imply a theoretical stop time of roughly 75–135 minutes, depending on evaluation and hourly scan alignment. This is not a strict two-hour timeout or a guaranteed deadline; scan timing and service failures can change it.
+With continuously low GPU utilization, warning and cleanup phases imply a theoretical stop time of roughly 45–75 minutes, depending on evaluation and check alignment. This is not a strict timeout or a guaranteed deadline; check timing and service failures can change it.
 
-A stopped shell cannot be reconnected. Keep work on shared storage and respond to warnings promptly. Use a command for an unattended one-off script, or an experiment for long training and overnight work.
+A stopped shell or notebook cannot be reconnected. Keep work on shared storage and respond to warnings promptly. Use a command for an unattended one-off script, or an experiment for long training and overnight work.
 
 The deployment source is linked from [Cluster Reference](Cluster_Reference.md). Keep this description aligned with the watchdog and Grafana configuration.
