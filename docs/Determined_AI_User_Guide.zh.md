@@ -13,13 +13,12 @@ Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久�
 | 工作负载 | 适用场景 | 典型持续时间 |
 | --- | --- | --- |
 | **Command** | 短时、非交互式的评估、转换或预处理 | 数分钟到数小时 |
-| **Shell** | 交互式调试、IDE 访问和环境检查 | 主动调试期间 |
-| **Notebook**（可选，使用原生 CLI） | 数据探索、可视化分析和教学 | 主动分析期间 |
+| **Shell** | 交互式调试、IDE 访问、JupyterLab 和环境检查 | 主动使用期间 |
 | **Experiment** | 长时或跨夜训练、检查点恢复和试验跟踪 | 数小时到数天 |
 
 一次性工作默认使用 command，包括短时无人值守任务。需要人工与进程交互时使用 shell。跨夜训练，或需要检查点恢复和试验跟踪时，使用 experiment。
 
-[Jupyter](Jupyter_Notebooks.zh.md) 是交互式研究的可选原生入口。占用 GPU 的 Notebook 与 shell 适用相同的空闲[回收策略](Interactive_Shell.zh.md#shell-cleanup-policy)。MCP 支持的任务类型以规范的[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)为准。
+Shell 在同一容器中运行 SSH 服务器，默认还运行 JupyterLab 和浏览器版 VS Code。数据探索、可视化分析和教学见 [Jupyter](Jupyter_Notebooks.zh.md)。MCP 支持的任务类型以规范的[计算服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.zh.md)为准。
 
 为每个任务设置简短且有意义的名称，并用描述说明它运行什么。`evaluate-checkpoint-240k` 这类名称比 UUID 或 `test` 更便于操作。
 
@@ -31,7 +30,7 @@ Determined 在 GPU 集群上运行容器化任务。每个任务中需要持久�
 集群运行 [WU-CVGL/determined](https://github.com/WU-CVGL/determined)，它是 Determined 的一个分支。请从该分支的 release 安装与集群版本一致的 CLI。先设置版本和 release 中的 wheel：
 
 ```bash
-DET_VERSION=0.42.4
+DET_VERSION=0.43.0
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
@@ -194,7 +193,7 @@ det command kill <command-id>
 det shell start --config-file examples/compute/shell.yaml
 ```
 
-Shell 用于调试和 IDE 访问。重连、VS Code/PyCharm 设置、端口转发和当前生命周期说明见[交互式 Shell](Interactive_Shell.zh.md)。
+Shell 用于调试、IDE 访问和 JupyterLab。重连、JupyterLab 与浏览器版 VS Code、VS Code/PyCharm 设置、端口转发和当前生命周期说明见[交互式 Shell](Interactive_Shell.zh.md)。
 
 <a id="run-a-durable-experiment"></a>
 ## 运行可恢复的 experiment
@@ -225,7 +224,7 @@ det experiment cancel <experiment-id>
 <a id="shell-cleanup-policy"></a>
 ## Shell 清理策略
 
-Watchdog 依据持续 GPU 利用率，而不是键盘活动。持续低于阈值的 shell 或 GPU notebook 可能先收到警告，随后被停止；时间是近似值，不是截止时间。详见[交互式 Shell 清理策略](Interactive_Shell.zh.md#shell-cleanup-policy)。请持续将工作保存到共享存储，无人值守的长时工作应使用 experiment。
+Watchdog 依据持续 GPU 利用率，而不是键盘活动。持续低于阈值的 shell 可能先收到警告，随后被停止；时间是近似值，不是截止时间。详见[交互式 Shell 清理策略](Interactive_Shell.zh.md#shell-cleanup-policy)。请持续将工作保存到共享存储，无人值守的长时工作应使用 experiment。
 
 <a id="related-pages"></a>
 ## 相关页面

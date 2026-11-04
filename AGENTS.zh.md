@@ -19,7 +19,7 @@
 | 配置可选 Codex 咨询后端 | [咨询服务参考](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/consultation.zh.md) |
 | 配置集群登录或凭据 | [入门指南](docs/Getting_started.zh.md)，然后阅读[集群故障排查](docs/Troubleshooting.zh.md) |
 | 交互调试或连接 IDE | [交互式 Shell](docs/Interactive_Shell.zh.md)，包括回收策略 |
-| 在 Notebook 中探索数据或展示结果 | 使用原生 Notebook 工作流的 [Jupyter](docs/Jupyter_Notebooks.zh.md) |
+| 在 Notebook 中探索数据或展示结果 | 在 shell 中使用 JupyterLab 的 [Jupyter](docs/Jupyter_Notebooks.zh.md) |
 | 配置实验跟踪 | [自托管 W&B](docs/Weights_and_Biases.zh.md)；集群任务使用 100G LAN 地址 |
 | 构建镜像 | [容器环境](docs/Custom_Containerized_Environment.zh.md)，以及当前的 [Buildx 与 Harbor 配置](docs/Buildx_and_Harbor.zh.md) |
 | 查找服务地址或配置依据 | [集群参考](docs/Cluster_Reference.zh.md) |
@@ -31,10 +31,10 @@
 ## 集群专用要点
 
 - 集群运行 Determined 的 WU-CVGL 分支。原生客户端使用该分支与集群版本一致的 CLI，按[任务指南](docs/Determined_AI_User_Guide.zh.md#install-and-authenticate)安装，不要从 PyPI 安装 `determined`。
-- 短时非交互任务使用 `command`，交互调试使用 `shell`，可选的人工交互探索使用原生 `notebook`，长时训练或需要实验生命周期管理时使用 `experiment`。
+- 短时非交互任务使用 `command`，交互调试以及 JupyterLab 或浏览器版 VS Code 使用 `shell`，长时训练或需要实验生命周期管理时使用 `experiment`。
 - 代码、数据和输出放在已映射的共享存储中。不要通过 Determined 上传项目上下文或代码、数据包。用户电脑不必挂载集群共享存储。
 - 原生提交前检查调度器实时状态。GPU 利用率低不能证明 slot 空闲，原生 `det` 提交可能进入队列。
-- Shell watchdog 依据持续 GPU 利用率，而不是键盘活动。原生 Notebook 任务由管理员另行管理。
+- Shell watchdog 依据持续 GPU 利用率，而不是键盘活动。
 - 计算任务使用集群的 W&B 100G LAN 地址。部署专用行为以本地网络、证书、存储、Harbor 和 shell 策略页面为准。
 
 <a id="documentation-maintenance"></a>
