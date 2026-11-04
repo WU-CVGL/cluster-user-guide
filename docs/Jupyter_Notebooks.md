@@ -50,6 +50,18 @@ If the image has no JupyterLab, `jupyter` is `UNAVAILABLE` and the shell runs on
 
 In the WebUI, select **Launch Interactive Task** on the **Jobs** page, keep **JupyterLab** checked under **Services**, and add the `bind_mounts` from `jupyter.yaml` under **Show Full Config**. Open JupyterLab in the **JupyterLab** tab of the shell's page, or choose **Open JupyterLab** from the shell's action menu.
 
+The launch form:
+
+![The Launch Interactive Task form](assets/Interactive_Shell/launch-interactive-task.png)
+
+The **JupyterLab** tab of the shell's page:
+
+![The JupyterLab tab of a shell's page](assets/Interactive_Shell/interactive-task-page-jupyterlab.png)
+
+The shell's action menu on the **Jobs** page:
+
+![A shell's action menu on the Jobs page](assets/Interactive_Shell/jobs-action-menu.png)
+
 ## Save work and release resources
 
 Keep notebooks, inputs and results on [shared storage](Shared_Storage.md). Saving an `.ipynb` file does not preserve all kernel memory; write required artifacts to files. Closing a browser tab does not stop the shell or release its allocated resources. Stop the shell when finished:

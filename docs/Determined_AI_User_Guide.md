@@ -117,6 +117,10 @@ Choose another pool with `resources.resource_pool`, or ask the cluster administr
 
 In the WebUI, open a pool from **Cluster**. Its **Active** tab lists the GPUs each job holds, by node, for example `node07: 0, 2` or `node08: 4-7`. Three or more consecutive GPUs show as a range. The numbers are the node's `nvidia-smi` indexes. Click them to outline the GPUs in the pool's topology panel.
 
+The **Cluster** page lists the resource pools:
+
+![Resource pools on the Cluster page](assets/Determined_AI_User_Guide/resource-pools.png)
+
 The native `det` launch commands can queue. Capacity can change between inspection and submission, so recheck the submitted task and cancel it if queuing was unintended. MCP capacity and admission behavior is documented in the canonical [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md).
 
 ## Request well-connected GPUs
