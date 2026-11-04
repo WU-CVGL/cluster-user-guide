@@ -4,7 +4,7 @@
 
 For agent-assisted shell management, use the canonical [Determined Cluster MCP workflow](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/agent-workflow.md). This page covers CVGL interactive access, IDE connections and the shell lifecycle; native CLI commands are included for manual operation.
 
-A Determined shell is a temporary interactive development environment. Use it to inspect an image, reproduce an issue, or attach an IDE. Put edits, caches worth keeping, and debug outputs on shared storage.
+A Determined shell is a temporary interactive development environment. It runs an SSH server and, by default, JupyterLab and VS Code in the browser in the same container. Use it to inspect an image, reproduce an issue, work in a notebook, or attach an IDE. Put edits, caches worth keeping, and debug outputs on shared storage.
 
 For an unattended one-off script, use a command. For long training or overnight work, use an experiment with shared checkpoints.
 
@@ -53,6 +53,33 @@ Stop the shell when finished:
 det shell kill <shell-id>
 ```
 
+To end a shell after a period without use, set `idle_timeout` in its configuration, for example `idle_timeout: 2h`. SSH sessions, browser terminals, requests to its services and a busy kernel count as activity. The GPU [cleanup policy](#shell-cleanup-policy) applies either way.
+
+## JupyterLab and VS Code in the browser
+
+A shell runs JupyterLab and VS Code in the browser (code-server) next to its SSH server, with the same user, files and mounts. List its services and their states:
+
+```bash
+det task services <shell-id>
+```
+
+Once a service is `READY`, open it:
+
+```bash
+det task open <shell-id> jupyter
+det task open <shell-id> vscode
+```
+
+In the WebUI, click the shell's name on the **Jobs** page. Its page has the **Terminal**, **JupyterLab**, **VS Code**, **Logs** and **Resources** tabs.
+
+To start a shell from the WebUI, select **Launch Interactive Task** on the **Jobs** page and check the **JupyterLab** and **VS Code** boxes under **Services** for the services you need. Add the `bind_mounts` from `shell.yaml` under **Show Full Config**.
+
+To leave a service out, add `--no-service <name>`:
+
+```bash
+det shell start --config-file examples/compute/shell.yaml --no-service vscode
+```
+
 ## VS Code Remote SSH
 
 1. Install the **Remote - SSH** extension.
@@ -99,16 +126,16 @@ Choose an unused local port if `7007` is already occupied. Expose only the ports
 
 ## Shell cleanup policy
 
-The cleanup rule applies to **shells** and **JupyterLab notebooks** that hold GPUs, and measures container GPU utilization. It does not measure keyboard or SSH activity.
+The cleanup rule applies to **shells** that hold GPUs, also when only JupyterLab or VS Code is used, and measures container GPU utilization. It does not measure keyboard, SSH or browser activity.
 
 - Grafana evaluates the rule every 60 seconds.
-- A shell or notebook becomes alerting after its maximum mapped GPU utilization remains below 10% for 15 minutes.
-- The watchdog checks every 30 minutes, at :00 and :30. The first matching check sends a warning; if the same alert is still present at the next check, it stops the task.
+- A shell becomes alerting after its maximum mapped GPU utilization remains below 10% for 15 minutes.
+- The watchdog checks every 30 minutes, at :00 and :30. The first matching check sends a warning; if the same alert is still present at the next check, it stops the shell.
 - The 30-minute query window is only the data-reading window; it is not another waiting period.
 - No-data and query-error states are not treated as alerts by this rule. Commands, TensorBoards and experiments are not stopped by the watchdog.
 
 With continuously low GPU utilization, warning and cleanup phases imply a theoretical stop time of roughly 45–75 minutes, depending on evaluation and check alignment. This is not a strict timeout or a guaranteed deadline; check timing and service failures can change it.
 
-A stopped shell or notebook cannot be reconnected. Keep work on shared storage and respond to warnings promptly. Use a command for an unattended one-off script, or an experiment for long training and overnight work.
+A stopped shell cannot be reconnected. Keep work on shared storage and respond to warnings promptly. Use a command for an unattended one-off script, or an experiment for long training and overnight work.
 
 The deployment source is linked from [Cluster Reference](Cluster_Reference.md). Keep this description aligned with the watchdog and Grafana configuration.

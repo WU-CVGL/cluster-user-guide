@@ -17,7 +17,7 @@ Here, an agent is an AI assistant. A **Determined agent** is a compute-node serv
 | Configure the optional Codex consultation backend | [Consultation reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/consultation.md) |
 | Configure cluster login or credentials | [Getting started](docs/Getting_started.md), then [cluster troubleshooting](docs/Troubleshooting.md) |
 | Debug interactively or connect an IDE | [Interactive shells](docs/Interactive_Shell.md), including the cleanup policy |
-| Explore data or present results in a notebook | [Jupyter](docs/Jupyter_Notebooks.md) for the native Notebook workflow |
+| Explore data or present results in a notebook | [Jupyter](docs/Jupyter_Notebooks.md) for JupyterLab in a shell |
 | Configure experiment tracking | [Self-hosted W&B](docs/Weights_and_Biases.md); cluster tasks use the 100G LAN endpoint |
 | Build an image | [Container environments](docs/Custom_Containerized_Environment.md), with the current [Buildx and Harbor setup](docs/Buildx_and_Harbor.md) |
 | Find service URLs or evidence sources | [Cluster reference](docs/Cluster_Reference.md) |
@@ -28,10 +28,10 @@ Every documentation page has a `.zh.md` counterpart. Use the reader's preferred 
 ## Site-specific points
 
 - The cluster runs the WU-CVGL fork of Determined. Native clients use the fork's CLI in the cluster's version, installed as in the [task guide](docs/Determined_AI_User_Guide.md#install-and-authenticate), not `determined` from PyPI.
-- Use `command` for short non-interactive work, `shell` for interactive debugging, native `notebook` for optional human-led exploration, and `experiment` for long training or experiment lifecycle features.
+- Use `command` for short non-interactive work, `shell` for interactive debugging and JupyterLab or VS Code in the browser, and `experiment` for long training or experiment lifecycle features.
 - Keep code, data and outputs on mapped shared storage. Do not upload project contexts or code/data bundles through Determined. A user's computer does not need to mount cluster storage.
 - Check live scheduler state before native submissions. Low GPU utilization does not prove that slots are free, and native `det` submissions can queue.
-- The shell watchdog uses sustained GPU utilization rather than keyboard inactivity. Native Notebook tasks are managed separately by the administrator.
+- The shell watchdog uses sustained GPU utilization rather than keyboard inactivity.
 - Use the cluster's 100G LAN W&B endpoint from compute tasks. Follow the local network, certificate, storage, Harbor, and shell-policy pages for deployment-specific behavior.
 
 ## Documentation maintenance

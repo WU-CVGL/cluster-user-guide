@@ -11,13 +11,12 @@ Determined runs containerized work on the GPU cluster. Keep the durable parts of
 | Workload | Use it for | Typical lifetime |
 | --- | --- | --- |
 | **Command** | Short, non-interactive evaluation, conversion, or preprocessing | Minutes to hours |
-| **Shell** | Interactive debugging, IDE access, and environment inspection | While actively debugging |
-| **Notebook** (optional, native CLI) | Data exploration, visual analysis and teaching | While actively analyzing |
+| **Shell** | Interactive debugging, IDE access, JupyterLab, and environment inspection | While actively working |
 | **Experiment** | Long or overnight training, checkpointing, restart, and trial tracking | Hours to days |
 
 Use a command by default for one-off work, including short unattended jobs. Use a shell when a person needs to interact with the process. Use an experiment for overnight training or when checkpoint recovery and trial tracking are needed.
 
-[Jupyter](Jupyter_Notebooks.md) is an optional native interface for interactive research. Notebooks that hold GPUs follow the same idle [cleanup policy](Interactive_Shell.md#shell-cleanup-policy) as shells. See the canonical [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) for MCP-supported task kinds.
+A shell runs an SSH server and, by default, JupyterLab and VS Code in the browser in the same container. [Jupyter](Jupyter_Notebooks.md) covers data exploration, visual analysis and teaching. See the canonical [compute-service reference](https://github.com/WU-CVGL/determined_cluster_mcp/blob/main/docs/compute-service.md) for MCP-supported task kinds.
 
 Give every task a short, meaningful name and a description that says what it runs. Names such as `evaluate-checkpoint-240k` are easier to operate than UUIDs or `test`.
 
@@ -28,7 +27,7 @@ Native command and shell configs expose one `description` field, so put the shor
 The cluster runs [WU-CVGL/determined](https://github.com/WU-CVGL/determined), a fork of Determined. Install the fork's CLI from its release, in the cluster's version. First set the version and the release wheel:
 
 ```bash
-DET_VERSION=0.42.4
+DET_VERSION=0.43.0
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
@@ -185,7 +184,7 @@ Review [`examples/compute/shell.yaml`](../examples/compute/shell.yaml), then run
 det shell start --config-file examples/compute/shell.yaml
 ```
 
-Use shells for debugging and IDE access. Reconnection, VS Code/PyCharm setup, port forwarding, and the current lifetime guidance are in [Interactive Shell](Interactive_Shell.md).
+Use shells for debugging, IDE access and JupyterLab. Reconnection, JupyterLab and VS Code in the browser, VS Code/PyCharm setup, port forwarding, and the current lifetime guidance are in [Interactive Shell](Interactive_Shell.md).
 
 ## Run a durable experiment
 
@@ -214,7 +213,7 @@ Design training to resume from shared checkpoints. A container restart must not 
 
 ## Shell cleanup policy
 
-The watchdog is based on sustained GPU utilization, not keyboard activity. A shell or GPU notebook that stays below the configured threshold can be warned and later stopped; timing is approximate rather than a deadline. See the [Interactive Shell cleanup policy](Interactive_Shell.md#shell-cleanup-policy). Save work continuously to shared storage and use an experiment for long unattended work.
+The watchdog is based on sustained GPU utilization, not keyboard activity. A shell that stays below the configured threshold can be warned and later stopped; timing is approximate rather than a deadline. See the [Interactive Shell cleanup policy](Interactive_Shell.md#shell-cleanup-policy). Save work continuously to shared storage and use an experiment for long unattended work.
 
 ## Related pages
 
