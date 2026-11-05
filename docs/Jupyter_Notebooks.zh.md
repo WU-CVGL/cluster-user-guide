@@ -53,6 +53,18 @@ det task open <shell-id> jupyter
 
 在 WebUI 中，于 **Jobs** 页面选择 **Launch Interactive Task**，保持 **Services** 下的 **JupyterLab** 勾选，并在 **Show Full Config** 中加入 `jupyter.yaml` 的 `bind_mounts`。在 shell 页面的 **JupyterLab** 标签页中打开 JupyterLab，或从 shell 的操作菜单中选择 **Open JupyterLab**。
 
+启动表单：
+
+![Launch Interactive Task 表单](assets/Interactive_Shell/launch-interactive-task.png)
+
+shell 页面的 **JupyterLab** 标签页：
+
+![shell 页面的 JupyterLab 标签页](assets/Interactive_Shell/interactive-task-page-jupyterlab.png)
+
+**Jobs** 页面上 shell 的操作菜单：
+
+![Jobs 页面上 shell 的操作菜单](assets/Interactive_Shell/jobs-action-menu.png)
+
 <a id="save-work-and-release-resources"></a>
 ## 保存工作并释放资源
 

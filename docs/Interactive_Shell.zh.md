@@ -76,7 +76,23 @@ det task open <shell-id> vscode
 
 在 WebUI 中，于 **Jobs** 页面点击 shell 的名称。它的页面有 **Terminal**、**JupyterLab**、**VS Code**、**Logs** 和 **Resources** 标签页。
 
+**Terminal** 标签页在 shell 中打开命令行：
+
+![shell 页面的 Terminal 标签页](assets/Interactive_Shell/interactive-task-page-terminal.png)
+
+**VS Code** 标签页在 shell 的工作目录中打开 VS Code：
+
+![shell 页面的 VS Code 标签页](assets/Interactive_Shell/interactive-task-page-vscode.png)
+
 若要从 WebUI 启动 shell，在 **Jobs** 页面选择 **Launch Interactive Task**，并在 **Services** 下勾选需要的 **JupyterLab** 和 **VS Code**。在 **Show Full Config** 中加入 `shell.yaml` 的 `bind_mounts`。
+
+勾选两个服务的表单：
+
+![Launch Interactive Task 表单](assets/Interactive_Shell/launch-interactive-task.png)
+
+点击 **Launch** 后，可在弹出的对话框中打开 shell 的终端、JupyterLab 或 VS Code：
+
+![Interactive Task Launched 对话框](assets/Interactive_Shell/interactive-task-launched.png)
 
 若要不运行某个服务，添加 `--no-service <name>`：
 

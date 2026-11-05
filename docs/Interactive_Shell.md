@@ -72,7 +72,23 @@ det task open <shell-id> vscode
 
 In the WebUI, click the shell's name on the **Jobs** page. Its page has the **Terminal**, **JupyterLab**, **VS Code**, **Logs** and **Resources** tabs.
 
+The **Terminal** tab opens a prompt in the shell:
+
+![The Terminal tab of a shell's page](assets/Interactive_Shell/interactive-task-page-terminal.png)
+
+The **VS Code** tab opens VS Code on the shell's working directory:
+
+![The VS Code tab of a shell's page](assets/Interactive_Shell/interactive-task-page-vscode.png)
+
 To start a shell from the WebUI, select **Launch Interactive Task** on the **Jobs** page and check the **JupyterLab** and **VS Code** boxes under **Services** for the services you need. Add the `bind_mounts` from `shell.yaml` under **Show Full Config**.
+
+The form with both services checked:
+
+![The Launch Interactive Task form](assets/Interactive_Shell/launch-interactive-task.png)
+
+After **Launch**, the dialog opens the shell's terminal, JupyterLab or VS Code:
+
+![The Interactive Task Launched dialog](assets/Interactive_Shell/interactive-task-launched.png)
 
 To leave a service out, add `--no-service <name>`:
 
