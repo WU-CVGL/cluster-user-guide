@@ -158,11 +158,11 @@ ENV DET_PYTHON_EXECUTABLE=/opt/det-python/bin/python
 
 未设置 `environment.image` 的任务运行在集群的默认镜像 `harbor.cvgl.lab/library/pytorch-ngc-dev:0736b6d-tb2.20.0` 中：即 Determined 的 `pytorch-ngc-dev:0736b6d` 加上 TensorBoard 2.20.0。
 
-在每个任务中，pip 的默认索引都是集群的 PyPI 缓存，使用辅助服务虚拟机的校园网地址 `http://10.0.1.68:5000/index/`。它提供一个国内 PyPI 镜像，并以 PyPI 作为后备。master 在每个任务中设置以下变量：
+在每个任务中，pip 的默认索引都是辅助服务虚拟机上的集群 PyPI 缓存，使用其在集群 100G 局域网上的地址（`http://192.168.233.8:5000/index/`；s8030 主机不在该局域网上，其资源池使用校园网地址 `http://10.0.1.68:5000/index/`）。它提供一个国内 PyPI 镜像，并以 PyPI 作为后备。master 在每个任务中设置以下变量：
 
 ```text
-PIP_INDEX_URL=http://10.0.1.68:5000/index/
-PIP_TRUSTED_HOST=10.0.1.68
+PIP_INDEX_URL=http://192.168.233.8:5000/index/
+PIP_TRUSTED_HOST=192.168.233.8
 PIP_CONFIG_FILE=/dev/null
 PIP_NO_CACHE_DIR=1
 ```
@@ -177,7 +177,7 @@ environment:
     # - PIP_CONFIG_FILE=
 ```
 
-uv 不读取 pip 的设置，集群也没有为它设置默认索引。要使用该缓存，请设置 `UV_DEFAULT_INDEX=http://10.0.1.68:5000/index/`；此时基于 PyPI 生成的 `uv.lock` 会使 `uv sync --locked` 失败，而 `uv sync --frozen` 可以正常使用。
+uv 不读取 pip 的设置，集群也没有为它设置默认索引。要使用该缓存，请将 `UV_DEFAULT_INDEX` 设为该缓存的地址；此时基于 PyPI 生成的 `uv.lock` 会使 `uv sync --locked` 失败，而 `uv sync --frozen` 可以正常使用。
 
 shell 的 `tensorboard` 服务不会安装任何包：自定义镜像需要自带 TensorBoard 2.9 或更新版本才能使用它。
 

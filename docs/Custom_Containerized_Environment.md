@@ -147,11 +147,11 @@ Run your code with `/opt/venv/bin/python`, for example `det cmd run '/opt/venv/b
 
 A task without `environment.image` runs in the cluster's default image, `harbor.cvgl.lab/library/pytorch-ngc-dev:0736b6d-tb2.20.0`: Determined's `pytorch-ngc-dev:0736b6d` with TensorBoard 2.20.0.
 
-In every task, pip's default index is the cluster's PyPI cache at the supplementary services VM's campus address, `http://10.0.1.68:5000/index/`. It serves a Chinese PyPI mirror, with PyPI as a fallback. The master sets these variables in every task:
+In every task, pip's default index is the cluster's PyPI cache on the supplementary services VM, at its address on the cluster's 100G LAN (`http://192.168.233.8:5000/index/`; the pool of the s8030 host, which is not on that LAN, uses the campus address `http://10.0.1.68:5000/index/`). It serves a Chinese PyPI mirror, with PyPI as a fallback. The master sets these variables in every task:
 
 ```text
-PIP_INDEX_URL=http://10.0.1.68:5000/index/
-PIP_TRUSTED_HOST=10.0.1.68
+PIP_INDEX_URL=http://192.168.233.8:5000/index/
+PIP_TRUSTED_HOST=192.168.233.8
 PIP_CONFIG_FILE=/dev/null
 PIP_NO_CACHE_DIR=1
 ```
@@ -166,7 +166,7 @@ environment:
     # - PIP_CONFIG_FILE=
 ```
 
-uv ignores pip's settings and has no cluster default. To use the cache, set `UV_DEFAULT_INDEX=http://10.0.1.68:5000/index/`; a `uv.lock` made against PyPI then fails `uv sync --locked`, while `uv sync --frozen` works.
+uv ignores pip's settings and has no cluster default. To use the cache, set `UV_DEFAULT_INDEX` to the cache's address; a `uv.lock` made against PyPI then fails `uv sync --locked`, while `uv sync --frozen` works.
 
 The shell's `tensorboard` service installs nothing: a custom image needs TensorBoard 2.9 or newer for it.
 
