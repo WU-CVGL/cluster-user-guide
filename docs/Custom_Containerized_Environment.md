@@ -143,6 +143,33 @@ Run your code with `/opt/venv/bin/python`, for example `det cmd run '/opt/venv/b
 - The separate interpreter also works when the image's system Python refuses pip with `externally-managed-environment` (Debian 12 and later, Ubuntu 23.04 and later).
 - pip downloads the SDK's missing dependencies when each task starts. Install them once in the image to save that time: `RUN /opt/det-python/bin/python -m pip install https://github.com/WU-CVGL/determined/releases/download/<version>/determined-<version>-py3-none-any.whl`.
 
+### pip inside tasks
+
+A task without `environment.image` runs in the cluster's default image, `harbor.cvgl.lab/library/pytorch-ngc-dev:0736b6d-tb2.20.0`: Determined's `pytorch-ngc-dev:0736b6d` with TensorBoard 2.20.0.
+
+In every task, pip's default index is the cluster's PyPI cache on the supplementary services VM, at its address on the cluster's 100G LAN (`http://192.168.233.8:5000/index/`; the pool of the s8030 host, which is not on that LAN, uses the campus address `http://10.0.1.68:5000/index/`). It serves a Chinese PyPI mirror, with PyPI as a fallback. The master sets these variables in every task:
+
+```text
+PIP_INDEX_URL=http://192.168.233.8:5000/index/
+PIP_TRUSTED_HOST=192.168.233.8
+PIP_CONFIG_FILE=/dev/null
+PIP_NO_CACHE_DIR=1
+```
+
+`PIP_CONFIG_FILE=/dev/null` turns off every pip configuration file, so a `pip.conf` in your image does not apply inside tasks and `pip config set` fails there. `PIP_CONFIG_FILE=` (empty) makes those files apply again, but the master's `PIP_INDEX_URL` still overrides their `index-url`, as it replaces an `ENV PIP_INDEX_URL` in your image: set the index itself in `environment_variables`. Use `--index-url` for one command, or set the variables in the task configuration; a task's own `environment_variables` override the master's by name:
+
+```yaml
+environment:
+  image: harbor.cvgl.lab/<project>/<image>:<version-tag>
+  environment_variables:
+    - PIP_INDEX_URL=https://pypi.org/simple
+    # - PIP_CONFIG_FILE=
+```
+
+uv ignores pip's settings and has no cluster default. To use the cache, set `UV_DEFAULT_INDEX` to the cache's address; a `uv.lock` made against PyPI then fails `uv sync --locked`, while `uv sync --frozen` works.
+
+The shell's `tensorboard` service installs nothing: a custom image needs TensorBoard 2.9 or newer for it.
+
 ## Troubleshooting
 
 - A default Buildx build reports `x509: certificate signed by unknown authority` while requesting `https://harbor.cvgl.lab/service/token`: run that Buildx command with the documented `SSL_CERT_DIR`.
@@ -151,3 +178,4 @@ Run your code with `/opt/venv/bin/python`, for example `det cmd run '/opt/venv/b
 - A package constraint creates a file such as `=0.16.0`: quote the complete requirement passed to the shell.
 - A Determined task cannot see code or output: check its bind mounts and use an approved shared-storage root.
 - A task fails with `externally-managed-environment` or `Can not perform a '--user' install`: give Determined its own interpreter, as in [Keep Determined's packages out of your Python environment](#keep-determineds-packages-out-of-your-python-environment).
+- `pip config set` fails inside a task with `ERROR: Fatal Internal error`: set the index with `--index-url` or `environment_variables`, as in [pip inside tasks](#pip-inside-tasks).

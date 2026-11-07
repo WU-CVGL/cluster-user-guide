@@ -153,6 +153,34 @@ ENV DET_PYTHON_EXECUTABLE=/opt/det-python/bin/python
 - 当镜像的系统 Python 以 `externally-managed-environment` 拒绝 pip 时（Debian 12 及以后、Ubuntu 23.04 及以后），这个单独的解释器同样可用。
 - 每个任务启动时，pip 都会下载 SDK 缺少的依赖。可在镜像中预先安装一次以节省时间：`RUN /opt/det-python/bin/python -m pip install https://github.com/WU-CVGL/determined/releases/download/<version>/determined-<version>-py3-none-any.whl`。
 
+<a id="pip-inside-tasks"></a>
+### 任务中的 pip
+
+未设置 `environment.image` 的任务运行在集群的默认镜像 `harbor.cvgl.lab/library/pytorch-ngc-dev:0736b6d-tb2.20.0` 中：即 Determined 的 `pytorch-ngc-dev:0736b6d` 加上 TensorBoard 2.20.0。
+
+在每个任务中，pip 的默认索引都是辅助服务虚拟机上的集群 PyPI 缓存，使用其在集群 100G 局域网上的地址（`http://192.168.233.8:5000/index/`；s8030 主机不在该局域网上，其资源池使用校园网地址 `http://10.0.1.68:5000/index/`）。它提供一个国内 PyPI 镜像，并以 PyPI 作为后备。master 在每个任务中设置以下变量：
+
+```text
+PIP_INDEX_URL=http://192.168.233.8:5000/index/
+PIP_TRUSTED_HOST=192.168.233.8
+PIP_CONFIG_FILE=/dev/null
+PIP_NO_CACHE_DIR=1
+```
+
+`PIP_CONFIG_FILE=/dev/null` 会关闭所有 pip 配置文件，因此镜像中的 `pip.conf` 在任务中不生效，`pip config set` 在任务中也会失败。`PIP_CONFIG_FILE=`（留空）会让这些配置文件重新生效，但 master 的 `PIP_INDEX_URL` 仍会覆盖其中的 `index-url`，镜像中的 `ENV PIP_INDEX_URL` 同样会被它替换：请在 `environment_variables` 中设置所需的索引。单条命令请使用 `--index-url`，或在任务配置中设置这些变量；任务自己的 `environment_variables` 会按名称覆盖 master 的设置：
+
+```yaml
+environment:
+  image: harbor.cvgl.lab/<project>/<image>:<version-tag>
+  environment_variables:
+    - PIP_INDEX_URL=https://pypi.org/simple
+    # - PIP_CONFIG_FILE=
+```
+
+uv 不读取 pip 的设置，集群也没有为它设置默认索引。要使用该缓存，请将 `UV_DEFAULT_INDEX` 设为该缓存的地址；此时基于 PyPI 生成的 `uv.lock` 会使 `uv sync --locked` 失败，而 `uv sync --frozen` 可以正常使用。
+
+shell 的 `tensorboard` 服务不会安装任何包：自定义镜像需要自带 TensorBoard 2.9 或更新版本才能使用它。
+
 <a id="troubleshooting"></a>
 ## 故障排查
 
@@ -162,3 +190,4 @@ ENV DET_PYTHON_EXECUTABLE=/opt/det-python/bin/python
 - package constraint 产生类似 `=0.16.0` 的文件：给传入 shell 的完整 requirement 加引号。
 - Determined 任务看不到代码或输出：检查 bind mount，并使用已认可的共享存储根目录。
 - 任务以 `externally-managed-environment` 或 `Can not perform a '--user' install` 失败：按[不让 Determined 的包进入你的 Python 环境](#keep-determineds-packages-out-of-your-python-environment)给 Determined 单独的解释器。
+- 任务中的 `pip config set` 以 `ERROR: Fatal Internal error` 失败：按[任务中的 pip](#pip-inside-tasks)用 `--index-url` 或 `environment_variables` 设置索引。
