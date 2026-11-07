@@ -27,7 +27,7 @@ Native command and shell configs expose one `description` field, so put the shor
 The cluster runs [WU-CVGL/determined](https://github.com/WU-CVGL/determined), a fork of Determined. Install the fork's CLI from its release, in the cluster's version. First set the version and the release wheel:
 
 ```bash
-DET_VERSION=0.43.0
+DET_VERSION=0.43.1
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
