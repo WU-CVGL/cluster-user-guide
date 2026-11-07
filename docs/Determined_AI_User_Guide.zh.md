@@ -30,7 +30,7 @@ Shell 在同一容器中运行 SSH 服务器，默认还运行 JupyterLab 和浏
 集群运行 [WU-CVGL/determined](https://github.com/WU-CVGL/determined)，它是 Determined 的一个分支。请从该分支的 release 安装与集群版本一致的 CLI。先设置版本和 release 中的 wheel：
 
 ```bash
-DET_VERSION=0.43.0
+DET_VERSION=0.43.1
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
