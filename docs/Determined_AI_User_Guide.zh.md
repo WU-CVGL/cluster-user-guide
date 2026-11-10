@@ -30,7 +30,7 @@ Shell 在同一容器中运行 SSH 服务器，默认还运行 JupyterLab 和浏
 集群运行 [WU-CVGL/determined](https://github.com/WU-CVGL/determined)，它是 Determined 的一个分支。请从该分支的 release 安装与集群版本一致的 CLI。先设置版本和 release 中的 wheel：
 
 ```bash
-DET_VERSION=0.43.1
+DET_VERSION=0.44.0
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
@@ -69,7 +69,7 @@ export DET_MASTER=https://gpu.cvgl.lab
 det user login <username>
 ```
 
-CLI 版本必须与集群一致。`det version` 显示 CLI 和 master 的版本；两者不一致时，`det` 会给出警告。此时请把 `DET_VERSION` 设为 master 的版本，重新安装。旧版 CLI 可能出错，例如在修改密码时。实时服务和配置来源见[集群参考](Cluster_Reference.zh.md)。
+CLI 版本必须与集群一致。`det version` 显示 CLI 和 master 的版本；两者不一致时，`det` 会给出警告。此时请把 `DET_VERSION` 设为 master 的版本，重新安装。旧版 CLI 可能出错，例如在修改密码或运行 `det tensorboard` 时。实时服务和配置来源见[集群参考](Cluster_Reference.zh.md)。
 
 启动任务前检查认证：
 
