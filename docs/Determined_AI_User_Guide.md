@@ -27,7 +27,7 @@ Native command and shell configs expose one `description` field, so put the shor
 The cluster runs [WU-CVGL/determined](https://github.com/WU-CVGL/determined), a fork of Determined. Install the fork's CLI from its release, in the cluster's version. First set the version and the release wheel:
 
 ```bash
-DET_VERSION=0.43.1
+DET_VERSION=0.44.0
 DET_WHEEL="https://github.com/WU-CVGL/determined/releases/download/$DET_VERSION/determined-$DET_VERSION-py3-none-any.whl"
 ```
 
@@ -66,7 +66,7 @@ export DET_MASTER=https://gpu.cvgl.lab
 det user login <username>
 ```
 
-The CLI must match the cluster's version. `det version` shows the CLI and master versions, and `det` warns when they differ. Then repeat the install with `DET_VERSION` set to the master's version. An older CLI can fail, for example when you change your password. See [Cluster Reference](Cluster_Reference.md) for the live service and configuration sources.
+The CLI must match the cluster's version. `det version` shows the CLI and master versions, and `det` warns when they differ. Then repeat the install with `DET_VERSION` set to the master's version. An older CLI can fail, for example when you change your password or run `det tensorboard`. See [Cluster Reference](Cluster_Reference.md) for the live service and configuration sources.
 
 Check authentication before launching work:
 

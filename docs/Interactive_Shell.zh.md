@@ -157,7 +157,7 @@ det shell start --config-file examples/compute/shell.yaml -- -L7007:localhost:70
 - 当 shell 映射到的 GPU 最大利用率持续 15 分钟低于 10% 时，进入 alerting 状态。
 - Watchdog 每 30 分钟检查一次（每小时的 :00 和 :30）。第一次匹配时发送警告；如果同一告警在下一次检查时仍存在，就停止该 shell。
 - 30 分钟 query window 只是读取数据的窗口，不是额外等待时间。
-- 此规则不会将 No Data 和查询错误状态视为告警；watchdog 不会停止 command、TensorBoard 和 experiment。
+- 此规则不会将 No Data 和查询错误状态视为告警；watchdog 不会停止 command 和 experiment。
 
 若 GPU 利用率持续偏低，根据评估和检查时刻的相位，警告与清理流程给出的理论停止时间约为 45–75 分钟。这不是严格的超时，也不是保证的截止时间；检查时机和服务故障都可能改变它。
 

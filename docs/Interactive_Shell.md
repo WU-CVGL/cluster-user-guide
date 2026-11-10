@@ -148,7 +148,7 @@ The cleanup rule applies to **shells** that hold GPUs, also when only JupyterLab
 - A shell becomes alerting after its maximum mapped GPU utilization remains below 10% for 15 minutes.
 - The watchdog checks every 30 minutes, at :00 and :30. The first matching check sends a warning; if the same alert is still present at the next check, it stops the shell.
 - The 30-minute query window is only the data-reading window; it is not another waiting period.
-- No-data and query-error states are not treated as alerts by this rule. Commands, TensorBoards and experiments are not stopped by the watchdog.
+- No-data and query-error states are not treated as alerts by this rule. Commands and experiments are not stopped by the watchdog.
 
 With continuously low GPU utilization, warning and cleanup phases imply a theoretical stop time of roughly 45–75 minutes, depending on evaluation and check alignment. This is not a strict timeout or a guaranteed deadline; check timing and service failures can change it.
 
